@@ -1,0 +1,148 @@
+# =============================================================================
+#  Diagram Studio — 分层技术架构图结构定义
+# =============================================================================
+#  此文件用于定义"分层技术架构图"的层、模块、布局，不需要写 HTML/CSS。
+#  修改此文件即可生成不同系统的架构图（微服务、IoT、大数据平台等）。
+#
+#  支持的 block 类型:
+#    module       — 标准白色矩形模块
+#    highlight    — 彩色高亮模块 (color: yellow|red|blue)
+#    device       — 图标 + 文字（手机/PC等设备示意）
+#    ajax-block   — Ajax 方法标签 (verbs: [POST, GET, ...])
+#    group        — 带标题的分栏容器（如 SpringBoot 三列）
+#    side-modules — 右侧竖排小模块组
+#    modular-block— 标题 + 水平子模块（如 MyBatis 四个子模块）
+# =============================================================================
+
+title: "Java Web N-Tier 技术架构图"
+subtitle: "Client -> Web -> Business -> Persistence -> Data"
+arrows: true
+
+layers:
+  - id: client
+    label: "客户端层"
+    blocks:
+      - type: device
+        icon: "Web"
+        text: "浏览器"
+        width: 2
+      - type: device
+        icon: "Mobile"
+        text: "移动端"
+        width: 2
+      - type: device
+        icon: "Admin"
+        text: "管理后台"
+        width: 2
+
+  - id: edge
+    label: "边界接入层"
+    blocks:
+      - type: module
+        text: "DNS / CDN"
+        style: large
+      - type: module
+        text: "WAF / TLS"
+        style: large
+      - type: module
+        text: "Nginx / Load Balancer"
+        width: 2
+        style: large
+
+  - id: web
+    label: "Web 表示层"
+    blocks:
+      - type: module
+        text: "Spring MVC Controller"
+        width: 2
+        style: large
+      - type: module
+        text: "REST API / JSON"
+        width: 2
+      - type: module
+        text: "Auth Filter"
+      - type: module
+        text: "Static Assets"
+
+  - id: application
+    label: "应用业务层"
+    blocks:
+      - type: group
+        title: "Spring Boot Application"
+        width: 5
+        columns:
+          - title: "接口编排"
+            items:
+              - "请求校验"
+              - "DTO 转换"
+              - "异常处理"
+          - title: "领域服务"
+            items:
+              - "业务规则"
+              - "流程编排"
+              - "权限判断"
+          - title: "事务事件"
+            items:
+              - "事务边界"
+              - "领域事件"
+              - "异步任务"
+      - type: side-modules
+        width: 1
+        items:
+          - "日志"
+          - "配置"
+          - "监控"
+
+  - id: data-access
+    label: "数据访问层"
+    blocks:
+      - type: modular-block
+        title: "Persistence Adapters"
+        width: 5
+        modules:
+          - "Repository"
+          - "MyBatis Mapper"
+          - "JPA Entity"
+          - "Cache Adapter"
+      - type: module
+        text: "Connection Pool"
+        width: 1
+        style: large
+
+  - id: data-integration
+    label: "数据与集成层"
+    blocks:
+      - type: highlight
+        text: "MySQL"
+        width: 2
+        color: blue
+        style: large
+      - type: highlight
+        text: "Redis"
+        width: 2
+        color: red
+        style: large
+      - type: module
+        text: "Message Queue"
+        width: 2
+        style: large
+      - type: module
+        text: "External APIs"
+        width: 2
+
+  - id: runtime
+    label: "运行支撑层"
+    blocks:
+      - type: module
+        text: "JVM / Tomcat"
+        style: large
+      - type: module
+        text: "Linux / Container"
+        style: large
+      - type: module
+        text: "CI/CD"
+        style: large
+      - type: module
+        text: "Metrics / Logs / Tracing"
+        width: 2
+        style: large

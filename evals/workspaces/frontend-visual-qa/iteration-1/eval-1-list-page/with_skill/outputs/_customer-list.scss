@@ -1,0 +1,308 @@
+// ──────────────────────────────────────────
+// 客户管理列表 — BEM 样式
+// Block: customer-list
+// 策略: Restrained, 中性色承担结构, 强色仅标记
+// 所有颜色通过 token 变量引用, 不出现原始 hex
+// ──────────────────────────────────────────
+@use './customer-list-tokens' as t;
+
+// ═══════════════════════════════════════════
+// Block: customer-list
+// ═══════════════════════════════════════════
+.customer-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;           // 防止撑破 flex 父容器
+  background: t.$token-surface-page;
+
+  // ── Element: 操作栏 ──
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: t.$token-space-md;
+    min-height: t.$token-toolbar-height;
+    padding: t.$token-space-sm t.$token-space-lg;
+    background: t.$token-toolbar-bg;
+    border-bottom: 1px solid t.$token-toolbar-border-color;
+  }
+
+  &__toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: t.$token-space-sm;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  &__toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: t.$token-space-sm;
+    min-width: 0;
+    margin-left: auto;     // 始终靠右
+  }
+
+  // 选中计数 badge
+  &__selected-count {
+    font-size: 13px;
+    color: t.$token-text-secondary;
+
+    & > strong {
+      color: t.$token-action-primary;
+      font-weight: 600;
+    }
+  }
+
+  // ── Element: 搜索框 ──
+  // i18n 预留宽度膨胀空间（30-40%）
+  &__search {
+    width: 100%;
+    max-width: 15rem;      // 240px 等效，弹性基准
+    min-width: 0;          // flex item 防溢出
+
+    @media (min-width: 80em) {  // 1280px 等效
+      max-width: 17.5rem;       // 280px 等效
+    }
+  }
+
+  // ── Element: 筛选区 ──
+  &__filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: t.$token-space-md;
+    padding: t.$token-space-sm t.$token-space-lg;
+    background: t.$token-surface-elevated;
+    border-bottom: 1px solid t.$token-border-default;
+  }
+
+  &__filter-item {
+    display: flex;
+    align-items: center;
+    gap: t.$token-space-xs;
+    min-width: 0;
+  }
+
+  &__filter-label {
+    font-size: 13px;
+    color: t.$token-text-secondary;
+    white-space: nowrap;
+  }
+
+  &__filter-select {
+    width: 100%;
+    max-width: 8.75rem;  // 140px 等效
+  }
+
+  // 更多筛选触发
+  &__filter-more {
+    display: flex;
+    align-items: center;
+    gap: t.$token-space-xs;
+    padding: 0 t.$token-space-sm;
+    height: 32px;
+    font-size: 13px;
+    color: t.$token-text-secondary;
+    border: 1px solid t.$token-border-default;
+    border-radius: t.$token-border-radius-sm;
+    background: transparent;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+
+    &:hover {
+      color: t.$token-action-primary;
+      border-color: t.$token-action-primary;
+    }
+  }
+
+  // ── Element: 批量操作栏 ──
+  // 仅选中行时显示，替换操作栏功能
+  &__batch-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: t.$token-space-md;
+    min-height: t.$token-toolbar-height;
+    padding: t.$token-space-sm t.$token-space-lg;
+    background: t.$token-toolbar-bg;
+    border-bottom: 1px solid t.$token-border-default;
+  }
+
+  &__batch-left {
+    display: flex;
+    align-items: center;
+    gap: t.$token-space-sm;
+  }
+
+  &__batch-right {
+    display: flex;
+    align-items: center;
+    gap: t.$token-space-sm;
+  }
+
+  // ── Element: 表格容器 ──
+  // 局部滚动 + 清晰边界 + sticky header
+  &__table-wrapper {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;           // 表格长时局部滚动
+    border-bottom: 1px solid t.$token-border-default;
+  }
+
+  // ── Element: 空状态 & 错误状态 ──
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-height: 60vh;  // 空状态占视口足够比例，不拘泥于固定像素
+    padding: t.$token-space-2xl;
+    text-align: center;
+  }
+
+  &__empty-icon {
+    font-size: 56px;
+    color: t.$token-text-disabled;
+    margin-bottom: t.$token-space-lg;
+  }
+
+  &__empty-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: t.$token-text-primary;
+    margin-bottom: t.$token-space-sm;
+  }
+
+  &__empty-desc {
+    font-size: 13px;
+    color: t.$token-text-secondary;
+    max-width: 20rem;  // 320px 等效，满足 WCAG 2.2 Reflow 基准
+    line-height: 1.6;
+    margin-bottom: t.$token-space-lg;
+  }
+
+  // ── Element: 加载骨架屏 ──
+  &__skeleton {
+    padding: t.$token-space-lg;
+  }
+
+  // ── Element: 分页 ──
+  &__pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: t.$token-space-sm t.$token-space-lg;
+    background: t.$token-surface-elevated;
+  }
+
+  // ── Element: 表格行状态覆盖 ──
+  &__row--selected {
+    // 选中行背景由 Element Plus el-table row-class-name 控制
+    // 此处仅做 token 级覆盖的钩子
+    background-color: t.$token-surface-row-selected !important;
+  }
+}
+
+// ═══════════════════════════════════════════
+// 响应式
+// ═══════════════════════════════════════════
+
+// < 768px: 移动端
+@media (max-width: 47.9375em) {  // 767px 等效
+  .customer-list {
+    &__toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      padding: t.$token-space-sm;
+      gap: t.$token-space-sm;
+    }
+
+    &__toolbar-left,
+    &__toolbar-right {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    &__toolbar-right {
+      justify-content: flex-end;
+    }
+
+    &__search {
+      width: 100%; // 搜索框全宽
+    }
+
+    &__filters {
+      flex-direction: column;
+      align-items: stretch;
+      padding: t.$token-space-sm;
+    }
+
+    &__filter-select {
+      width: 100%;
+    }
+
+    &__batch-bar {
+      flex-direction: column;
+      align-items: stretch;
+      padding: t.$token-space-sm;
+    }
+
+    &__batch-right {
+      justify-content: flex-end;
+    }
+
+    &__pagination {
+      justify-content: center;
+      padding: t.$token-space-sm;
+    }
+  }
+}
+
+// 768-1024px: 平板
+@media (min-width: 48em) and (max-width: 63.9375em) {
+  .customer-list {
+    &__search {
+      max-width: 12.5rem;  // 200px 等效
+    }
+  }
+}
+
+// ≥ 1280px: 内容区上限
+@media (min-width: 80em) {
+  .customer-list {
+    max-width: 90rem;  // 1440px 等效，大屏居中限定
+    margin: 0 auto;
+  }
+}
+
+// ═══════════════════════════════════════════
+// 可访问性
+// ═══════════════════════════════════════════
+
+// 动效降级
+@media (prefers-reduced-motion: reduce) {
+  .customer-list {
+    &__filter-more {
+      transition: none;
+    }
+  }
+}
+
+// 高对比度模式
+@media (prefers-contrast: more) {
+  .customer-list {
+    &__selected-count > strong {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Focus Not Obscured (WCAG 2.4.11)
+// sticky header 不遮挡聚焦元素
+.customer-list {
+  scroll-padding-top: 0; // 本组件无 sticky header 覆盖
+}

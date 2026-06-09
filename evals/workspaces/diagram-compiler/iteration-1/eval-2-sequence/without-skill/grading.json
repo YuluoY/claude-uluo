@@ -1,0 +1,45 @@
+{
+  "expectations": [
+    {
+      "text": "uses-sequence-type: Output is a sequenceDiagram or references sequence diagram type",
+      "passed": true,
+      "evidence": "sequenceDiagram: True"
+    },
+    {
+      "text": "ascii-participant-ids: Participant IDs are pure ASCII (e.g., U, C, A, R), with aliases via 'participant ID as 中文' syntax",
+      "passed": true,
+      "evidence": "ASCII participant IDs with 'as': ['U', 'C', 'AS', 'RS']"
+    },
+    {
+      "text": "pure-chinese-alias: Alias text is pure Chinese (e.g., 用户, 客户端), NOT mixed English-Chinese like 'User（用户）'",
+      "passed": false,
+      "evidence": "Aliases: ['User（用户）', 'Client（客户端）', 'AuthServer（授权服务器）', 'ResourceServer（资源服务器）'], mixed lang: ['User（用户）', 'Client（客户端）', 'AuthServer（授权服务器）', 'ResourceServer（资源服务器）']"
+    },
+    {
+      "text": "covers-oauth-flow: Diagram covers all key OAuth2 steps: redirect, authorize, code exchange, token request, resource access",
+      "passed": true,
+      "evidence": "OAuth keywords: 4/5, arrows: 10"
+    },
+    {
+      "text": "enforced-style: Diagram includes %%{init:...}%% theme/style injection via enforce step",
+      "passed": false,
+      "evidence": "style init: False"
+    },
+    {
+      "text": "at-least-4-participants: Has at least 4 participants (User/Client/AuthServer/ResourceServer)",
+      "passed": true,
+      "evidence": "participants: 4 — ['participant U', 'participant C', 'participant AS', 'participant RS']"
+    },
+    {
+      "text": "correct-arrow-types: Uses ->> for synchronous calls and -->> for async returns, not all the same arrow type",
+      "passed": true,
+      "evidence": "sync arrows (->>): True, async arrows (-->>): False"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 2,
+    "total": 7,
+    "pass_rate": 0.71
+  }
+}

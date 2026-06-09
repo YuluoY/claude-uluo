@@ -1,0 +1,636 @@
+{
+  "metadata": {
+    "skill_name": "diagram-compiler",
+    "timestamp": "2026-06-09T07:35:00Z",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "runs_per_configuration": 1,
+    "grading_version": "iter2-final",
+    "skill_path": "/Users/huyongle/Desktop/workspace/skills/diagram-compiler"
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "pass_rate": 1.0,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-quadrant-type: Output contains quadrantChart Mermaid syntax or references quadrant diagram type",
+          "passed": true,
+          "evidence": "quadrantChart: True"
+        },
+        {
+          "text": "has-four-items: Diagram includes all 4 frameworks (React, Vue, Svelte, Solid) as data points",
+          "passed": true,
+          "evidence": "Frameworks: {'react': True, 'vue': True, 'svelte': True, 'solid': True}"
+        },
+        {
+          "text": "has-axes-labels: X and Y axes have meaningful labels with low/high descriptions",
+          "passed": true,
+          "evidence": "X: True, Y: True"
+        },
+        {
+          "text": "correct-positions: React and Vue are positioned in top-right area (high ecosystem maturity), Svelte in middle, Solid lower",
+          "passed": true,
+          "evidence": "React OK:True, Vue OK:True, Solid OK:True"
+        },
+        {
+          "text": "not-hardcoded-mermaid: Model does NOT write raw Mermaid code from scratch — uses data-driven approach (YAML/JSON data → generate)",
+          "passed": true,
+          "evidence": "schema:True, generate:True, PathB:True"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "pass_rate": 0.8,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-quadrant-type: Output contains quadrantChart Mermaid syntax or references quadrant diagram type",
+          "passed": true,
+          "evidence": "quadrantChart: True"
+        },
+        {
+          "text": "has-four-items: Diagram includes all 4 frameworks (React, Vue, Svelte, Solid) as data points",
+          "passed": true,
+          "evidence": "Frameworks: {'react': True, 'vue': True, 'svelte': True, 'solid': True}"
+        },
+        {
+          "text": "has-axes-labels: X and Y axes have meaningful labels with low/high descriptions",
+          "passed": true,
+          "evidence": "X: True, Y: True"
+        },
+        {
+          "text": "correct-positions: React and Vue are positioned in top-right area (high ecosystem maturity), Svelte in middle, Solid lower",
+          "passed": true,
+          "evidence": "React OK:True, Vue OK:True, Solid OK:True"
+        },
+        {
+          "text": "not-hardcoded-mermaid: Model does NOT write raw Mermaid code from scratch — uses data-driven approach (YAML/JSON data → generate)",
+          "passed": false,
+          "evidence": "schema:False, generate:False, PathB:False"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "pass_rate": 1.0,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-sequence-type: Output is a sequenceDiagram or references sequence diagram type",
+          "passed": true,
+          "evidence": "sequenceDiagram: True"
+        },
+        {
+          "text": "ascii-participant-ids: Participant IDs are pure ASCII (e.g., U, C, A, R), with aliases via 'participant ID as 中文' syntax",
+          "passed": true,
+          "evidence": "ASCII participant IDs with 'as': ['U', 'C', 'A', 'R']"
+        },
+        {
+          "text": "pure-chinese-alias: Alias text is pure Chinese (e.g., 用户, 客户端), NOT mixed English-Chinese like 'User（用户）'",
+          "passed": true,
+          "evidence": "Aliases: ['用户', '客户端', '授权服务器', '资源服务器'], mixed lang: []"
+        },
+        {
+          "text": "covers-oauth-flow: Diagram covers all key OAuth2 steps: redirect, authorize, code exchange, token request, resource access",
+          "passed": true,
+          "evidence": "OAuth keywords: 3/5, arrows: 8"
+        },
+        {
+          "text": "enforced-style: Diagram includes %%{init:...}%% theme/style injection via enforce step",
+          "passed": true,
+          "evidence": "style init: True"
+        },
+        {
+          "text": "at-least-4-participants: Has at least 4 participants (User/Client/AuthServer/ResourceServer)",
+          "passed": true,
+          "evidence": "participants: 5 — ['participant U', 'participant C', 'participant A', 'participant R', 'participant ID']"
+        },
+        {
+          "text": "correct-arrow-types: Uses ->> for synchronous calls and -->> for async returns, not all the same arrow type",
+          "passed": true,
+          "evidence": "sync arrows (->>): True, async arrows (-->>): True"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 5,
+        "failed": 2,
+        "total": 7,
+        "pass_rate": 0.71,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-sequence-type: Output is a sequenceDiagram or references sequence diagram type",
+          "passed": true,
+          "evidence": "sequenceDiagram: True"
+        },
+        {
+          "text": "ascii-participant-ids: Participant IDs are pure ASCII (e.g., U, C, A, R), with aliases via 'participant ID as 中文' syntax",
+          "passed": true,
+          "evidence": "ASCII participant IDs with 'as': ['U', 'C', 'AS', 'RS']"
+        },
+        {
+          "text": "pure-chinese-alias: Alias text is pure Chinese (e.g., 用户, 客户端), NOT mixed English-Chinese like 'User（用户）'",
+          "passed": false,
+          "evidence": "Aliases: ['User（用户）', 'Client（客户端）', 'AuthServer（授权服务器）', 'ResourceServer（资源服务器）'], mixed lang: ['User（用户）', 'Client（客户端）', 'AuthServer（授权服务器）', 'ResourceServer（资源服务器）']"
+        },
+        {
+          "text": "covers-oauth-flow: Diagram covers all key OAuth2 steps: redirect, authorize, code exchange, token request, resource access",
+          "passed": true,
+          "evidence": "OAuth keywords: 4/5, arrows: 10"
+        },
+        {
+          "text": "enforced-style: Diagram includes %%{init:...}%% theme/style injection via enforce step",
+          "passed": false,
+          "evidence": "style init: False"
+        },
+        {
+          "text": "at-least-4-participants: Has at least 4 participants (User/Client/AuthServer/ResourceServer)",
+          "passed": true,
+          "evidence": "participants: 4 — ['participant U', 'participant C', 'participant AS', 'participant RS']"
+        },
+        {
+          "text": "correct-arrow-types: Uses ->> for synchronous calls and -->> for async returns, not all the same arrow type",
+          "passed": true,
+          "evidence": "sync arrows (->>): True, async arrows (-->>): False"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "pass_rate": 1.0,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-layered-architecture: Uses layered_architecture.py (Matplotlib renderer) or explicitly references layered-architecture type",
+          "passed": true,
+          "evidence": "layered_architecture ref: True, matplotlib: True"
+        },
+        {
+          "text": "not-plain-flowchart: Does NOT fall back to a generic Mermaid flowchart for a layered architecture task",
+          "passed": true,
+          "evidence": "generic flowchart: False, has layered YAML: True"
+        },
+        {
+          "text": "four-layers-minimum: Architecture has at least 4 distinct layers matching the prompt (Client, Gateway, AI Service, Data)",
+          "passed": true,
+          "evidence": "YAML layer entries: 4"
+        },
+        {
+          "text": "data-driven-yaml: Uses YAML layout approach (--layout flag) with custom content, not default template",
+          "passed": true,
+          "evidence": "has YAML: True, custom: True, --layout: True"
+        },
+        {
+          "text": "layer-dashed-borders: Layers are visually separated (dashed lines, distinct backgrounds) — signature of the skill's renderer",
+          "passed": true,
+          "evidence": "skill renderer: True, dash in YAML: False"
+        },
+        {
+          "text": "layer-labels: Each layer has a visible label/name on the left side",
+          "passed": true,
+          "evidence": "layer labels in YAML: 4"
+        },
+        {
+          "text": "specific-technologies: Mentions specific tech from prompt in the diagram (Milvus, Redis, WebSocket, RAG, NLU, MySQL, ES)",
+          "passed": true,
+          "evidence": "Found 9 technologies: ['milvus', 'redis', 'websocket', 'rag', 'nlu', 'elasticsearch', 'mysql', 'chat', '企业微信']"
+        },
+        {
+          "text": "outputs-png: Produces a valid PNG output file >50KB (high-resolution architecture diagram)",
+          "passed": true,
+          "evidence": "PNG: True, size: 114040B"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "pass_rate": 1.0,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-layered-architecture: Uses layered_architecture.py (Matplotlib renderer) or explicitly references layered-architecture type",
+          "passed": true,
+          "evidence": "layered_architecture ref: False, matplotlib: True"
+        },
+        {
+          "text": "not-plain-flowchart: Does NOT fall back to a generic Mermaid flowchart for a layered architecture task",
+          "passed": true,
+          "evidence": "generic flowchart: False, has layered YAML: True"
+        },
+        {
+          "text": "four-layers-minimum: Architecture has at least 4 distinct layers matching the prompt (Client, Gateway, AI Service, Data)",
+          "passed": true,
+          "evidence": "YAML layer entries: 18"
+        },
+        {
+          "text": "data-driven-yaml: Uses YAML layout approach (--layout flag) with custom content, not default template",
+          "passed": true,
+          "evidence": "has YAML: True, custom: True, --layout: False"
+        },
+        {
+          "text": "layer-dashed-borders: Layers are visually separated (dashed lines, distinct backgrounds) — signature of the skill's renderer",
+          "passed": true,
+          "evidence": "skill renderer: False, dash in YAML: True"
+        },
+        {
+          "text": "layer-labels: Each layer has a visible label/name on the left side",
+          "passed": true,
+          "evidence": "layer labels in YAML: 4"
+        },
+        {
+          "text": "specific-technologies: Mentions specific tech from prompt in the diagram (Milvus, Redis, WebSocket, RAG, NLU, MySQL, ES)",
+          "passed": true,
+          "evidence": "Found 9 technologies: ['milvus', 'redis', 'websocket', 'rag', 'nlu', 'elasticsearch', 'mysql', 'chat', '企业微信']"
+        },
+        {
+          "text": "outputs-png: Produces a valid PNG output file >50KB (high-resolution architecture diagram)",
+          "passed": true,
+          "evidence": "PNG: True, size: 1122654B"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "configuration": "with-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "pass_rate": 1.0,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-sankey-type: Uses sankey-beta diagram type for the conversion funnel, with correct source,target,value CSV format",
+          "passed": true,
+          "evidence": "sankey-beta: True, CSV: True, PNG: True"
+        },
+        {
+          "text": "five-conversion-stages: Sankey has all 5 stages (访问→注册→激活→付费→续费) with visible drop-off",
+          "passed": true,
+          "evidence": "Stages: 5/5 — ['访问', '注册', '激活', '付费', '续费']"
+        },
+        {
+          "text": "uses-radar-type: Uses radar chart type for the 3-way technical comparison",
+          "passed": true,
+          "evidence": "radar mention: True, PNG: True"
+        },
+        {
+          "text": "six-axes: Radar chart has all 6 dimensions (性能/可维护性/开发效率/社区生态/学习成本/扩展性)",
+          "passed": true,
+          "evidence": "Dimensions: 6/6"
+        },
+        {
+          "text": "three-series: Radar chart has all 3 technical approaches (方案A/B/C) with their respective values",
+          "passed": true,
+          "evidence": "Series: ['方案A', '方案B', '方案C', '微服务', '模块化', 'serverless']"
+        },
+        {
+          "text": "not-hardcoded-mermaid: Model uses schema→data→generate workflow for both diagrams rather than writing raw Mermaid",
+          "passed": true,
+          "evidence": "schema:False, gen:False, yaml:False, render:True"
+        },
+        {
+          "text": "both-pngs: Produces TWO separate PNG files — one for sankey, one for radar",
+          "passed": true,
+          "evidence": "sankey PNG: True, radar PNG: True"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "configuration": "without-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "pass_rate": 0.86,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-sankey-type: Uses sankey-beta diagram type for the conversion funnel, with correct source,target,value CSV format",
+          "passed": true,
+          "evidence": "sankey-beta: True, CSV: True, PNG: True"
+        },
+        {
+          "text": "five-conversion-stages: Sankey has all 5 stages (访问→注册→激活→付费→续费) with visible drop-off",
+          "passed": true,
+          "evidence": "Stages: 5/5 — ['访问', '注册', '激活', '付费', '续费']"
+        },
+        {
+          "text": "uses-radar-type: Uses radar chart type for the 3-way technical comparison",
+          "passed": true,
+          "evidence": "radar mention: True, PNG: True"
+        },
+        {
+          "text": "six-axes: Radar chart has all 6 dimensions (性能/可维护性/开发效率/社区生态/学习成本/扩展性)",
+          "passed": true,
+          "evidence": "Dimensions: 6/6"
+        },
+        {
+          "text": "three-series: Radar chart has all 3 technical approaches (方案A/B/C) with their respective values",
+          "passed": true,
+          "evidence": "Series: ['方案A', '方案B', '方案C', '微服务', '模块化', 'serverless']"
+        },
+        {
+          "text": "not-hardcoded-mermaid: Model uses schema→data→generate workflow for both diagrams rather than writing raw Mermaid",
+          "passed": false,
+          "evidence": "schema:False, gen:True, yaml:False, render:False"
+        },
+        {
+          "text": "both-pngs: Produces TWO separate PNG files — one for sankey, one for radar",
+          "passed": true,
+          "evidence": "sankey PNG: True, radar PNG: True"
+        }
+      ]
+    },
+    {
+      "eval_id": 5,
+      "configuration": "with-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "pass_rate": 1.0,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-c4-context: Diagram uses C4Context syntax with correct entity types",
+          "passed": true,
+          "evidence": "C4Context: True"
+        },
+        {
+          "text": "correct-entity-types: Students/Teachers are Person type, EduPlatform is System, payment/storage/notification are System_Ext",
+          "passed": true,
+          "evidence": "Person:True, System:True, System_Ext:True"
+        },
+        {
+          "text": "six-plus-entities: At least 6 entities (2 Person + 1 System + 3 System_Ext)",
+          "passed": true,
+          "evidence": "Entities: 6 — ['System', 'Person', 'Person', 'System_Ext', 'System_Ext', 'System_Ext']"
+        },
+        {
+          "text": "has-relationships: All entities that interact have Rel() connections with meaningful labels",
+          "passed": true,
+          "evidence": "Relationships: 5"
+        },
+        {
+          "text": "enforced-style: Diagram includes %%{init:...}%% theme injection via enforce",
+          "passed": true,
+          "evidence": "Style init: True"
+        }
+      ]
+    },
+    {
+      "eval_id": 5,
+      "configuration": "without-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "pass_rate": 0.8,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-c4-context: Diagram uses C4Context syntax with correct entity types",
+          "passed": true,
+          "evidence": "C4Context: True"
+        },
+        {
+          "text": "correct-entity-types: Students/Teachers are Person type, EduPlatform is System, payment/storage/notification are System_Ext",
+          "passed": true,
+          "evidence": "Person:True, System:True, System_Ext:True"
+        },
+        {
+          "text": "six-plus-entities: At least 6 entities (2 Person + 1 System + 3 System_Ext)",
+          "passed": true,
+          "evidence": "Entities: 6 — ['Person', 'Person', 'System', 'System_Ext', 'System_Ext', 'System_Ext']"
+        },
+        {
+          "text": "has-relationships: All entities that interact have Rel() connections with meaningful labels",
+          "passed": true,
+          "evidence": "Relationships: 5"
+        },
+        {
+          "text": "enforced-style: Diagram includes %%{init:...}%% theme injection via enforce",
+          "passed": false,
+          "evidence": "Style init: False"
+        }
+      ]
+    },
+    {
+      "eval_id": 6,
+      "configuration": "with-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "pass_rate": 1.0,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-journey-type: Diagram uses Mermaid journey syntax",
+          "passed": true,
+          "evidence": "journey: True"
+        },
+        {
+          "text": "three-sections: Has exactly 3 sections matching the prompt phases (浏览商品/结算支付/售后)",
+          "passed": true,
+          "evidence": "Sections: 3 — ['浏览商品', '结算支付', '售后']"
+        },
+        {
+          "text": "eleven-plus-tasks: At least 11 tasks covering the full checkout flow",
+          "passed": true,
+          "evidence": "Tasks: 11"
+        },
+        {
+          "text": "valid-scores: All task scores are within 1-5 range",
+          "passed": true,
+          "evidence": "Scores: [4, 3, 5, 4, 3, 2, 3, 5, 4, 5, 2], all valid: True"
+        },
+        {
+          "text": "has-actors: Tasks include actor names (用户, 系统 etc.)",
+          "passed": true,
+          "evidence": "用户 actor: True, 系统 actor: True"
+        }
+      ]
+    },
+    {
+      "eval_id": 6,
+      "configuration": "without-skill",
+      "run_number": 1,
+      "result": {
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "pass_rate": 1.0,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "uses-journey-type: Diagram uses Mermaid journey syntax",
+          "passed": true,
+          "evidence": "journey: True"
+        },
+        {
+          "text": "three-sections: Has exactly 3 sections matching the prompt phases (浏览商品/结算支付/售后)",
+          "passed": true,
+          "evidence": "Sections: 3 — ['浏览商品', '结算支付', '售后']"
+        },
+        {
+          "text": "eleven-plus-tasks: At least 11 tasks covering the full checkout flow",
+          "passed": true,
+          "evidence": "Tasks: 11"
+        },
+        {
+          "text": "valid-scores: All task scores are within 1-5 range",
+          "passed": true,
+          "evidence": "Scores: [4, 3, 5, 4, 3, 2, 3, 5, 4, 5, 2], all valid: True"
+        },
+        {
+          "text": "has-actors: Tasks include actor names (用户, 系统 etc.)",
+          "passed": true,
+          "evidence": "用户 actor: True, 系统 actor: True"
+        }
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "avg_pass_rate": 1.0,
+      "runs": 6
+    },
+    "without_skill": {
+      "avg_pass_rate": 0.86,
+      "runs": 6
+    },
+    "delta": 0.14
+  },
+  "eval_results": {
+    "eval_1": {
+      "with_skill_pass_rate": 1.0,
+      "without_skill_pass_rate": 0.8,
+      "delta": 0.2
+    },
+    "eval_2": {
+      "with_skill_pass_rate": 1.0,
+      "without_skill_pass_rate": 0.71,
+      "delta": 0.29
+    },
+    "eval_3": {
+      "with_skill_pass_rate": 1.0,
+      "without_skill_pass_rate": 1.0,
+      "delta": 0.0
+    },
+    "eval_4": {
+      "with_skill_pass_rate": 1.0,
+      "without_skill_pass_rate": 0.86,
+      "delta": 0.14
+    },
+    "eval_5": {
+      "with_skill_pass_rate": 1.0,
+      "without_skill_pass_rate": 0.8,
+      "delta": 0.2
+    },
+    "eval_6": {
+      "with_skill_pass_rate": 1.0,
+      "without_skill_pass_rate": 1.0,
+      "delta": 0.0
+    }
+  }
+}

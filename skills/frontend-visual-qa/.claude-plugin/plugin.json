@@ -1,0 +1,9 @@
+{
+  "name": "frontend-visual-qa",
+  "version": "0.1.0",
+  "description": "Visual quality assurance for AI-generated frontend UI. Enforces design tokens, component library usage, responsive layout, accessibility, and i18n.",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["frontend", "visual-qa", "accessibility", "design-tokens", "responsive"],
+  "license": "MIT",
+  "skills": "./"
+}

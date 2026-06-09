@@ -1,0 +1,1 @@
+{"eval_id": 3, "eval_name": "payment-gateway", "prompt": "我们需要对接一个新的支付网关（Stripe），在做之前先出一份技术方案评审文档。系统目前使用 Spring Boot + MyBatis，已经对接过支付宝。请做深入的方案调研和对比分析，给出推荐的技术方案。不需要写代码，只需要出文档。", "assertions": []}

@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "library-booking-system",
+  "prompt": "我需要为新项目搭建一个图书馆书籍预约系统的第一个模块。需求：用户能搜索书籍、预约借阅、取消预约。请用 TypeScript 帮我设计并实现这个模块的完整代码结构和核心代码文件。项目还没有任何基础设施。",
+  "assertions": [
+    "目录结构包含 features/book/ 或 features/reservation/ 垂直切片",
+    "顶层包含 components/、utils/、types/、monitoring/ 等水平层",
+    "每个文件夹有 index.ts 聚合导出",
+    "值对象使用 readonly 或不可变模式"
+  ]
+}

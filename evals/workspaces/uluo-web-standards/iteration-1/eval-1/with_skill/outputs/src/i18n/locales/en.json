@@ -1,0 +1,54 @@
+{
+  "app": {
+    "title": "Library Book Reservation System"
+  },
+  "book": {
+    "search": {
+      "placeholder": "Search by title, author, or ISBN",
+      "button": "Search",
+      "noResults": "No matching books found",
+      "loading": "Searching..."
+    },
+    "status": {
+      "available": "Available",
+      "borrowed": "Borrowed",
+      "reserved": "Reserved",
+      "maintenance": "Under Maintenance"
+    },
+    "detail": {
+      "author": "Author",
+      "isbn": "ISBN",
+      "publisher": "Publisher",
+      "publishYear": "Publish Year",
+      "availableCopies": "Available Copies",
+      "totalCopies": "Total Copies"
+    }
+  },
+  "reservation": {
+    "create": "Reserve",
+    "cancel": "Cancel Reservation",
+    "creating": "Reserving...",
+    "cancelling": "Cancelling...",
+    "success": "Reservation successful",
+    "cancelSuccess": "Reservation cancelled",
+    "activeHint": "You have {count} active reservation(s)",
+    "maxReached": "Maximum reservations reached ({max})",
+    "alreadyReserved": "You have already reserved this book",
+    "notAvailable": "This book is currently unavailable for reservation",
+    "expiresIn": "Expires in {hours} hours",
+    "status": {
+      "active": "Pending Pickup",
+      "fulfilled": "Picked Up",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again.",
+    "empty": "No data available",
+    "retry": "Retry",
+    "confirm": "Confirm",
+    "back": "Back"
+  }
+}

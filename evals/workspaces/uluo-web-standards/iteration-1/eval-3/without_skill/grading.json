@@ -1,0 +1,45 @@
+{
+  "expectations": [
+    {
+      "text": "输出包含 [uluo-web-standards] 场景确认信息",
+      "passed": false,
+      "evidence": "keyword match: 0/5"
+    },
+    {
+      "text": "Money 值对象使用 Object.freeze 或展开运算符实现不可变",
+      "passed": true,
+      "evidence": "keyword match: 3/5"
+    },
+    {
+      "text": "运费策略使用工厂模式聚合（非 if-else 分支）",
+      "passed": false,
+      "evidence": "keyword match: 0/2"
+    },
+    {
+      "text": "依赖通过构造函数或函数参数显式注入",
+      "passed": false,
+      "evidence": "keyword match: 0/1"
+    },
+    {
+      "text": "异步操作使用 to() 元组解包 [error, data]",
+      "passed": true,
+      "evidence": "keyword match: 2/4"
+    },
+    {
+      "text": "嵌套深度不超过 3 层",
+      "passed": false,
+      "evidence": "keyword match: 0/1"
+    },
+    {
+      "text": "运行 validate-rules.js 的说明正确（format→eslint→自定义检查）",
+      "passed": false,
+      "evidence": "keyword match: 2/6"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 5,
+    "total": 7,
+    "pass_rate": 0.29
+  }
+}

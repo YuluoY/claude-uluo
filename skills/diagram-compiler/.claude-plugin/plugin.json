@@ -1,0 +1,9 @@
+{
+  "name": "diagram-compiler",
+  "version": "0.1.0",
+  "description": "Script-driven technical diagram studio for documents, papers, patents, and reports. Generates diagrams with Mermaid, Matplotlib/PIL, and Canvas/SVG backends.",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["diagram", "mermaid", "flowchart", "architecture", "visualization"],
+  "license": "MIT",
+  "skills": "./"
+}

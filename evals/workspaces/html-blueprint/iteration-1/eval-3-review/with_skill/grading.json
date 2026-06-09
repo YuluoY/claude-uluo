@@ -1,0 +1,39 @@
+{
+  "expectations": [
+    {
+      "text": "识别 data-component=\"card\" 为小写+泛名问题",
+      "passed": true,
+      "evidence": "identified naming issue"
+    },
+    {
+      "text": "识别图表缺少 manual 标记和子元素 data-prop",
+      "passed": true,
+      "evidence": "identified chart issues"
+    },
+    {
+      "text": "识别表单缺少 data-model 和 data-field",
+      "passed": true,
+      "evidence": "identified form issues"
+    },
+    {
+      "text": "识别 !important 和深度选择器",
+      "passed": true,
+      "evidence": "identified CSS anti-patterns"
+    },
+    {
+      "text": "识别 box1 和 left 泛名 class",
+      "passed": true,
+      "evidence": "identified class naming"
+    },
+    {
+      "text": "按严重程度（HARD/SHOULD）组织输出",
+      "passed": true,
+      "evidence": "output has priority tiers"
+    },
+    {
+      "text": "每个问题给出具体修复代码",
+      "passed": true,
+      "evidence": "provides fix code"
+    }
+  ]
+}

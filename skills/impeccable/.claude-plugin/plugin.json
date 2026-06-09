@@ -1,0 +1,9 @@
+{
+  "name": "impeccable",
+  "version": "0.1.0",
+  "description": "Design, critique, audit, polish, or improve frontend interfaces. Covers UX review, visual hierarchy, accessibility, theming, typography, color, and motion.",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["frontend", "design", "ux", "ui", "accessibility", "theming"],
+  "license": "MIT",
+  "skills": "./"
+}

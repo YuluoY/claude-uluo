@@ -1,0 +1,14 @@
+{
+  "name": "memex",
+  "version": "1.0.0",
+  "description": "长期经验记忆插件：自动从对话中学习，巴普洛夫条件反射 × TrueSkill 连续评分 × 四层知识提取 × 12 关系知识图谱 × 混合向量检索",
+  "author": {
+    "name": "Memex Contributors"
+  },
+  "homepage": "https://github.com/memex-plugin/memex",
+  "keywords": ["memory", "knowledge-graph", "lessons", "retrospective", "vector-search"],
+  "license": "MIT",
+  "skills": "./skills/",
+  "agents": "./agents/",
+  "hooks": "./hooks/hooks.json"
+}

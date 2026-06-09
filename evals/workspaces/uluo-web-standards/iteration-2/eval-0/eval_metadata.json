@@ -1,0 +1,10 @@
+{
+  "eval_id": 0,
+  "eval_name": "refactor-function",
+  "prompt": "请用 TypeScript 帮我重构下面这段函数，让它清晰可维护。\n\n```typescript\nfunction processOrder(order) {\n    var result = {};\n    if (order) {\n        if (order.items && order.items.length > 0) {\n            var total = 0;\n            for (var i = 0; i < order.items.length; i++) {\n                var item = order.items[i];\n                if (item.price && item.quantity) {\n                    total += item.price * item.quantity;\n                }\n            }\n            if (total > 0) {\n                if (order.customer && order.customer.vip) {\n                    total = total * 0.9;\n                }\n                if (total > 1000) {\n                    total = total - 50;\n                }\n                result.total = total;\n                result.status = 'processed';\n                console.log('Order processed: ' + order.id + ', total: ' + total);\n                saveToDatabase(order, result);\n                sendEmail(order.customer.email, 'Your order has been processed');\n            }\n        }\n    }\n    return result;\n}\n```\n\n要求：重构完成后运行 validate-rules.js 验证（format 格式检查 + eslint 质量检查 + 自定义检查），并逐条自述 soft-rules.md 中通用规则的自检清单通过情况。",
+  "assertions": [
+    "重构代码使用 const/let 替代 var",
+    "重构代码无 console.log",
+    "重构代码无深层嵌套（≤2 层缩进）"
+  ]
+}

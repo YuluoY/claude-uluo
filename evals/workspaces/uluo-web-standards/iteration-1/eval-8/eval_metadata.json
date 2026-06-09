@@ -1,0 +1,10 @@
+{
+  "eval_id": 8,
+  "eval_name": "simple-refactor",
+  "prompt": "请把下面这个 TypeScript 函数重构得更清晰，但不要新建 DDD 目录，也不要引入类。\n\n```typescript\nexport function calc(items: { price: number; quantity: number; disabled?: boolean }[], vip: boolean): number {\n  let total = 0;\n  for (const item of items) {\n    if (!item.disabled) {\n      total += item.price * item.quantity;\n    }\n  }\n  if (vip) {\n    total = total * 0.9;\n  }\n  return total;\n}\n```",
+  "assertions": [
+    "没有创建 DDD 目录结构或类",
+    "函数名清晰表达了功能意图",
+    "参数命名消除了歧义"
+  ]
+}

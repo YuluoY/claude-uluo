@@ -1,0 +1,51 @@
+REFACTORING EXPLANATION — processOrder()
+
+Problems with the original code:
+
+1. Arrow anti-pattern (deep nesting): 4-5 levels of if-blocks make the
+   control flow hard to follow. Every guard condition is nested inside the
+   previous one instead of returning early.
+
+2. No types: All parameters and variables are untyped (implicit `any`),
+   providing zero compile-time safety or editor intellisense.
+
+3. `var` declarations: Uses `var` (function-scoped, hoisted) instead of
+   `const`/`let` (block-scoped). This is error-prone and pre-ES6.
+
+4. Mixed concerns: Business-logic (total calculation, discounts), logging,
+   database persistence, and email notification are all interleaved in
+   one monolithic function with no separation.
+
+5. Magic numbers: `0.9`, `1000`, `50` appear inline with no explanation
+   of what they represent.
+
+6. Single-responsibility violation: One function does validation,
+   calculation, side-effects, and notification.
+
+Changes made:
+
+A. TypeScript interfaces — `Order`, `OrderItem`, `Customer`, `OrderResult`
+   give the compiler and developers a clear contract for what shape the
+   data must have.
+
+B. Guard clauses — Instead of nesting everything inside `if (order) { if
+   (order.items) { ... } }`, each invalid condition returns `{}` immediately.
+   This flattens the control flow to a single level.
+
+C. Extracted pure functions — `calculateSubtotal`, `applyVipDiscount`,
+   `applyLargeOrderDiscount`, and `computeFinalTotal` are pure functions
+   (no side effects, no external state). They are trivially testable in
+   isolation.
+
+D. Named constants — `VIP_DISCOUNT_RATE`, `LARGE_ORDER_THRESHOLD`, and
+   `LARGE_ORDER_FLAT_DISCOUNT` document the business rules at the top of
+   the file.
+
+E. Side-effect functions — `logOrderProcessing` and `persistAndNotify`
+   isolate IO operations so the calculation pipeline stays pure.
+
+F. Type guard — `isValidOrder` uses the `order is Order` return type
+   so TypeScript narrows the type after the check.
+
+The result: each function does exactly one thing, reads top-to-bottom
+with no nesting, and can be unit-tested independently.

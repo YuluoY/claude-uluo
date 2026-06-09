@@ -1,0 +1,42 @@
+{
+  "eval_id": 2,
+  "eval_name": "generate-form-blueprint",
+  "prompt": "帮我做一个用户注册表单的HTML设计稿，包含姓名、邮箱、密码、确认密码四个字段。要求后续能转成Vue组件，需要表单校验。",
+  "assertions": [
+    {
+      "id": "form-has-data-model",
+      "text": "<form> 有 data-model 属性",
+      "check_method": "content_check"
+    },
+    {
+      "id": "form-has-data-component",
+      "text": "<form> 有 data-component 属性",
+      "check_method": "content_check"
+    },
+    {
+      "id": "fields-have-data-field",
+      "text": "每个 input 有 data-field 属性",
+      "check_method": "content_check"
+    },
+    {
+      "id": "fields-have-data-type",
+      "text": "每个 input 声明 data-type",
+      "check_method": "content_check"
+    },
+    {
+      "id": "submit-has-data-event",
+      "text": "提交按钮有 data-event=\"submit\"",
+      "check_method": "content_check"
+    },
+    {
+      "id": "static-labels",
+      "text": "字段 label 文本标记 data-static=\"true\"",
+      "check_method": "content_check"
+    },
+    {
+      "id": "no-missing-field",
+      "text": "无缺少 data-field 的表单控件",
+      "check_method": "content_check"
+    }
+  ]
+}

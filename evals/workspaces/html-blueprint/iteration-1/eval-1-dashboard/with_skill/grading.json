@@ -1,0 +1,39 @@
+{
+  "expectations": [
+    {
+      "text": "页面根节点有 data-page 属性",
+      "passed": true,
+      "evidence": "found data-page attribute"
+    },
+    {
+      "text": "所有 data-component 值为 PascalCase 且非泛名",
+      "passed": true,
+      "evidence": "all 20 components PascalCase"
+    },
+    {
+      "text": "图表元素标记 data-convert=\"manual\"",
+      "passed": true,
+      "evidence": "chart has data-convert=manual"
+    },
+    {
+      "text": "组件元素有 data-convert 属性",
+      "passed": true,
+      "evidence": "has data-convert"
+    },
+    {
+      "text": "输出包含转换置信度 JSON 报告",
+      "passed": true,
+      "evidence": "report found"
+    },
+    {
+      "text": "CSS class 不使用 box1/left/text2 等泛名",
+      "passed": true,
+      "evidence": "no generic class names"
+    },
+    {
+      "text": "CSS 不使用 !important",
+      "passed": true,
+      "evidence": "no !important"
+    }
+  ]
+}

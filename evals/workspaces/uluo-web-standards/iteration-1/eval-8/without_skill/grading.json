@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 单函数重构）",
+      "passed": false,
+      "evidence": "keyword match: 0/6"
+    },
+    {
+      "text": "没有创建 DDD 目录结构或类",
+      "passed": false,
+      "evidence": "keyword match: 0/3"
+    },
+    {
+      "text": "只加载了 soft-rules.md §通用规则 + coding-paradigms.md",
+      "passed": false,
+      "evidence": "keyword match: 0/6"
+    },
+    {
+      "text": "函数名从 calc 改为有意义的动词短语",
+      "passed": false,
+      "evidence": "keyword match: 1/3"
+    },
+    {
+      "text": "参数从缩写改为全称（如 vip → isVip）",
+      "passed": true,
+      "evidence": "keyword match: 2/3"
+    },
+    {
+      "text": "说明为什么小任务不应过度架构",
+      "passed": false,
+      "evidence": "keyword match: 0/1"
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 5,
+    "total": 6,
+    "pass_rate": 0.17
+  }
+}

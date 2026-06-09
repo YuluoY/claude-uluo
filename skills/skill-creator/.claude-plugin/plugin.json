@@ -1,0 +1,9 @@
+{
+  "name": "skill-creator",
+  "version": "0.1.0",
+  "description": "Create, modify, improve skills and measure skill performance with evals, benchmarking, and variance analysis.",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["skill", "eval", "benchmark", "claude-code"],
+  "license": "MIT",
+  "skills": "./"
+}

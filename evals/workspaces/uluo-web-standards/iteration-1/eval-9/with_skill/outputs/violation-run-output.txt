@@ -1,0 +1,22 @@
+Files to check: 1 (1 JS/TS/Vue, 0 SCSS/Vue)
+
+
+/Users/huyongle/Desktop/workspace/skills/uluo-web-standards-workspace/iteration-1/eval-9/with_skill/outputs/eval-9-violation.ts
+   4:1   error  Unexpected var, use let or const instead    no-var
+   7:34  error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+   7:40  error  Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  10:3   error  Unexpected console statement                no-console
+  16:10  error  'riskyOperation' is defined but never used  @typescript-eslint/no-unused-vars
+  22:10  error  'e' is defined but never used               @typescript-eslint/no-unused-vars
+  23:3   error  Empty block statement                       no-empty
+  29:8   error  Prefer named exports                        import/no-default-export
+
+✖ 8 problems (8 errors, 0 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+
+
+=== validation checked 1 file(s) ===
+[tsc] passed
+.:1  error  [eslint] issues found (see above)
+failed with 1 error, 0 warnings
+EXIT_CODE=0

@@ -1,0 +1,12 @@
+{
+  "eval_id": 11,
+  "eval_name": "notification-module",
+  "prompt": "请帮我搭建一个完整的通知管理模块（features/notification）。需求：支持创建通知、查询通知列表、标记已读。用 TypeScript + React 写。包含：types/、api/、hooks/、stores/（用 Zustand）、components/（NotificationList、NotificationCard 两个业务组件）、constants/、index.ts 出口。组件以文件夹为单位。完成后逐条自述 soft-rules.md 架构规则 A1-A7 的通过情况。",
+  "assertions": [
+    "features/notification/ 下包含 types/、api/、hooks/、stores/、components/、constants/",
+    "组件以文件夹为单位（NotificationList/、NotificationCard/）",
+    "每个文件夹有 index.ts 聚合导出",
+    "store 使用 Zustand（create 或 defineStore 语法）",
+    "使用 TypeScript + React（函数组件 + Hooks）"
+  ]
+}

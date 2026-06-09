@@ -1,0 +1,46 @@
+{
+  "expectations": [
+    {
+      "id": "doc-structure",
+      "text": "规范化目录结构",
+      "passed": false,
+      "evidence": "fail"
+    },
+    {
+      "id": "spec-sections",
+      "text": "含背景/用户故事/FR/验收标准",
+      "passed": true,
+      "evidence": "pass"
+    },
+    {
+      "id": "spec-users",
+      "text": "多角色用户故事",
+      "passed": true,
+      "evidence": "pass"
+    },
+    {
+      "id": "spec-ac",
+      "text": "验收标准可验证",
+      "passed": true,
+      "evidence": "pass"
+    },
+    {
+      "id": "plan-decisions",
+      "text": "设计决策四段完整",
+      "passed": true,
+      "evidence": "pass"
+    },
+    {
+      "id": "plan-api",
+      "text": "API契约含错误码",
+      "passed": true,
+      "evidence": "pass"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 1,
+    "total": 6,
+    "pass_rate": 0.8333333333333334
+  }
+}

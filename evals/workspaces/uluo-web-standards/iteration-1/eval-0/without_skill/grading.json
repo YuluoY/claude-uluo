@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "输出包含 [uluo-web-standards] 场景确认信息",
+      "passed": false,
+      "evidence": "keyword match: 0/5"
+    },
+    {
+      "text": "重构代码使用 const/let 替代 var",
+      "passed": true,
+      "evidence": "keyword match: 3/4"
+    },
+    {
+      "text": "重构代码无 console.log",
+      "passed": true,
+      "evidence": "keyword match: 2/3"
+    },
+    {
+      "text": "重构代码使用 Guard Clause 模式（if 提前 return/throw）",
+      "passed": true,
+      "evidence": "keyword match: 3/5"
+    },
+    {
+      "text": "重构代码无深层嵌套（≤2 层缩进）",
+      "passed": false,
+      "evidence": "keyword match: 0/2"
+    },
+    {
+      "text": "输出了 soft-rules.md 自检清单（至少覆盖 G1-G4）",
+      "passed": false,
+      "evidence": "keyword match: 1/5"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 3,
+    "total": 6,
+    "pass_rate": 0.5
+  }
+}

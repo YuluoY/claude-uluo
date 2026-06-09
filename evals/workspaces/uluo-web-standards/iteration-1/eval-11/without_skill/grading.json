@@ -1,0 +1,50 @@
+{
+  "expectations": [
+    {
+      "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 搭建完整模块）",
+      "passed": false,
+      "evidence": "keyword match: 0/6"
+    },
+    {
+      "text": "显式加载了 architecture.md 和 coding-paradigms.md",
+      "passed": false,
+      "evidence": "keyword match: 0/4"
+    },
+    {
+      "text": "features/notification/ 下包含 types/、api/、hooks/、stores/、components/、constants/",
+      "passed": true,
+      "evidence": "keyword match: 7/9"
+    },
+    {
+      "text": "组件以文件夹为单位（NotificationList/、NotificationCard/）",
+      "passed": true,
+      "evidence": "keyword match: 2/3"
+    },
+    {
+      "text": "每个文件夹有 index.ts 聚合导出",
+      "passed": false,
+      "evidence": "keyword match: 0/3"
+    },
+    {
+      "text": "store 使用 Zustand（create 或 defineStore 语法）",
+      "passed": true,
+      "evidence": "keyword match: 3/4"
+    },
+    {
+      "text": "逐条自述了 soft-rules.md §架构规则 A1-A7",
+      "passed": false,
+      "evidence": "keyword match: 0/4"
+    },
+    {
+      "text": "使用 TypeScript + React（函数组件 + Hooks）",
+      "passed": true,
+      "evidence": "keyword match: 2/4"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 4,
+    "total": 8,
+    "pass_rate": 0.5
+  }
+}

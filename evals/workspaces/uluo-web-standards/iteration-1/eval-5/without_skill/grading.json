@@ -1,0 +1,50 @@
+{
+  "expectations": [
+    {
+      "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: React 组件）",
+      "passed": false,
+      "evidence": "keyword match: 2/6"
+    },
+    {
+      "text": "函数组件使用 function 关键字声明（非箭头函数）",
+      "passed": false,
+      "evidence": "keyword match: 1/4"
+    },
+    {
+      "text": "Props 使用 interface 定义（不用 type 或 React.FC）",
+      "passed": true,
+      "evidence": "keyword match: 4/4"
+    },
+    {
+      "text": "useEffect 包含 cleanup 逻辑（AbortController 或 ignore flag）",
+      "passed": true,
+      "evidence": "keyword match: 3/5"
+    },
+    {
+      "text": "列表渲染 key 使用用户 ID（非 index）",
+      "passed": true,
+      "evidence": "keyword match: 2/4"
+    },
+    {
+      "text": "CSS 中使用 var(--xxx) 变量，无硬编码色值",
+      "passed": true,
+      "evidence": "keyword match: 2/5"
+    },
+    {
+      "text": "组件覆盖 loading/empty/error/success 四态",
+      "passed": true,
+      "evidence": "keyword match: 3/5"
+    },
+    {
+      "text": "逐条自述了 soft-rules.md §组件规则（React）R1-R10",
+      "passed": false,
+      "evidence": "keyword match: 1/5"
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 3,
+    "total": 8,
+    "pass_rate": 0.62
+  }
+}

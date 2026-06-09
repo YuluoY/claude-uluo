@@ -1,0 +1,12 @@
+{
+  "eval_id": 10,
+  "eval_name": "small-module",
+  "prompt": "请帮我在现有项目中新增一个小模块——价格格式化工具。要求：一个文件只导出一个函数，放到 utils/ 下，有 JSDoc 注释，纯函数无副作用，不引入 DDD 目录结构。用 TypeScript 写。完成后说明为什么这是\"小模块\"而非\"完整模块\"，以及你加载了哪些规则文件。",
+  "assertions": [
+    "文件放在 utils/ 目录下",
+    "一个文件只导出一个函数（named export）",
+    "函数有 JSDoc 注释（@param 和 @returns）",
+    "函数是纯函数，无副作用",
+    "没有创建 features/ 或 DDD 目录结构"
+  ]
+}

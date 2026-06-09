@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "没有创建 DDD 目录结构或类",
+      "passed": true,
+      "evidence": "文件只包含两个导出函数 calculateSubtotal/calculateVipSubtotal 和一个 OrderItem 接口，没有 class 声明，也没有创建任何 DDD 子目录。"
+    },
+    {
+      "text": "函数名清晰表达了功能意图",
+      "passed": true,
+      "evidence": "函数命名为 calculateSubtotal（计算小计）和 calculateVipSubtotal（计算 VIP 小计），名称自文档化，清晰表达了各自的功能意图。"
+    },
+    {
+      "text": "参数命名消除了歧义",
+      "passed": true,
+      "evidence": "原函数中的 vip: boolean 参数已被消除（拆分为两个独立函数以避免布尔标志的歧义），剩余参数 items: readonly OrderItem[] 命名清晰无歧义。"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 100.0
+  }
+}

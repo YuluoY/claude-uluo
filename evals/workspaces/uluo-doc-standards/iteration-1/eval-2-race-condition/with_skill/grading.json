@@ -1,0 +1,28 @@
+{
+  "expectations": [
+    {
+      "id": "doc-structure",
+      "text": "产出规范化目录结构",
+      "passed": true,
+      "evidence": "检查通过"
+    },
+    {
+      "id": "tasks-fields",
+      "text": "tasks 含产出物路径和参考代码",
+      "passed": true,
+      "evidence": "检查通过"
+    },
+    {
+      "id": "changelog-format",
+      "text": "CHANGELOG 使用标准分类",
+      "passed": true,
+      "evidence": "检查通过"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1
+  }
+}

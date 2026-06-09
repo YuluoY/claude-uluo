@@ -1,0 +1,110 @@
+# =============================================================================
+#  Diagram Studio — 分层技术架构图配色配置
+# =============================================================================
+#  修改此文件即可自定义所有分层架构图的颜色。
+#  支持 YAML 锚点复用，也可以内联写死颜色值。
+# =============================================================================
+
+# ─── 预设主题（可通过 --theme 切换）─────────────────────────────
+themes:
+  # 默认主题：低饱和学术风格
+  default:
+    canvasBg:       "#ffffff"
+    layer_colors:
+      - "#eef5ef"   # L1 客户端层
+      - "#f3f7f2"   # L2 边界接入层
+      - "#eef4f8"   # L3 Web 表示层
+      - "#edf5fb"   # L4 应用业务层
+      - "#f3f7f2"   # L5 数据访问层
+      - "#eef4f8"   # L6 数据与集成层
+      - "#f7f3ea"   # L7 运行支撑层
+    module_bg:      "#ffffff"
+    module_border:  "#5f666d"
+    module_text:    "#1a1a1a"
+    label_bg:       "#d3ddd5"   # 标签色（L1示例，实际按层色自动计算加深）
+    label_text:     "#3e464d"
+    arrow_color:    "#3f464c"
+    dash_color:     "#aeb7b0"
+    highlight_yellow: "#fff9c4"
+    highlight_red:    "#e53935"
+    highlight_blue:   "#1e88e5"
+
+  # 深色主题：深色画布 + 浅色文字，适合暗色文档/PPT/深色模式
+  dark:
+    canvasBg:       "#121218"
+    layer_colors:
+      - "#263238"
+      - "#2e3b3e"
+      - "#2e3b3e"
+      - "#1a2d3d"
+      - "#263238"
+      - "#1a2d3d"
+      - "#2e3b3e"
+      - "#2d1f1a"
+    module_bg:      "#37474f"
+    module_border:  "#78909c"
+    module_text:    "#eceff1"
+    label_bg:       "#455a64"
+    label_text:     "#ffffff"
+    arrow_color:    "#90a4ae"
+    dash_color:     "#546e7a"
+    highlight_yellow: "#4e4a00"
+    highlight_red:    "#b71c1c"
+    highlight_blue:   "#0d47a1"
+
+  # 暖色主题
+  warm:
+    canvasBg:       "#ffffff"
+    layer_colors:
+      - "#fff8e1"
+      - "#fff3e0"
+      - "#fff3e0"
+      - "#fce4ec"
+      - "#fff8e1"
+      - "#fce4ec"
+      - "#fff3e0"
+      - "#f3e5f5"
+    module_bg:      "#ffffff"
+    module_border:  "#8d6e63"
+    module_text:    "#3e2723"
+    label_bg:       "#ffe0b2"
+    label_text:     "#4e342e"
+    arrow_color:    "#6d4c41"
+    dash_color:     "#a1887f"
+    highlight_yellow: "#fff9c4"
+    highlight_red:    "#d32f2f"
+    highlight_blue:   "#1976d2"
+
+  # 商务蓝主题
+  business:
+    canvasBg:       "#ffffff"
+    layer_colors:
+      - "#e3f2fd"
+      - "#e8eaf6"
+      - "#e8eaf6"
+      - "#e3f2fd"
+      - "#e8eaf6"
+      - "#e3f2fd"
+      - "#e8eaf6"
+      - "#ede7f6"
+    module_bg:      "#ffffff"
+    module_border:  "#3949ab"
+    module_text:    "#1a237e"
+    label_bg:       "#c5cae9"
+    label_text:     "#283593"
+    arrow_color:    "#283593"
+    dash_color:     "#7986cb"
+    highlight_yellow: "#fff9c4"
+    highlight_red:    "#c62828"
+    highlight_blue:   "#1565c0"
+
+# ─── 当前激活的主题 ───────────────────────────────────────────
+active_theme: default
+
+# ─── 自定义覆盖（会覆盖 active_theme 中的对应字段）────────────
+#  例：只想改两个层的颜色，其他保持不变
+#  custom:
+#    layer_colors:
+#      0: "#c8e6c9"   # L1 改成深一点的绿
+#      5: "#bbdefb"   # L6 改成深一点的蓝
+#    module_border: "#333333"

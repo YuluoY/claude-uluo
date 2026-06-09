@@ -1,0 +1,39 @@
+{
+  "expectations": [
+    {
+      "text": "<form> 有 data-model 属性",
+      "passed": false,
+      "evidence": "no data-model"
+    },
+    {
+      "text": "<form> 有 data-component 属性",
+      "passed": false,
+      "evidence": "no data-component on form"
+    },
+    {
+      "text": "每个 input 有 data-field 属性",
+      "passed": false,
+      "evidence": "4/4 missing data-field"
+    },
+    {
+      "text": "每个 input 声明 data-type",
+      "passed": false,
+      "evidence": "4/4 missing data-type"
+    },
+    {
+      "text": "提交按钮有 data-event=\"submit\"",
+      "passed": false,
+      "evidence": "no data-event on submit"
+    },
+    {
+      "text": "字段 label 文本标记 data-static=\"true\"",
+      "passed": false,
+      "evidence": "no data-static"
+    },
+    {
+      "text": "无缺少 data-field 的表单控件",
+      "passed": false,
+      "evidence": "4 missing data-field"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "eval_id": 3,
+  "eval_name": "review-bad-blueprint",
+  "prompt": "请review这个HTML设计稿的问题并给出修复方案：包含 data-component=\"card\" 小写、class=\"box1\"/\"left\"、图表无 manual、表单无 data-model/data-field、CSS 用 !important 和深度选择器。",
+  "assertions": [
+    {
+      "id": "flags-component-naming",
+      "text": "识别 data-component=\"card\" 为小写+泛名问题",
+      "check_method": "content_check"
+    },
+    {
+      "id": "flags-chart-issues",
+      "text": "识别图表缺少 manual 标记和子元素 data-prop",
+      "check_method": "content_check"
+    },
+    {
+      "id": "flags-form-issues",
+      "text": "识别表单缺少 data-model 和 data-field",
+      "check_method": "content_check"
+    },
+    {
+      "id": "flags-css-antipatterns",
+      "text": "识别 !important 和深度选择器",
+      "check_method": "content_check"
+    },
+    {
+      "id": "flags-class-names",
+      "text": "识别 box1 和 left 泛名 class",
+      "check_method": "content_check"
+    },
+    {
+      "id": "prioritized-output",
+      "text": "按严重程度（HARD/SHOULD）组织输出",
+      "check_method": "content_check"
+    },
+    {
+      "id": "provides-fixes",
+      "text": "每个问题给出具体修复代码",
+      "check_method": "content_check"
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "metadata": {
+    "skill_name": "html-blueprint",
+    "timestamp": "2026-06-09T07:35:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "generate-dashboard-blueprint",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 150.7,
+        "tokens": 34366
+      },
+      "expectations": [
+        {"text": "页面根节点有 data-page 属性", "passed": true, "evidence": "found data-page attribute"},
+        {"text": "所有 data-component 值为 PascalCase 且非泛名", "passed": true, "evidence": "all 20 components PascalCase"},
+        {"text": "图表元素标记 data-convert=\"manual\"", "passed": true, "evidence": "chart has data-convert=manual"},
+        {"text": "组件元素有 data-convert 属性", "passed": true, "evidence": "has data-convert"},
+        {"text": "输出包含转换置信度 JSON 报告", "passed": true, "evidence": "report found"},
+        {"text": "CSS class 不使用 box1/left/text2 等泛名", "passed": true, "evidence": "no generic class names"},
+        {"text": "CSS 不使用 !important", "passed": true, "evidence": "no !important"}
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "generate-dashboard-blueprint",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.14,
+        "passed": 1,
+        "failed": 6,
+        "total": 7,
+        "time_seconds": 86.3,
+        "tokens": 15012
+      },
+      "expectations": [
+        {"text": "页面根节点有 data-page 属性", "passed": false, "evidence": "no data-page"},
+        {"text": "所有 data-component 值为 PascalCase 且非泛名", "passed": false, "evidence": "no data-component found"},
+        {"text": "图表元素标记 data-convert=\"manual\"", "passed": false, "evidence": "chart missing manual"},
+        {"text": "组件元素有 data-convert 属性", "passed": false, "evidence": "no data-convert"},
+        {"text": "输出包含转换置信度 JSON 报告", "passed": false, "evidence": "no report"},
+        {"text": "CSS class 不使用 box1/left/text2 等泛名", "passed": true, "evidence": "no generic class names"},
+        {"text": "CSS 不使用 !important", "passed": false, "evidence": "contains !important"}
+      ],
+      "notes": ["Without skill: generated 884-line dashboard with Chart.js but zero data-* protocol annotations"]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "generate-form-blueprint",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 140.9,
+        "tokens": 28631
+      },
+      "expectations": [
+        {"text": "<form> 有 data-model 属性", "passed": true, "evidence": "has data-model"},
+        {"text": "<form> 有 data-component 属性", "passed": true, "evidence": "has data-component"},
+        {"text": "每个 input 有 data-field 属性", "passed": true, "evidence": "all 4 inputs have data-field"},
+        {"text": "每个 input 声明 data-type", "passed": true, "evidence": "all inputs have data-type"},
+        {"text": "提交按钮有 data-event=\"submit\"", "passed": true, "evidence": "submit has data-event"},
+        {"text": "字段 label 文本标记 data-static=\"true\"", "passed": true, "evidence": "has data-static"},
+        {"text": "无缺少 data-field 的表单控件", "passed": true, "evidence": "no missing fields"}
+      ],
+      "notes": ["With skill: all 8 hard constraint checks passed, generated conversion-report.json"]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "generate-form-blueprint",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 7,
+        "total": 7,
+        "time_seconds": 58.9,
+        "tokens": 12321
+      },
+      "expectations": [
+        {"text": "<form> 有 data-model 属性", "passed": false, "evidence": "no data-model"},
+        {"text": "<form> 有 data-component 属性", "passed": false, "evidence": "no data-component on form"},
+        {"text": "每个 input 有 data-field 属性", "passed": false, "evidence": "4/4 missing data-field"},
+        {"text": "每个 input 声明 data-type", "passed": false, "evidence": "4/4 missing data-type"},
+        {"text": "提交按钮有 data-event=\"submit\"", "passed": false, "evidence": "no data-event on submit"},
+        {"text": "字段 label 文本标记 data-static=\"true\"", "passed": false, "evidence": "no data-static"},
+        {"text": "无缺少 data-field 的表单控件", "passed": false, "evidence": "4 missing data-field"}
+      ],
+      "notes": ["Without skill: produced functional HTML form with JS validation but no data-* protocol semantics"]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "review-bad-blueprint",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 52.6,
+        "tokens": 17542
+      },
+      "expectations": [
+        {"text": "识别 data-component=\"card\" 为小写+泛名问题", "passed": true, "evidence": "identified naming issue"},
+        {"text": "识别图表缺少 manual 标记和子元素 data-prop", "passed": true, "evidence": "identified chart issues"},
+        {"text": "识别表单缺少 data-model 和 data-field", "passed": true, "evidence": "identified form issues"},
+        {"text": "识别 !important 和深度选择器", "passed": true, "evidence": "identified CSS anti-patterns"},
+        {"text": "识别 box1 和 left 泛名 class", "passed": true, "evidence": "identified class naming"},
+        {"text": "按严重程度（HARD/SHOULD）组织输出", "passed": true, "evidence": "output has priority tiers"},
+        {"text": "每个问题给出具体修复代码", "passed": true, "evidence": "provides fix code"}
+      ],
+      "notes": ["With skill: identified 10 HARD + 3 SHOULD + 2 WARN violations with tiered structure and fix code"]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "review-bad-blueprint",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.71,
+        "passed": 5,
+        "failed": 2,
+        "total": 7,
+        "time_seconds": 57.7,
+        "tokens": 11592
+      },
+      "expectations": [
+        {"text": "识别 data-component=\"card\" 为小写+泛名问题", "passed": true, "evidence": "identified naming issue"},
+        {"text": "识别图表缺少 manual 标记和子元素 data-prop", "passed": false, "evidence": "did not flag chart protocol issues"},
+        {"text": "识别表单缺少 data-model 和 data-field", "passed": false, "evidence": "did not flag form protocol issues"},
+        {"text": "识别 !important 和深度选择器", "passed": true, "evidence": "identified CSS anti-patterns"},
+        {"text": "识别 box1 和 left 泛名 class", "passed": true, "evidence": "identified class naming"},
+        {"text": "按严重程度（HARD/SHOULD）组织输出", "passed": true, "evidence": "output has priority tiers"},
+        {"text": "每个问题给出具体修复代码", "passed": true, "evidence": "provides fix code"}
+      ],
+      "notes": ["Without skill: caught general HTML issues (DOCTYPE, accessibility) but missed protocol-specific violations (chart manual, form data-model)"]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 114.7, "stddev": 44.0, "min": 52.6, "max": 150.7},
+      "tokens": {"mean": 26846, "stddev": 7000, "min": 17542, "max": 34366}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.28, "stddev": 0.31, "min": 0.0, "max": 0.71},
+      "time_seconds": {"mean": 67.6, "stddev": 13.6, "min": 57.7, "max": 86.3},
+      "tokens": {"mean": 12975, "stddev": 1500, "min": 11592, "max": 15012}
+    },
+    "delta": {
+      "pass_rate": "+0.72",
+      "time_seconds": "+47.1",
+      "tokens": "+13871"
+    }
+  },
+  "notes": [
+    "Eval 1 (Dashboard): without-skill generated a functional 884-line HTML with Chart.js but zero data-* annotations — skill completely transforms output format",
+    "Eval 2 (Form): without-skill 0/7 — form generation is protocol-dependent; no data-* means no convertibility",
+    "Eval 3 (Review): without-skill caught general HTML issues but missed protocol-specific violations (chart manual, form data-model)",
+    "Skill adds ~47s and ~14k tokens on average but increases pass rate from 28% to 100%",
+    "The protocol knowledge (data-* semantics, component taxonomy) is the key differentiator — general AI doesn't have it"
+  ]
+}

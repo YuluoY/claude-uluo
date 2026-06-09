@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "order-service-infra",
+  "prompt": "我们正在启动一个新的订单服务（Node.js/TypeScript），这个服务需要调用用户服务、支付服务和库存服务三个外部依赖。请帮我设计：1) 错误处理策略 2) 可观测性方案（日志、埋点、trace）3) 项目基础设施的初始代码框架。",
+  "assertions": [
+    "日志结构包含 timestamp/level/traceId 基础字段",
+    "错误处理包含分层转换逻辑（DomainError → API 错误）",
+    "埋点事件模型包含 event/userId/timestamp/context",
+    "traceId 通过 header X-Trace-Id 传播",
+    "配置值通过环境变量或配置服务注入，无硬编码"
+  ]
+}

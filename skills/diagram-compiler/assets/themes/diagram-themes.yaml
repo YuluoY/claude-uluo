@@ -1,0 +1,55 @@
+# =============================================================================
+#  Diagram Studio — Mermaid 图表配色配置
+# =============================================================================
+#  修改此文件即可自定义 flowchart/ER/state/gantt/pie 等 Mermaid 图表的配色。
+#  这些值直接映射为 Mermaid 的 %%{init: {'theme':'base', 'themeVariables':{...} }}%%
+# =============================================================================
+
+themes:
+  # 默认主题：白色底色 + 灰色边框
+  default:
+    backgroundColor: "#ffffff"
+    primaryColor: "#ffffff"
+    primaryBorderColor: "#888888"
+    primaryTextColor: "#333333"
+    lineColor: "#666666"
+    secondaryColor: "#f5f5f5"
+    tertiaryColor: "#fafafa"
+
+  # 深色主题：深色背景 + 浅色文字，white-on-dark 场景下文字清晰可见
+  dark:
+    backgroundColor: "#1a1a2e"
+    primaryColor: "#37474f"
+    primaryBorderColor: "#78909c"
+    primaryTextColor: "#eceff1"
+    lineColor: "#90a4ae"
+    secondaryColor: "#263238"
+    tertiaryColor: "#1a2d3d"
+
+  # 暖色主题
+  warm:
+    backgroundColor: "#ffffff"
+    primaryColor: "#ffffff"
+    primaryBorderColor: "#8d6e63"
+    primaryTextColor: "#3e2723"
+    lineColor: "#6d4c41"
+    secondaryColor: "#fff8e1"
+    tertiaryColor: "#fce4ec"
+
+  # 商务蓝主题
+  business:
+    backgroundColor: "#ffffff"
+    primaryColor: "#ffffff"
+    primaryBorderColor: "#3949ab"
+    primaryTextColor: "#1a237e"
+    lineColor: "#283593"
+    secondaryColor: "#e3f2fd"
+    tertiaryColor: "#e8eaf6"
+
+# ─── 当前激活的主题 ───────────────────────────────────────────
+active_theme: default
+
+# ─── 自定义覆盖（会合并到 active_theme 之上）───────────────────
+# custom:
+#   primaryBorderColor: "#333333"
+#   primaryTextColor: "#000000"

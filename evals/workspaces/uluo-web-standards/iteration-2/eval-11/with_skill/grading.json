@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "features/notification/ 下包含 types/、api/、hooks/、stores/、components/、constants/",
+      "passed": true,
+      "evidence": "Directory listing confirms all six subdirectories exist under features/notification/: types/ (with index.ts, notification.types.ts), api/ (with index.ts, notification.api.ts), hooks/ (with index.ts, useNotifications.ts, useMarkAsRead.ts), stores/ (with index.ts, useNotificationStore.ts), components/ (with index.ts, NotificationCard/, NotificationList/), constants/ (with index.ts, notification.constants.ts)."
+    },
+    {
+      "text": "组件以文件夹为单位（NotificationList/、NotificationCard/）",
+      "passed": true,
+      "evidence": "features/notification/components/NotificationCard/ contains NotificationCard.tsx, NotificationCard.module.css, and index.ts. features/notification/components/NotificationList/ contains NotificationList.tsx, NotificationList.module.css, and index.ts. Both components are organized as dedicated folders."
+    },
+    {
+      "text": "每个文件夹有 index.ts 聚合导出",
+      "passed": true,
+      "evidence": "All subdirectories have barrel index.ts files: types/index.ts exports from notification.types.ts; api/index.ts exports from notification.api.ts; hooks/index.ts exports useNotifications and useMarkAsRead; stores/index.ts exports useNotificationStore; components/index.ts exports NotificationCard and NotificationList; components/NotificationCard/index.ts exports NotificationCard; components/NotificationList/index.ts exports NotificationList; constants/index.ts exports from notification.constants.ts. The top-level features/notification/index.ts aggregates exports from all subdirectories."
+    },
+    {
+      "text": "store 使用 Zustand（create 或 defineStore 语法）",
+      "passed": true,
+      "evidence": "stores/useNotificationStore.ts imports { create } from 'zustand' at line 1 and defines the store using create<NotificationState>((set, get) => ({...})) at line 20."
+    },
+    {
+      "text": "使用 TypeScript + React（函数组件 + Hooks）",
+      "passed": true,
+      "evidence": "All files use .ts/.tsx extensions with TypeScript type annotations. Components are defined as function components: NotificationCard.tsx uses 'export function NotificationCard({...})' and NotificationList.tsx uses 'export function NotificationList()'. Custom hooks are defined in useNotifications.ts (using useEffect and Zustand's useNotificationStore hook) and useMarkAsRead.ts (using Zustand's useNotificationStore hook)."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  }
+}

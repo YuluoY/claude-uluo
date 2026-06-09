@@ -1,0 +1,97 @@
+title: AI 智能客服系统 - 分层技术架构图
+subtitle: AI Intelligent Customer Service System - Layered Technical Architecture
+layers:
+- id: client
+  label_en: Client Layer
+  label_zh: 客户端层
+  y: 0.82
+  height: 0.14
+  components:
+  - id: web_chat
+    label_zh: Web Chat
+    label_en: 网页在线客服
+    marker: W
+  - id: mobile_app
+    label_zh: Mobile App
+    label_en: 移动端 APP
+    marker: M
+  - id: wechat_work
+    label_zh: 企业微信
+    label_en: WeChat Work
+    marker: Q
+- id: access
+  label_en: Access Layer
+  label_zh: 接入层
+  y: 0.59
+  height: 0.18
+  components:
+  - id: api_gateway
+    label_zh: API Gateway
+    label_en: API 网关 (Kong/APISIX)
+    marker: G
+  - id: websocket
+    label_zh: WebSocket
+    label_en: 长连接推送服务
+    marker: W
+  - id: auth
+    label_zh: 鉴权
+    label_en: JWT/OAuth2 身份认证
+    marker: A
+- id: ai_service
+  label_en: AI Service Layer
+  label_zh: AI 服务层
+  y: 0.3
+  height: 0.24
+  components:
+  - id: nlu
+    label_zh: NLU 意图识别
+    label_en: NLU Intent Recognition
+    marker: N
+  - id: rag
+    label_zh: 知识检索 RAG
+    label_en: RAG Knowledge Retrieval
+    marker: R
+  - id: llm
+    label_zh: 大模型调用
+    label_en: LLM Invocation
+    marker: L
+  - id: dialog_mgr
+    label_zh: 多轮对话管理
+    label_en: Multi-turn Dialog Mgr
+    marker: D
+- id: data
+  label_en: Data Layer
+  label_zh: 数据层
+  y: 0.06
+  height: 0.19
+  components:
+  - id: milvus
+    label_zh: 向量数据库 Milvus
+    label_en: Milvus Vector DB
+    marker: V
+  - id: mysql
+    label_zh: MySQL
+    label_en: Relational Database
+    marker: S
+  - id: redis
+    label_zh: Redis 缓存
+    label_en: Redis Cache
+    marker: C
+  - id: elasticsearch
+    label_zh: Elasticsearch 日志
+    label_en: ES Log & Search
+    marker: E
+connections:
+- from: client
+  to: access
+  label: HTTPS / WSS
+- from: access
+  to: ai_service
+  label: gRPC / REST
+- from: ai_service
+  to: data
+  label: SDK / SQL / API
+- from: ai_service
+  to: access
+  label: 流式响应 (SSE)
+  style: dashed

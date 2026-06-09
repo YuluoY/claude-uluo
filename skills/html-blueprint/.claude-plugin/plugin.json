@@ -1,0 +1,9 @@
+{
+  "name": "html-blueprint",
+  "version": "0.1.0",
+  "description": "HTML-first Component Design Protocol. Generate browser-renderable HTML/CSS design drafts annotated with data-* attributes for component mapping.",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["html", "css", "component", "design", "prototype"],
+  "license": "MIT",
+  "skills": "./"
+}

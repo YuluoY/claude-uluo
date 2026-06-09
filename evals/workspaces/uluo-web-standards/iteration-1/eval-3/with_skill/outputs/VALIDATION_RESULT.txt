@@ -1,0 +1,7 @@
+Files to check: 12 (12 JS/TS/Vue, 0 SCSS/Vue)
+
+
+=== validation checked 12 file(s) ===
+[eslint] passed
+[tsc] passed
+passed with 0 warnings

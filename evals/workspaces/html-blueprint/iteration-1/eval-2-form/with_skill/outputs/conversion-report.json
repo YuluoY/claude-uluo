@@ -1,0 +1,121 @@
+{
+  "page": "RegisterPage",
+  "generatedAt": "2026-06-09",
+  "targetFramework": "Vue 3",
+  "components": [
+    {
+      "component": "RegisterForm",
+      "confidence": 0.95,
+      "convertMode": "auto",
+      "props": [
+        { "name": "name", "type": "string", "required": true },
+        { "name": "email", "type": "email", "required": true },
+        { "name": "password", "type": "password", "required": true },
+        { "name": "confirmPassword", "type": "password", "required": true }
+      ],
+      "events": [
+        { "name": "submitRegister", "trigger": "submit", "description": "表单提交事件，携带完整表单数据" },
+        { "name": "validateName", "trigger": "input", "description": "姓名字段实时校验" },
+        { "name": "validateEmail", "trigger": "input", "description": "邮箱字段实时校验" },
+        { "name": "validatePassword", "trigger": "input", "description": "密码字段实时校验" },
+        { "name": "validateConfirmPassword", "trigger": "input", "description": "确认密码字段实时校验" },
+        { "name": "togglePasswordVisibility", "trigger": "click", "description": "切换密码字段显示/隐藏" },
+        { "name": "toggleConfirmPasswordVisibility", "trigger": "click", "description": "切换确认密码字段显示/隐藏" }
+      ],
+      "slots": [
+        { "name": "nameError", "description": "姓名字段校验错误信息" },
+        { "name": "emailError", "description": "邮箱字段校验错误信息" },
+        { "name": "passwordError", "description": "密码字段校验错误信息" },
+        { "name": "confirmPasswordError", "description": "确认密码字段校验错误信息" }
+      ],
+      "states": ["default", "validating", "submitting", "error"],
+      "issues": [
+        "密码可见性切换按钮带 tabindex=\"-1\"，转为 Vue 后需确认无障碍交互方案",
+        "表单校验逻辑（密码长度、邮箱格式、两次密码一致性）需在 Vue 侧以 computed/validator 实现",
+        "错误信息展示通过 data-slot 标记，转换时对应 Vue slot 插槽",
+        "header/footer 区域标记为 static，转换为静态模板内容，不提取为独立 props",
+        "装饰元素（页面背景光效）标记为 decorative + aria-hidden，转换时保留在模板中作为纯装饰",
+        "RegisterSection 标记为 layout，不单独拆分为组件，保留在页面模板中",
+        "提交按钮标记 data-confirm=\"false\"，无二次确认需求",
+        "表单添加 novalidate 属性，浏览器原生校验关闭，由 JavaScript 校验接管"
+      ],
+      "vueConversionNotes": {
+        "vModel": "v-model=\"registerForm.name\" 等，数据模型使用 reactive() 定义",
+        "emits": "defineEmits<{ submitRegister: [formData: RegisterFormData] }>() 及各个 toggle 事件",
+        "slotsTemplate": "<slot name=\"nameError\"> 默认提供示例错误文案 </slot>",
+        "validation": "建议使用 computed 属性或第三方库（如 VeeValidate）实现表单校验",
+        "passwordToggle": "data-action=\"togglePasswordVisibility\" → 组件内 ref 控制 type 属性在 password/text 间切换"
+      }
+    }
+  ],
+  "layoutElements": [
+    {
+      "element": "RegisterSection",
+      "convertMode": "layout",
+      "description": "页面布局容器，居中定位表单卡片"
+    }
+  ],
+  "staticElements": [
+    {
+      "element": "RegisterForm > Header",
+      "convertMode": "static",
+      "description": "表单标题和副标题，静态文案"
+    },
+    {
+      "element": "RegisterForm > Footer",
+      "convertMode": "static",
+      "description": "注册页底部链接，静态文案"
+    }
+  ],
+  "decorativeElements": [
+    {
+      "element": "register-page__decor-top",
+      "convertMode": "decorative",
+      "ariaHidden": true,
+      "description": "页面右上角装饰光效"
+    },
+    {
+      "element": "register-page__decor-bottom",
+      "convertMode": "decorative",
+      "ariaHidden": true,
+      "description": "页面左下角装饰光效"
+    }
+  ],
+  "validationRules": {
+    "name": {
+      "required": true,
+      "minLength": null,
+      "pattern": null,
+      "message": "请输入姓名"
+    },
+    "email": {
+      "required": true,
+      "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+      "message": "请输入有效的邮箱地址"
+    },
+    "password": {
+      "required": true,
+      "minLength": 6,
+      "message": "密码长度至少6位"
+    },
+    "confirmPassword": {
+      "required": true,
+      "matchField": "password",
+      "message": "两次输入的密码不一致"
+    }
+  },
+  "hardConstraintCheck": {
+    "status": "passed",
+    "totalFindings": 0,
+    "checks": {
+      "data-component": 0,
+      "data-convert": 0,
+      "charts-manual": 0,
+      "form-model": 0,
+      "decorative-aria": 0,
+      "class-names": 0,
+      "forbidden-selectors": 0,
+      "responsive-viewport": 0
+    }
+  }
+}

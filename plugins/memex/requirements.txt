@@ -1,0 +1,23 @@
+# NLP (零 LLM 成本)
+snownlp==0.12.3
+jieba==0.42.1
+pysentimiento[transformers]==0.7.3
+
+# 评分
+trueskill==0.4.5
+
+# 向量
+sqlite-vec>=0.1.0
+sentence-transformers>=3.0.0
+
+# 图
+networkx>=3.0
+pyvis>=0.3.0
+
+# 性能
+orjson==3.10.0
+diskcache>=5.6
+tiktoken>=0.7.0
+
+# 同步
+jsonpatch>=1.33

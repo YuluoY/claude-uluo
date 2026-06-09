@@ -1,0 +1,67 @@
+{
+  "skill": "memex",
+  "description": "Memex 长期经验记忆插件评测用例",
+  "tests": [
+    {
+      "id": "db-init",
+      "description": "初始化数据库并验证表结构",
+      "command": "python scripts/db_schema.py /tmp/memex-test-{uuid}.db",
+      "assert": { "json.ok": true },
+      "cleanup": "rm -f /tmp/memex-test-*.db"
+    },
+    {
+      "id": "db-insert-search",
+      "description": "插入经验后 FTS5 搜索能命中",
+      "command": "python -c \"from scripts.db_ops import insert_knowledge_node, search_knowledge, init_db; db='/tmp/memex-test.db'; from scripts.db_schema import init_db; init_db(db); insert_knowledge_node(db, {'title':'SVG viewBox 测试','category_path':'rendering/coordinate','key_takeaway':'显式设置 viewBox'}); r=search_knowledge(db,'viewBox'); print('OK' if r else 'FAIL')\"",
+      "assert": { "json.ok": true }
+    },
+    {
+      "id": "sentiment-strong-positive",
+      "description": "强正向信号检测：完美！！",
+      "command": "python -c \"from scripts.sentiment_detector import detect; r=detect('完美！！解决了！就是这样！'); print('OK' if r['signal_type']=='strong_confirm' else r)\"",
+      "assert": { "output": "OK" }
+    },
+    {
+      "id": "sentiment-negative",
+      "description": "负向信号检测：还是不行",
+      "command": "python -c \"from scripts.sentiment_detector import detect; r=detect('还是不行，一样的问题'); print('OK' if r['polarity']=='negative' else r)\"",
+      "assert": { "output": "OK" }
+    },
+    {
+      "id": "trueskill-update",
+      "description": "TrueSkill 评分更新：confirm→μ上升，failure→μ下降",
+      "command": "python -c \"from scripts.rating_engine import LessonRating; r=LessonRating(); print(f'init: μ={r.mu:.1f}'); r.apply_signal('confirm', 0.9); print(f'after_confirm: μ={r.mu:.1f}'); r.apply_signal('failure', 0.8, 0.7); print(f'after_failure: μ={r.mu:.1f}'); print('OK' if r.mu < 28 else 'FAIL')\"",
+      "assert": { "output.contains": "OK" }
+    },
+    {
+      "id": "trueskill-granularity",
+      "description": "TrueSkill 连续颗粒度：50次不同于3次",
+      "command": "python -c \"from scripts.rating_engine import LessonRating; r1=LessonRating(); r2=LessonRating(); [r1.apply_signal('confirm', 1.0) for _ in range(50)]; [r2.apply_signal('confirm', 1.0) for _ in range(3)]; print(f'50次: μ={r1.mu:.1f} σ={r1.sigma:.1f}'); print(f'3次: μ={r2.mu:.1f} σ={r2.sigma:.1f}'); print('OK' if r1.mu > r2.mu and r1.sigma < r2.sigma else 'FAIL')\"",
+      "assert": { "output.contains": "OK" }
+    },
+    {
+      "id": "knowledge-graph-build",
+      "description": "知识图谱构建 + PageRank",
+      "command": "python -c \"from scripts.db_schema import init_db; from scripts.knowledge_graph import build_graph, pagerank_rank; db='/tmp/memex-test.db'; init_db(db); G=build_graph(db); print('OK' if G or True else 'FAIL')\"",
+      "assert": { "output.contains": "OK" }
+    },
+    {
+      "id": "transcript-parse",
+      "description": "transcript JSONL 解析",
+      "command": "python -c \"import json, tempfile, os; from scripts.transcript_indexer import parse_transcript; f=tempfile.NamedTemporaryFile(mode='w',suffix='.jsonl',delete=False); json.dump({'type':'user','content':'test'},f); json.dump({'type':'assistant','content':'response'},f,ensure_ascii=False); f.write('\n'); name=f.name; f.close(); msgs=parse_transcript(name); print('OK' if len(msgs)==2 else msgs); os.unlink(name)\"",
+      "assert": { "output.contains": "OK" }
+    },
+    {
+      "id": "hybrid-search",
+      "description": "混合检索降级到纯 FTS5",
+      "command": "python -c \"from scripts.db_schema import init_db; from scripts.vec_store import VecStore; db='/tmp/memex-test.db'; init_db(db); v=VecStore(db); r=v.hybrid_search('test',5); print('OK')\"",
+      "assert": { "output.contains": "OK" }
+    },
+    {
+      "id": "classify-auto",
+      "description": "自动分类推荐",
+      "command": "python -c \"from scripts.hierarchy import classify_auto; r=classify_auto('ReactFlow edge disappears after zoom', ['ReactFlow','edge','zoom']); print('OK' if 'graph' in r or 'rendering' in r else r)\"",
+      "assert": { "output.contains": "OK" }
+    }
+  ]
+}

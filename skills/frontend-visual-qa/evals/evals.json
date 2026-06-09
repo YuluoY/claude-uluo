@@ -1,0 +1,46 @@
+{
+  "skill_name": "frontend-visual-qa",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "在一个已有 Vue 3 + Element Plus 项目里新增客户管理列表页。项目已经有 Sass 变量、BEM 命名和 Element Plus Icons。请说明你会怎么实现 UI 并输出关键代码。要求覆盖筛选区、表格、批量操作、新建按钮、空状态和加载状态。",
+      "expected_output": "模型应先识别已有项目 UI 体系，沿用 Element Plus 组件、Element Plus Icons 和 Sass + BEM，覆盖 loading/empty/error 状态，禁止 emoji 图标，做响应式布局，并给出可维护的 tokens 驱动的样式方案。",
+      "files": [],
+      "expectations": [
+        "uses-component-library: Uses Element Plus components (el-table, el-button, el-input, el-dialog etc.) rather than hand-writing basic controls",
+        "no-emoji-icons: Uses Element Plus Icons or SVG icons, not emoji characters as UI icons",
+        "covers-states: Mentions or implements loading, empty, and error states for the data table",
+        "responsive-aware: Addresses responsive/mobile behavior for the list page",
+        "uses-design-language: Demonstrates visual hierarchy thinking, not just code-listing"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "请 review 这个前端页面的设计问题：它大量使用 emoji 作为状态图标（✅❌🔥），卡片都是固定 320px 宽度，按钮和输入框全部手写 CSS 绕过组件库，#ff6600 硬编码到处散落，没有任何移动端适配、没有 loading/error/empty 状态处理、也没有暗色模式支持。请指出问题并按优先级给出修复方向。",
+      "expected_output": "模型应以 UI/UX review 姿态输出，指出硬失败（emoji 图标/tokens 缺失/绕过组件库/缺状态/无响应式），按一票否决→响应式→状态→tokens→视觉细节排序，并给出每项的具体修复方向。",
+      "files": [],
+      "expectations": [
+        "flags-emoji: Identifies emoji icons as a critical problem",
+        "flags-hardcoded-colors: Identifies hardcoded #ff6600 / missing tokens as a problem",
+        "flags-missing-states: Identifies missing loading/error/empty states as a problem",
+        "flags-no-responsive: Identifies lack of mobile adaptation as a problem",
+        "flags-no-component-library: Identifies hand-writing basic controls as problematic",
+        "prioritized-structure: Organizes findings by severity/priority, not random list",
+        "actionable-fixes: Each problem has a concrete fix direction, not just 'this is bad'"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "帮我做一个后台首页，现代一点，好看一点。",
+      "expected_output": "模型不应直接堆通用 dashboard。应先判断需求模糊、最多问一个关键问题（组件库/tokens），然后基于工作型产品假设给出克制、信息密度合理的设计方案，体现视觉层级和渐进呈现，而非营销 hero 或模板化大屏。",
+      "files": [],
+      "expectations": [
+        "minimal-questions: Asks at most 1-2 clarifying questions, does not unleash a long questionnaire",
+        "no-marketing-hero: Does not generate marketing/landing-page hero section",
+        "design-thinking: Shows evidence of visual hierarchy and information architecture consideration",
+        "mentions-states: Mentions loading/empty/error state considerations",
+        "not-generic-template: Output is not just a generic 3-card + table dashboard template"
+      ]
+    }
+  ]
+}

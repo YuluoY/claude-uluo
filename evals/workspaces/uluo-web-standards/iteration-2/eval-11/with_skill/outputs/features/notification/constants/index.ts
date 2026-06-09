@@ -1,0 +1,1 @@
+export { NOTIFICATION_PAGE_SIZE, NOTIFICATION_TYPES, NOTIFICATION_TYPE_LABELS } from './notification.constants'

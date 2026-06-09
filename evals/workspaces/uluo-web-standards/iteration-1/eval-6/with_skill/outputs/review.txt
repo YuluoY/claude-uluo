@@ -1,0 +1,228 @@
+================================================================================
+[uluo-web-standards] Code Review Report
+================================================================================
+
+场景: 代码 Review | 语言: TypeScript | 目标文件: domain/order/order.entity.ts
+
+已加载规范文件:
+  - rules/soft-rules.md (§通用 + §Review)
+  - languages/typescript.md
+  - references/naming.md
+  - references/coding-paradigms.md
+  - references/git-conventions.md
+
+================================================================================
+问题清单
+================================================================================
+
+问题 #1: DDD 层依赖违反 — Domain import 了 Infrastructure
+---------------------------------------------------------------------------
+严重程度: MUST (阻断)
+
+文件 domain/order/order.entity.ts 属于领域层（domain），但它 import 了
+../infrastructure/order.repository.impl。这违反了 DDD 分层架构的核心规则：
+
+  Domain MUST NOT import from infrastructure layer.
+
+根据 check-layer-boundary.js 自定义检查的正则模式:
+  if (normalized.includes('/domain/') && importsLayer(content, 'infrastructure'))
+    → addError: 'Domain MUST NOT import from infrastructure layer'
+
+修复方向:
+  在 domain 层定义一个 IOrderRepository 接口（抽象），entity 只依赖该接口。
+  具体实现 OrderRepositoryImpl 保留在 infrastructure/，由入口文件（如
+  setup.ts 或 main.ts）在依赖组装阶段注入，entity 通过构造函数参数接收
+  已注入的仓储实例。
+
+  示例:
+  // domain/order/interfaces/order.repository.interface.ts
+  export interface IOrderRepository {
+    findById(id: string): Promise<Order | undefined>
+    save(order: Order): Promise<void>
+  }
+
+  // domain/order/order.entity.ts
+  import type { IOrderRepository } from './interfaces/order.repository.interface'
+  export class Order {
+    constructor(private readonly repo: IOrderRepository) {}
+    // 不再 new OrderRepositoryImpl()
+  }
+
+================================================================================
+
+问题 #2: 实体方法内直接 new 数据库仓储实例
+---------------------------------------------------------------------------
+严重程度: MUST (阻断)
+
+在 Entity 的方法体中直接构造具体仓储实例 (new OrderRepositoryImpl())，
+违反了三项依赖管理规则：
+
+  - G3.1 显式注入: 依赖应通过构造函数参数或函数参数显式传入，而非在方法
+    内部隐式创建。
+  - G3.2 依赖接口: 业务代码应依赖抽象接口，不应直接依赖具体实现。直接
+    new 导致 Entity 与 Infrastructure 强耦合。
+  - G3.3 入口组装: 依赖图应在程序入口处组装，业务代码只消费已注入的依赖。
+
+另外违反了 Tell, Don't Ask 与 Command-Query Separation——Entity 的职责是
+封装领域规则，不应自己获取数据库连接。
+
+修复方向:
+  将仓储实例通过构造函数注入，在 Entity 方法中只调用 repo.xxx()，不创建。
+
+================================================================================
+
+问题 #3: 空 catch (e) {} 块 — 隐蔽的异常吞没
+---------------------------------------------------------------------------
+严重程度: MUST (阻断)
+
+存在 catch (e) {} 块，异常被完全吞没，不做任何日志记录、转换或重抛。
+
+违反的 soft-rules:
+  - G2.1 禁止空吞异常: 每个 catch 块必须至少做日志记录或转换重抛。
+  - G2.2 分层转换: 异常应在 domain → application → interface 逐层转换，
+    不应让空 catch 阻断整个异常链。
+
+违反的编码范式:
+  - Fail Fast: 不应消音异常让坏数据继续向下游流动。
+  - await-to-js: 异步错误处理应使用 [error, data] 元组解包模式，而非
+    try-catch 嵌套。
+
+修复方向:
+  至少记录日志并重抛转换后的领域异常：
+  方案 A (如果适用 await-to-js 模式):
+    const [err, result] = await to(this.repo.findById(id))
+    if (err) throw new OrderRetrievalError('Failed to retrieve order', err)
+
+  方案 B (保留 try-catch 场景):
+    try { ... }
+    catch (e) {
+      log.error('Order retrieval failed', { orderId: id, error: e })
+      throw new OrderRetrievalError('Failed to retrieve order', { cause: e })
+    }
+
+================================================================================
+
+问题 #4: any 类型标注
+---------------------------------------------------------------------------
+严重程度: MUST (阻断)
+
+使用了 any 类型标注，违反 TypeScript 代码规范的零容忍原则。
+
+typescript.md 明确规定:
+  - any — 零容忍。eslint @typescript-eslint/no-explicit-any 已阻断。
+  - 应用泛型、unknown 或具体类型替代 any。
+
+修复方向:
+  根据实际使用场景选择替代方案:
+  - 函数参数 / 返回值: 使用具体 interface 或泛型约束 T
+  - 接收不确定结构: 先用 unknown + type guard 收窄
+  - 第三方库返回值: 查阅库的类型定义，使用正确类型
+
+  示例:
+  // ❌
+  function parse(data: any): any {}
+
+  // ✅ 泛型约束
+  function parse<T>(data: string): T {
+    return JSON.parse(data) as T
+  }
+
+  // ✅ unknown + type guard
+  function handle(input: unknown) {
+    if (typeof input === 'object' && input !== null && 'id' in input) { ... }
+  }
+
+================================================================================
+validate-rules.js 各步骤检查能力分析
+================================================================================
+
+脚本管线: Step 1 stylelint --fix → Step 2 stylelint → Step 3 eslint →
+          Step 4 tsc --noEmit → Step 5 自定义检查
+
+问题 #1: Domain import Infrastructure (DDD层依赖违反)
+  | Step 1 (stylelint --fix) | 无法捕获 — 只管 SCSS 格式修复，不涉及 TS import |
+  | Step 2 (stylelint)       | 无法捕获 — 只管 SCSS 审查规则，不涉及 TS       |
+  | Step 3 (eslint)          | 无法捕获 — eslint 不内置 DDD 分层语义知识，     |
+  |                          | import/no-restricted-paths 可配置但默认无此规则 |
+  | Step 4 (tsc --noEmit)    | 无法捕获 — tsc 只做类型检查，不关心模块层次依赖 |
+  | Step 5 (自定义检查)       | **可以捕获** — checkLayerBoundary 正则匹配       |
+  |                          | domain/ 路径 + import from 'infrastructure'      |
+  |                          | 正则会命中并报错:                                |
+  |                          | "Domain MUST NOT import from infrastructure layer"|
+
+问题 #2: 实体方法内直接 new 仓储实例
+  | Step 1 (stylelint --fix) | 无法捕获 — 不涉及样式                         |
+  | Step 2 (stylelint)       | 无法捕获 — 不涉及样式                          |
+  | Step 3 (eslint)          | 无法捕获 — 没有 "禁止 new 具体类" 的语义规则   |
+  | Step 4 (tsc --noEmit)    | 无法捕获 — new 具体类型在 TS 层面上完全合法    |
+  | Step 5 (自定义检查)       | 无法捕获 — checkLayerBoundary 只检查 import    |
+  |                          | 路径（from '.../infrastructure/...'），不检查   |
+  |                          | 函数体内的 new 表达式。这个问题的发现依赖:      |
+  |                          | soft-rules.md G3 自检 + coding-paradigms.md DI  |
+  |                          | 这项是**模型的语义审查职责**，工具链无法覆盖    |
+
+问题 #3: 空 catch (e) {}
+  | Step 1 (stylelint --fix) | 无法捕获 — 不涉及样式                         |
+  | Step 2 (stylelint)       | 无法捕获 — 不涉及样式                          |
+  | Step 3 (eslint)          | **可以捕获** — eslint 配置中:                  |
+  |                          | 'no-empty': ['error', { allowEmptyCatch: false }]|
+  |                          | 空 catch 块直接报 error，阻断通过              |
+  | Step 4 (tsc --noEmit)    | 无法捕获 — 空 catch 在 TS 中语法合法           |
+  | Step 5 (自定义检查)       | 无法捕获 — checkLayerBoundary 不检查 catch 块  |
+
+问题 #4: any 类型标注
+  | Step 1 (stylelint --fix) | 无法捕获 — 不涉及样式                         |
+  | Step 2 (stylelint)       | 无法捕获 — 不涉及样式                          |
+  | Step 3 (eslint)          | **可以捕获** — @typescript-eslint/no-explicit-any|
+  |                          | 配置为 'error'，任何 any 标注都会报错阻断       |
+  | Step 4 (tsc --noEmit)    | 部分相关 — tsc strict 模式会要求显式类型，但   |
+  |                          | any 本身是合法 TS 类型，tsc 不报错。主要靠 eslint|
+  | Step 5 (自定义检查)       | 无法捕获 — checkLayerBoundary 不检查类型标注   |
+
+================================================================================
+修复优先级与阻断层级汇总
+================================================================================
+
+| 优先级 | 问题                        | 工具阻断来源                      |
+|--------|-----------------------------|----------------------------------|
+| 1 (最高)| 任意空白类型 → 具体类型      | eslint Step 3 (no-explicit-any)  |
+| 2      | 空 catch → 日志+重抛         | eslint Step 3 (no-empty)         |
+| 3      | import infrastructure → 移除 | 自定义 Step 5 (checkLayerBoundary)|
+| 4      | new Repository → 构造注入    | 模型自检 (soft-rules G3)         |
+
+所有四个问题均为 MUST 级别，须全部修复后重新验证通过。
+
+================================================================================
+
+## Soft Rules Self-Check
+
+### 场景: 代码 Review | 语言: TypeScript
+
+#### § 通用规则
+- [ ] G1.1 纯函数 vs 业务函数 — 实体方法为业务函数，身份明确
+- [ ] G1.2 禁止布尔参数 — 需实际检查参数列表
+- [ ] G1.3 认知复杂度 — 需实际检查函数体
+- [ ] G1.4 单数 vs 批量 — 需实际检查
+- [x] G2.1 禁止空吞异常 — **违反**: 存在空 catch(e){} 块，异常被完全吞没
+- [x] G2.2 分层转换 — **违反**: 空 catch 阻断了异常分层转换的链条
+- [ ] G2.3 错误处理模式 — 建议使用 await-to-js [error, data] 元组替代 try-catch 嵌套
+- [x] G3.1 显式注入 — **违反**: 实体方法内隐式 new 仓储实例，未通过参数注入
+- [x] G3.2 依赖接口 — **违反**: 直接 new 具体实现类 OrderRepositoryImpl，未依赖抽象接口
+- [x] G3.3 入口组装 — **违反**: 依赖图未在入口组装，业务代码自行创建依赖
+- [ ] G4.1 归属判断 — 需实际检查值归属
+- [ ] G4.2 修改半径 — 需实际检查
+- [ ] G4.3 跨文件复用值 — 需实际检查
+- [ ] G5.1-G5.4 命名 — 需实际检查命名，注意 any 不是命名问题
+- [ ] G6.1-G6.3 文件纯度 — entity 文件同时承担实体定义和仓储创建，身份混杂
+- [ ] G7.1-G7.7 设计质量 — 直接 new 违反 CQS 和 Tell Don't Ask
+- [ ] G8.1-G8.2 代码注释 — 需实际检查
+
+#### § Review 规则
+- [x] RV1 规则违反 — 已逐条列出: G2.1, G2.2, G3.1, G3.2, G3.3, typescript.md §any禁令
+- [x] RV2 场景匹配 — 本次为 Review 场景，深度匹配正确（§通用 + §Review + 深度参考）
+- [ ] RV3 重复识别 — 需检查文件内是否有 >=3 次重复逻辑
+- [x] RV4 过度工程 — 当前问题是工程不足（缺少 DI、缺少异常处理），非过度工程
+- [ ] RV5 项目风格 — 需对照项目既有约定
+
+### 工具验证: stylelint N/A | eslint FAIL (any + empty catch) | tsc N/A | custom checks FAIL (layer boundary)
+### 结果: 存在 4 项 MUST 级别违规，需全部修复

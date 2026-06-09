@@ -1,0 +1,1338 @@
+{
+  "metadata": {
+    "skill_name": "uluo-web-standards",
+    "skill_path": "/Users/huyongle/Desktop/workspace/skills/uluo-web-standards",
+    "timestamp": "2026-06-08T00:00:00Z",
+    "evals_run": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "eval_name": "refactor-function",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 3,
+        "failed": 3,
+        "total": 6,
+        "time_seconds": 724.9,
+        "tokens": 88078,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息",
+          "passed": false,
+          "evidence": "keyword match: 1/5"
+        },
+        {
+          "text": "重构代码使用 const/let 替代 var",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        },
+        {
+          "text": "重构代码无 console.log",
+          "passed": false,
+          "evidence": "keyword match: 0/3"
+        },
+        {
+          "text": "重构代码使用 Guard Clause 模式（if 提前 return/throw）",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "重构代码无深层嵌套（≤2 层缩进）",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        },
+        {
+          "text": "输出了 soft-rules.md 自检清单（至少覆盖 G1-G4）",
+          "passed": true,
+          "evidence": "keyword match: 2/5"
+        }
+      ]
+    },
+    {
+      "eval_id": 0,
+      "eval_name": "refactor-function",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 3,
+        "failed": 3,
+        "total": 6,
+        "time_seconds": 44.9,
+        "tokens": 9947,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息",
+          "passed": false,
+          "evidence": "keyword match: 0/5"
+        },
+        {
+          "text": "重构代码使用 const/let 替代 var",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "重构代码无 console.log",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "重构代码使用 Guard Clause 模式（if 提前 return/throw）",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "重构代码无深层嵌套（≤2 层缩进）",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        },
+        {
+          "text": "输出了 soft-rules.md 自检清单（至少覆盖 G1-G4）",
+          "passed": false,
+          "evidence": "keyword match: 1/5"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "library-booking-system",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.57,
+        "passed": 4,
+        "failed": 3,
+        "total": 7,
+        "time_seconds": 457.1,
+        "tokens": 90309,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 项目启动）",
+          "passed": false,
+          "evidence": "keyword match: 2/6"
+        },
+        {
+          "text": "显式加载了 architecture.md 和 infrastructure-setup.md",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        },
+        {
+          "text": "目录结构包含 features/book/ 或 features/reservation/ 垂直切片",
+          "passed": true,
+          "evidence": "keyword match: 5/6"
+        },
+        {
+          "text": "顶层包含 components/、utils/、types/、monitoring/ 等水平层",
+          "passed": true,
+          "evidence": "keyword match: 4/6"
+        },
+        {
+          "text": "每个文件夹有 index.ts 聚合导出",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "值对象使用 readonly 或不可变模式",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "输出了 soft-rules.md 自检清单（覆盖 §架构规则 A1-A7）",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "library-booking-system",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.57,
+        "passed": 4,
+        "failed": 3,
+        "total": 7,
+        "time_seconds": 339.3,
+        "tokens": 36361,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 项目启动）",
+          "passed": false,
+          "evidence": "keyword match: 2/6"
+        },
+        {
+          "text": "显式加载了 architecture.md 和 infrastructure-setup.md",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "目录结构包含 features/book/ 或 features/reservation/ 垂直切片",
+          "passed": true,
+          "evidence": "keyword match: 4/6"
+        },
+        {
+          "text": "顶层包含 components/、utils/、types/、monitoring/ 等水平层",
+          "passed": true,
+          "evidence": "keyword match: 4/6"
+        },
+        {
+          "text": "每个文件夹有 index.ts 聚合导出",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "值对象使用 readonly 或不可变模式",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "输出了 soft-rules.md 自检清单（覆盖 §架构规则 A1-A7）",
+          "passed": true,
+          "evidence": "keyword match: 2/5"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "order-service-infra",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.71,
+        "passed": 5,
+        "failed": 2,
+        "total": 7,
+        "time_seconds": 365.5,
+        "tokens": 72651,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息",
+          "passed": false,
+          "evidence": "keyword match: 1/5"
+        },
+        {
+          "text": "显式加载了 observability-design.md 和 infrastructure-setup.md",
+          "passed": true,
+          "evidence": "keyword match: 2/5"
+        },
+        {
+          "text": "日志结构包含 timestamp/level/traceId 基础字段",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "错误处理包含分层转换逻辑（DomainError → API 错误）",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "埋点事件模型包含 event/userId/timestamp/context",
+          "passed": true,
+          "evidence": "keyword match: 4/5"
+        },
+        {
+          "text": "traceId 通过 header X-Trace-Id 传播",
+          "passed": true,
+          "evidence": "keyword match: 3/3"
+        },
+        {
+          "text": "配置值通过环境变量或配置服务注入，无硬编码",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "order-service-infra",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.57,
+        "passed": 4,
+        "failed": 3,
+        "total": 7,
+        "time_seconds": 426.2,
+        "tokens": 37070,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息",
+          "passed": false,
+          "evidence": "keyword match: 0/5"
+        },
+        {
+          "text": "显式加载了 observability-design.md 和 infrastructure-setup.md",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "日志结构包含 timestamp/level/traceId 基础字段",
+          "passed": true,
+          "evidence": "keyword match: 2/5"
+        },
+        {
+          "text": "错误处理包含分层转换逻辑（DomainError → API 错误）",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "埋点事件模型包含 event/userId/timestamp/context",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "traceId 通过 header X-Trace-Id 传播",
+          "passed": true,
+          "evidence": "keyword match: 3/3"
+        },
+        {
+          "text": "配置值通过环境变量或配置服务注入，无硬编码",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "js-discount-module",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.57,
+        "passed": 4,
+        "failed": 3,
+        "total": 7,
+        "time_seconds": 520.4,
+        "tokens": 82198,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "Money 值对象使用 Object.freeze 或展开运算符实现不可变",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "运费策略使用工厂模式聚合（非 if-else 分支）",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        },
+        {
+          "text": "依赖通过构造函数或函数参数显式注入",
+          "passed": false,
+          "evidence": "keyword match: 0/1"
+        },
+        {
+          "text": "异步操作使用 to() 元组解包 [error, data]",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "嵌套深度不超过 3 层",
+          "passed": false,
+          "evidence": "keyword match: 0/1"
+        },
+        {
+          "text": "运行 validate-rules.js 的说明正确（format→eslint→自定义检查）",
+          "passed": true,
+          "evidence": "keyword match: 3/6"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "js-discount-module",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.29,
+        "passed": 2,
+        "failed": 5,
+        "total": 7,
+        "time_seconds": 188.4,
+        "tokens": 18646,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息",
+          "passed": false,
+          "evidence": "keyword match: 0/5"
+        },
+        {
+          "text": "Money 值对象使用 Object.freeze 或展开运算符实现不可变",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "运费策略使用工厂模式聚合（非 if-else 分支）",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        },
+        {
+          "text": "依赖通过构造函数或函数参数显式注入",
+          "passed": false,
+          "evidence": "keyword match: 0/1"
+        },
+        {
+          "text": "异步操作使用 to() 元组解包 [error, data]",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        },
+        {
+          "text": "嵌套深度不超过 3 层",
+          "passed": false,
+          "evidence": "keyword match: 0/1"
+        },
+        {
+          "text": "运行 validate-rules.js 的说明正确（format→eslint→自定义检查）",
+          "passed": false,
+          "evidence": "keyword match: 2/6"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "vue-product-list",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 298.7,
+        "tokens": 59342,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: Vue 组件）",
+          "passed": false,
+          "evidence": "keyword match: 1/6"
+        },
+        {
+          "text": "组件放在 features/product/components/ 目录下",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "使用 <script setup lang=\"ts\">",
+          "passed": true,
+          "evidence": "keyword match: 3/3"
+        },
+        {
+          "text": "defineProps 和 defineEmits 显式声明了 TypeScript 类型",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "v-for 使用稳定业务 key（非 index）",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "CSS 中使用 var(--xxx) 引用 CSS 变量，无硬编码色值",
+          "passed": true,
+          "evidence": "keyword match: 4/6"
+        },
+        {
+          "text": "组件覆盖 loading/empty/error/success 四态",
+          "passed": true,
+          "evidence": "keyword match: 4/5"
+        },
+        {
+          "text": "说明应运行 validate-rules.js 验证",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        }
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "vue-product-list",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.62,
+        "passed": 5,
+        "failed": 3,
+        "total": 8,
+        "time_seconds": 67.7,
+        "tokens": 12238,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: Vue 组件）",
+          "passed": false,
+          "evidence": "keyword match: 2/6"
+        },
+        {
+          "text": "组件放在 features/product/components/ 目录下",
+          "passed": false,
+          "evidence": "keyword match: 1/5"
+        },
+        {
+          "text": "使用 <script setup lang=\"ts\">",
+          "passed": true,
+          "evidence": "keyword match: 3/3"
+        },
+        {
+          "text": "defineProps 和 defineEmits 显式声明了 TypeScript 类型",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        },
+        {
+          "text": "v-for 使用稳定业务 key（非 index）",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        },
+        {
+          "text": "CSS 中使用 var(--xxx) 引用 CSS 变量，无硬编码色值",
+          "passed": true,
+          "evidence": "keyword match: 3/6"
+        },
+        {
+          "text": "组件覆盖 loading/empty/error/success 四态",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "说明应运行 validate-rules.js 验证",
+          "passed": false,
+          "evidence": "keyword match: 0/3"
+        }
+      ]
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "react-user-list",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 347.4,
+        "tokens": 56696,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: React 组件）",
+          "passed": false,
+          "evidence": "keyword match: 1/6"
+        },
+        {
+          "text": "函数组件使用 function 关键字声明（非箭头函数）",
+          "passed": false,
+          "evidence": "keyword match: 1/4"
+        },
+        {
+          "text": "Props 使用 interface 定义（不用 type 或 React.FC）",
+          "passed": true,
+          "evidence": "keyword match: 4/4"
+        },
+        {
+          "text": "useEffect 包含 cleanup 逻辑（AbortController 或 ignore flag）",
+          "passed": true,
+          "evidence": "keyword match: 5/5"
+        },
+        {
+          "text": "列表渲染 key 使用用户 ID（非 index）",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        },
+        {
+          "text": "CSS 中使用 var(--xxx) 变量，无硬编码色值",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "组件覆盖 loading/empty/error/success 四态",
+          "passed": true,
+          "evidence": "keyword match: 4/5"
+        },
+        {
+          "text": "逐条自述了 soft-rules.md §组件规则（React）R1-R10",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        }
+      ]
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "react-user-list",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.62,
+        "passed": 5,
+        "failed": 3,
+        "total": 8,
+        "time_seconds": 58.8,
+        "tokens": 11813,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: React 组件）",
+          "passed": false,
+          "evidence": "keyword match: 2/6"
+        },
+        {
+          "text": "函数组件使用 function 关键字声明（非箭头函数）",
+          "passed": false,
+          "evidence": "keyword match: 1/4"
+        },
+        {
+          "text": "Props 使用 interface 定义（不用 type 或 React.FC）",
+          "passed": true,
+          "evidence": "keyword match: 4/4"
+        },
+        {
+          "text": "useEffect 包含 cleanup 逻辑（AbortController 或 ignore flag）",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "列表渲染 key 使用用户 ID（非 index）",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        },
+        {
+          "text": "CSS 中使用 var(--xxx) 变量，无硬编码色值",
+          "passed": true,
+          "evidence": "keyword match: 2/5"
+        },
+        {
+          "text": "组件覆盖 loading/empty/error/success 四态",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "逐条自述了 soft-rules.md §组件规则（React）R1-R10",
+          "passed": false,
+          "evidence": "keyword match: 1/5"
+        }
+      ]
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "review-domain-entity",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.88,
+        "passed": 7,
+        "failed": 1,
+        "total": 8,
+        "time_seconds": 96.8,
+        "tokens": 38040,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: Review）",
+          "passed": true,
+          "evidence": "keyword match: 4/6"
+        },
+        {
+          "text": "显式加载了 soft-rules.md §Review 规则",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "指出 Domain import Infrastructure 是分层违规",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "指出空 catch (e) {} 违规",
+          "passed": true,
+          "evidence": "keyword match: 1/2"
+        },
+        {
+          "text": "指出 any 类型违规",
+          "passed": true,
+          "evidence": "keyword match: 1/2"
+        },
+        {
+          "text": "说明 eslint typescript/no-explicit-any 能捕获 any 类型",
+          "passed": true,
+          "evidence": "keyword match: 5/6"
+        },
+        {
+          "text": "说明自定义检查 check-layer-boundary 能阻断分层违规",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "给出具体修复方向（不是仅指出问题）",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        }
+      ]
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "review-domain-entity",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 96.3,
+        "tokens": 12768,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: Review）",
+          "passed": false,
+          "evidence": "keyword match: 1/6"
+        },
+        {
+          "text": "显式加载了 soft-rules.md §Review 规则",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        },
+        {
+          "text": "指出 Domain import Infrastructure 是分层违规",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "指出空 catch (e) {} 违规",
+          "passed": true,
+          "evidence": "keyword match: 1/2"
+        },
+        {
+          "text": "指出 any 类型违规",
+          "passed": true,
+          "evidence": "keyword match: 1/2"
+        },
+        {
+          "text": "说明 eslint typescript/no-explicit-any 能捕获 any 类型",
+          "passed": true,
+          "evidence": "keyword match: 5/6"
+        },
+        {
+          "text": "说明自定义检查 check-layer-boundary 能阻断分层违规",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "给出具体修复方向（不是仅指出问题）",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        }
+      ]
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "conflict-resolution",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "failed": 2,
+        "total": 5,
+        "time_seconds": 230.3,
+        "tokens": 41970,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "明确说明项目风格优先级高于 skill 默认 eslint 配置",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "没有引入新文件或目录结构",
+          "passed": false,
+          "evidence": "keyword match: 0/1"
+        },
+        {
+          "text": "只在语义质量层面提出改进（如变量命名、错误处理）",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "引用了 SKILL.md §优先级：用户需求 > 项目风格 > skill MUST",
+          "passed": true,
+          "evidence": "keyword match: 6/7"
+        }
+      ]
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "conflict-resolution",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.2,
+        "passed": 1,
+        "failed": 4,
+        "total": 5,
+        "time_seconds": 176.7,
+        "tokens": 27813,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息",
+          "passed": true,
+          "evidence": "keyword match: 3/5"
+        },
+        {
+          "text": "明确说明项目风格优先级高于 skill 默认 eslint 配置",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "没有引入新文件或目录结构",
+          "passed": false,
+          "evidence": "keyword match: 0/1"
+        },
+        {
+          "text": "只在语义质量层面提出改进（如变量命名、错误处理）",
+          "passed": false,
+          "evidence": "keyword match: 0/3"
+        },
+        {
+          "text": "引用了 SKILL.md §优先级：用户需求 > 项目风格 > skill MUST",
+          "passed": false,
+          "evidence": "keyword match: 0/7"
+        }
+      ]
+    },
+    {
+      "eval_id": 8,
+      "eval_name": "simple-refactor",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.17,
+        "passed": 1,
+        "failed": 5,
+        "total": 6,
+        "time_seconds": 107.4,
+        "tokens": 35590,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 单函数重构）",
+          "passed": false,
+          "evidence": "keyword match: 1/6"
+        },
+        {
+          "text": "没有创建 DDD 目录结构或类",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "只加载了 soft-rules.md §通用规则 + coding-paradigms.md",
+          "passed": true,
+          "evidence": "keyword match: 3/6"
+        },
+        {
+          "text": "函数名从 calc 改为有意义的动词短语",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "参数从缩写改为全称（如 vip → isVip）",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "说明为什么小任务不应过度架构",
+          "passed": false,
+          "evidence": "keyword match: 0/1"
+        }
+      ]
+    },
+    {
+      "eval_id": 8,
+      "eval_name": "simple-refactor",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.17,
+        "passed": 1,
+        "failed": 5,
+        "total": 6,
+        "time_seconds": 22.7,
+        "tokens": 8802,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 单函数重构）",
+          "passed": false,
+          "evidence": "keyword match: 0/6"
+        },
+        {
+          "text": "没有创建 DDD 目录结构或类",
+          "passed": false,
+          "evidence": "keyword match: 0/3"
+        },
+        {
+          "text": "只加载了 soft-rules.md §通用规则 + coding-paradigms.md",
+          "passed": false,
+          "evidence": "keyword match: 0/6"
+        },
+        {
+          "text": "函数名从 calc 改为有意义的动词短语",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "参数从缩写改为全称（如 vip → isVip）",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "说明为什么小任务不应过度架构",
+          "passed": false,
+          "evidence": "keyword match: 0/1"
+        }
+      ]
+    },
+    {
+      "eval_id": 9,
+      "eval_name": "deliberate-violations",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 354.8,
+        "tokens": 60325,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "生成的违规文件包含 var 声明",
+          "passed": true,
+          "evidence": "keyword match: 1/2"
+        },
+        {
+          "text": "生成的违规文件包含 any 类型标注",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "生成的违规文件包含空 catch (e) {} 块",
+          "passed": true,
+          "evidence": "keyword match: 1/2"
+        },
+        {
+          "text": "生成的违规文件包含 console.log",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "生成的违规文件包含 default export",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "说明第一次运行 exit code ≠ 0",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "修复后全部违规消除，exit code = 0",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "明确说明 eslint 和自定义检查各自管辖的违规范围",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        }
+      ]
+    },
+    {
+      "eval_id": 9,
+      "eval_name": "deliberate-violations",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 4,
+        "failed": 4,
+        "total": 8,
+        "time_seconds": 41.4,
+        "tokens": 9780,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "生成的违规文件包含 var 声明",
+          "passed": true,
+          "evidence": "keyword match: 1/2"
+        },
+        {
+          "text": "生成的违规文件包含 any 类型标注",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "生成的违规文件包含空 catch (e) {} 块",
+          "passed": true,
+          "evidence": "keyword match: 1/2"
+        },
+        {
+          "text": "生成的违规文件包含 console.log",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "生成的违规文件包含 default export",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "说明第一次运行 exit code ≠ 0",
+          "passed": false,
+          "evidence": "keyword match: 0/3"
+        },
+        {
+          "text": "修复后全部违规消除，exit code = 0",
+          "passed": false,
+          "evidence": "keyword match: 0/3"
+        },
+        {
+          "text": "明确说明 eslint 和自定义检查各自管辖的违规范围",
+          "passed": false,
+          "evidence": "keyword match: 0/3"
+        }
+      ]
+    },
+    {
+      "eval_id": 10,
+      "eval_name": "small-module",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.71,
+        "passed": 5,
+        "failed": 2,
+        "total": 7,
+        "time_seconds": 157.3,
+        "tokens": 36092,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 新增小模块）",
+          "passed": true,
+          "evidence": "keyword match: 4/6"
+        },
+        {
+          "text": "文件放在 utils/ 目录下",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "一个文件只导出一个函数（named export）",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "函数有 JSDoc 注释（@param 和 @returns）",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "函数是纯函数，无副作用",
+          "passed": true,
+          "evidence": "keyword match: 1/2"
+        },
+        {
+          "text": "没有创建 features/ 或 DDD 目录结构",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "说明小模块 vs 完整模块的判断标准",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        }
+      ]
+    },
+    {
+      "eval_id": 10,
+      "eval_name": "small-module",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.14,
+        "passed": 1,
+        "failed": 6,
+        "total": 7,
+        "time_seconds": 41.1,
+        "tokens": 9947,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 新增小模块）",
+          "passed": false,
+          "evidence": "keyword match: 0/6"
+        },
+        {
+          "text": "文件放在 utils/ 目录下",
+          "passed": false,
+          "evidence": "keyword match: 0/3"
+        },
+        {
+          "text": "一个文件只导出一个函数（named export）",
+          "passed": false,
+          "evidence": "keyword match: 1/3"
+        },
+        {
+          "text": "函数有 JSDoc 注释（@param 和 @returns）",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        },
+        {
+          "text": "函数是纯函数，无副作用",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        },
+        {
+          "text": "没有创建 features/ 或 DDD 目录结构",
+          "passed": false,
+          "evidence": "keyword match: 0/4"
+        },
+        {
+          "text": "说明小模块 vs 完整模块的判断标准",
+          "passed": false,
+          "evidence": "keyword match: 0/2"
+        }
+      ]
+    },
+    {
+      "eval_id": 11,
+      "eval_name": "notification-module",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 6,
+        "failed": 2,
+        "total": 8,
+        "time_seconds": 449.5,
+        "tokens": 64198,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 搭建完整模块）",
+          "passed": false,
+          "evidence": "keyword match: 2/6"
+        },
+        {
+          "text": "显式加载了 architecture.md 和 coding-paradigms.md",
+          "passed": false,
+          "evidence": "keyword match: 1/4"
+        },
+        {
+          "text": "features/notification/ 下包含 types/、api/、hooks/、stores/、components/、constants/",
+          "passed": true,
+          "evidence": "keyword match: 8/9"
+        },
+        {
+          "text": "组件以文件夹为单位（NotificationList/、NotificationCard/）",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "每个文件夹有 index.ts 聚合导出",
+          "passed": true,
+          "evidence": "keyword match: 3/3"
+        },
+        {
+          "text": "store 使用 Zustand（create 或 defineStore 语法）",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "逐条自述了 soft-rules.md §架构规则 A1-A7",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "使用 TypeScript + React（函数组件 + Hooks）",
+          "passed": true,
+          "evidence": "keyword match: 4/4"
+        }
+      ]
+    },
+    {
+      "eval_id": 11,
+      "eval_name": "notification-module",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 4,
+        "failed": 4,
+        "total": 8,
+        "time_seconds": 111.5,
+        "tokens": 16169,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "输出包含 [uluo-web-standards] 场景确认信息（场景: 搭建完整模块）",
+          "passed": false,
+          "evidence": "keyword match: 0/6"
+        },
+        {
+          "text": "显式加载了 architecture.md 和 coding-paradigms.md",
+          "passed": false,
+          "evidence": "keyword match: 0/4"
+        },
+        {
+          "text": "features/notification/ 下包含 types/、api/、hooks/、stores/、components/、constants/",
+          "passed": true,
+          "evidence": "keyword match: 7/9"
+        },
+        {
+          "text": "组件以文件夹为单位（NotificationList/、NotificationCard/）",
+          "passed": true,
+          "evidence": "keyword match: 2/3"
+        },
+        {
+          "text": "每个文件夹有 index.ts 聚合导出",
+          "passed": false,
+          "evidence": "keyword match: 0/3"
+        },
+        {
+          "text": "store 使用 Zustand（create 或 defineStore 语法）",
+          "passed": true,
+          "evidence": "keyword match: 3/4"
+        },
+        {
+          "text": "逐条自述了 soft-rules.md §架构规则 A1-A7",
+          "passed": false,
+          "evidence": "keyword match: 0/4"
+        },
+        {
+          "text": "使用 TypeScript + React（函数组件 + Hooks）",
+          "passed": true,
+          "evidence": "keyword match: 2/4"
+        }
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 0.642,
+        "stddev": 0.183,
+        "min": 0.17,
+        "max": 0.88
+      },
+      "time_seconds": {
+        "mean": 342.5,
+        "stddev": 182.8,
+        "min": 96.8,
+        "max": 724.9
+      },
+      "tokens": {
+        "mean": 60457,
+        "stddev": 19911,
+        "min": 35590,
+        "max": 90309
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.453,
+        "stddev": 0.202,
+        "min": 0.14,
+        "max": 0.75
+      },
+      "time_seconds": {
+        "mean": 134.6,
+        "stddev": 128.6,
+        "min": 22.7,
+        "max": 426.2
+      },
+      "tokens": {
+        "mean": 17613,
+        "stddev": 10356,
+        "min": 8802,
+        "max": 37070
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.19",
+      "time_seconds": "+207.9",
+      "tokens": "+42844"
+    }
+  },
+  "notes": [
+    "with_skill consistently scores higher on code review, architecture, and self-check assertions (+19% avg)",
+    "with_skill uses 3-5x more tokens but produces self-check checklists and 4-phase protocol compliance",
+    "without_skill is faster (avg 131s vs 351s) but lacks systematic standards enforcement",
+    "Eval-7 (conflict resolution) shows the biggest gap: with_skill 60% vs without_skill 20%",
+    "Eval-10 (small module) shows 71% vs 14% — skill dramatically improves small-module discipline",
+    "Eval-8 (simple refactor) scores equally low (17%) — assertion design may need refinement for simple tasks",
+    "Programmatic grading uses keyword matching; subjective qualities may be undercounted"
+  ]
+}

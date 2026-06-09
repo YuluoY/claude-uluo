@@ -1,0 +1,8 @@
+Files to check: 1 (1 JS/TS/Vue, 0 SCSS/Vue)
+
+
+=== validation checked 1 file(s) ===
+[eslint] passed
+[tsc] passed
+passed with 0 warnings
+EXIT_CODE=0

@@ -1,0 +1,39 @@
+{
+  "expectations": [
+    {
+      "text": "flags-emoji: Identifies emoji icons as a critical problem",
+      "passed": true,
+      "evidence": "Issue 1 is titled 'Emoji as Status Icons (✅❌🔥)' and is assigned Severity: High. It details accessibility failures ('Screen readers announce emoji literally'), cross-platform inconsistency, lack of semantic mapping, and scattered status-to-icon logic. The issue is ranked in the priority roadmap."
+    },
+    {
+      "text": "flags-hardcoded-colors: Identifies hardcoded #ff6600 / missing tokens as a problem",
+      "passed": true,
+      "evidence": "Issue 4 is titled '#ff6600 Hardcoded Everywhere' with Severity: High. It states 'The color #ff6600 is used as a bare hex literal in dozens of places across the codebase' and details problems with dark mode, semantic meaning, contrast ratio, and design iteration. It is ranked P0 in the priority roadmap."
+    },
+    {
+      "text": "flags-missing-states: Identifies missing loading/error/empty states as a problem",
+      "passed": true,
+      "evidence": "Issue 6 is titled 'No Loading / Error / Empty States' with Severity: Medium-High. It explicitly addresses all three states: 'Loading: No skeleton screens, no spinner, no progress indicator', 'Error: No error boundary, no inline error message', and 'Empty: When a list has zero items, the user sees a blank card with no explanatory message.'"
+    },
+    {
+      "text": "flags-no-responsive: Identifies lack of mobile adaptation as a problem",
+      "passed": true,
+      "evidence": "Issue 2 ('Fixed 320px Card Width', Severity: High) and Issue 5 ('No Mobile Adaptation', Severity: High) both address responsive/mobile problems. Issue 5 states 'The page has zero responsive design. No media queries, no viewport meta tag review, no flexible layouts' and lists horizontal scrolling, small touch targets, and no safe-area handling."
+    },
+    {
+      "text": "flags-no-component-library: Identifies hand-writing basic controls as problematic",
+      "passed": true,
+      "evidence": "Issue 3 is titled 'Handwritten CSS Bypassing Component Library' with Severity: High. It states 'Buttons, inputs, selects, and other form controls are styled entirely with raw CSS, ignoring the project's component library' and details lack of design consistency, built-in accessibility, theming support, and duplicated effort."
+    },
+    {
+      "text": "prioritized-structure: Organizes findings by severity/priority, not random list",
+      "passed": true,
+      "evidence": "The overview states 'The issues are ordered from highest to lowest priority based on user-facing impact and architectural debt.' Each issue has an explicit Severity label (High/Medium-High/Medium). A dedicated 'Priority Roadmap' table ranks all 7 issues into P0/P1/P2 tiers with Effort, Impact, and Dependencies columns. A 'Suggested Execution Order' section provides week-by-week sequencing."
+    },
+    {
+      "text": "actionable-fixes: Each problem has a concrete fix direction, not just 'this is bad'",
+      "passed": true,
+      "evidence": "Every issue (1-7) contains a 'Fix Direction' section with numbered, concrete action steps. Five of seven issues include specific code examples (TSX, CSS) demonstrating the fix. For example, Issue 1 provides a STATUS_ICON_MAP code snippet, Issue 2 provides CSS Grid auto-fill examples, Issue 4 provides CSS custom property token definitions, and Issue 6 provides a three-state rendering pattern in TSX."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "eval_id": 7,
+  "eval_name": "conflict-resolution",
+  "prompt": "当前项目已有自己的 eslint 配置和命名规范，团队要求本次只修 bug，不改全局配置风格。请修改一个已有 JS 函数（不要引入新文件）并说明你如何处理 uluo-web-standards 规范与项目既有风格的冲突。",
+  "assertions": [
+    "明确说明项目风格优先级高于 skill 默认 eslint 配置",
+    "没有引入新文件或目录结构",
+    "只在语义质量层面提出改进（如变量命名、错误处理）"
+  ]
+}

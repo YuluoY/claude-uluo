@@ -1,0 +1,9 @@
+{
+  "name": "uluo-web-standards",
+  "version": "0.1.0",
+  "description": "Enforces web engineering standards via eslint/stylelint/tsc toolchain and soft-rules self-check. Covers DDD layered architecture and JS/TS/Vue/React/HTML/CSS best practices.",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["eslint", "stylelint", "typescript", "standards", "ddd"],
+  "license": "MIT",
+  "skills": "./"
+}

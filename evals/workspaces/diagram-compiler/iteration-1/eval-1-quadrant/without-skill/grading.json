@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "uses-quadrant-type: Output contains quadrantChart Mermaid syntax or references quadrant diagram type",
+      "passed": true,
+      "evidence": "quadrantChart: True"
+    },
+    {
+      "text": "has-four-items: Diagram includes all 4 frameworks (React, Vue, Svelte, Solid) as data points",
+      "passed": true,
+      "evidence": "Frameworks: {'react': True, 'vue': True, 'svelte': True, 'solid': True}"
+    },
+    {
+      "text": "has-axes-labels: X and Y axes have meaningful labels with low/high descriptions",
+      "passed": true,
+      "evidence": "X: True, Y: True"
+    },
+    {
+      "text": "correct-positions: React and Vue are positioned in top-right area (high ecosystem maturity), Svelte in middle, Solid lower",
+      "passed": true,
+      "evidence": "React OK:True, Vue OK:True, Solid OK:True"
+    },
+    {
+      "text": "not-hardcoded-mermaid: Model does NOT write raw Mermaid code from scratch — uses data-driven approach (YAML/JSON data → generate)",
+      "passed": false,
+      "evidence": "schema:False, generate:False, PathB:False"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  }
+}

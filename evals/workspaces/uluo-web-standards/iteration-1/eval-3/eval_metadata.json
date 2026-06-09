@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "js-discount-module",
+  "prompt": "请用 JavaScript（纯 JS，不需要 TypeScript）为商品促销场景实现折扣计算模块。需求：1. 创建一个不可变的 Money 值对象（金额+币种）2. 创建订单实体 3. 支持按会员等级计算折扣 4. 支持按配送方式计算运费 5. 实现一个下单用例 6. 实现一个 HTTP handler。要求：嵌套不超过3层必须提取函数。完成后运行 validate-rules.js 验证。",
+  "assertions": [
+    "Money 值对象使用 Object.freeze 或展开运算符实现不可变",
+    "运费策略使用工厂模式聚合（非 if-else 分支）",
+    "依赖通过构造函数或函数参数显式注入",
+    "异步操作使用 to() 元组解包 [error, data]",
+    "嵌套深度不超过 3 层"
+  ]
+}

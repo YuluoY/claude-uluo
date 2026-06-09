@@ -1,0 +1,25 @@
+{
+  "expectations": [
+    {
+      "text": "没有创建 DDD 目录结构或类",
+      "passed": true,
+      "evidence": "文件只包含一个导出函数 calculateTotal、几个内部辅助函数（isEnabled/getSubtotal/add）和一个 Item 类型别名，没有 class 声明，也没有 DDD 子目录。"
+    },
+    {
+      "text": "函数名清晰表达了功能意图",
+      "passed": true,
+      "evidence": "函数命名为 calculateTotal，清晰表达了计算总价的功能意图。"
+    },
+    {
+      "text": "参数命名消除了歧义",
+      "passed": true,
+      "evidence": "参数 items: Item[] 和 vip: boolean 命名清晰，且 JSDoc 进一步解释了 vip 参数的作用：'VIP customers receive a 10% discount on the final total'。"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  }
+}
