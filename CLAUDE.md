@@ -54,28 +54,22 @@ claude-uluo/
 
 ## 使用方式
 
-**推荐：curl 一行安装**
+**推荐：一条命令注册 marketplace**
 
 ```bash
-# 注册 marketplace + 安装扩展，一步到位
-curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- <扩展名>
+# 注册（每台机器只需一次）
+claude plugin marketplace add YuluoY/claude-uluo
 
-# 或仅注册 marketplace
-curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash
+# 安装扩展（每个项目）
+claude plugin install <扩展名>@claude-uluo --scope project
 ```
 
-**手动安装**
+Claude Code 自动从 GitHub 拉取，无需手动 clone。
+
+**亦可一键脚本**
 
 ```bash
-git clone https://github.com/YuluoY/claude-uluo.git ~/claude-uluo
-
-# 在项目 .claude/settings.json 注册 marketplace：
-#   "extraKnownMarketplaces": {
-#     "claude-uluo": { "source": { "source": "directory", "path": "~/claude-uluo" } }
-#   }
-
-# 安装扩展
-claude plugin install <扩展名>@claude-uluo --scope project
+curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- <扩展名>
 ```
 
 **Symlink 兼容方式**

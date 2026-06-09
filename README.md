@@ -7,8 +7,11 @@ Claude Code 前端研发扩展集——覆盖 UI 审查、组件蓝图、可视�
 ## 快速开始
 
 ```bash
-# 在项目根目录执行（会自动 clone、注册 marketplace、安装扩展）
-curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- diagram-compiler
+# 1. 注册 marketplace（每台机器只需一次）
+claude plugin marketplace add YuluoY/claude-uluo
+
+# 2. 在项目中安装扩展
+claude plugin install diagram-compiler@claude-uluo --scope project
 ```
 
 之后在 Claude Code 中直接 `/<扩展名>` 即可使用。
@@ -17,46 +20,37 @@ curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/ins
 
 ## 安装
 
-### 一行命令（推荐）
+### 命令行（推荐）
 
 ```bash
-# 仅注册 marketplace（不安装具体扩展）
-curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash
-
-# 注册并安装指定扩展
-curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- <扩展名>
-```
-
-脚本会自动完成：
-1. clone / 更新仓库到 `~/claude-uluo`
-2. 在项目 `.claude/settings.json` 中注册 marketplace
-3. （可选）安装指定扩展
-
-### 手动安装
-
-```bash
-git clone https://github.com/YuluoY/claude-uluo.git ~/claude-uluo
-
-# 在项目 .claude/settings.json 中注册：
-#   "extraKnownMarketplaces": {
-#     "claude-uluo": {
-#       "source": { "source": "directory", "path": "~/claude-uluo" }
-#     }
-#   }
+# 注册 marketplace
+claude plugin marketplace add YuluoY/claude-uluo
 
 # 安装扩展
 claude plugin install <扩展名>@claude-uluo --scope project
 ```
 
-### 更新
+Claude Code 自动从 GitHub 拉取 marketplace 和扩展，无需手动 clone。
+
+### 一键脚本
 
 ```bash
-cd ~/claude-uluo && git pull
+# 仅注册
+curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash
+
+# 注册并安装指定扩展
+curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- diagram-compiler
+```
+
+### 更新扩展
+
+```bash
+claude plugin update <扩展名>
 ```
 
 ## 使用
 
-注册 marketplace 后，在任意项目中：
+在任意项目中：
 
 ```bash
 # 安装
