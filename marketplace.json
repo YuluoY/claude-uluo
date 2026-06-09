@@ -3,6 +3,11 @@
   "name": "claude-uluo",
   "plugins": [
     {
+      "name": "claude-uluo-all",
+      "source": "./plugins/claude-uluo-all",
+      "description": "元插件——安装此插件即自动安装全部分扩展"
+    },
+    {
       "name": "memex",
       "source": "./plugins/memex",
       "description": "长期经验记忆插件：自动从对话中学习，巴普洛夫条件反射 × TrueSkill 连续评分 × 四层知识提取 × 混合向量检索"

@@ -1,0 +1,18 @@
+{
+  "name": "claude-uluo-all",
+  "version": "0.1.0",
+  "description": "一键安装 claude-uluo 全部扩展的元插件——安装此插件即自动安装所有自研 skill",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["all", "bundle", "claude-uluo"],
+  "license": "MIT",
+  "dependencies": {
+    "diagram-compiler": "0.1.0",
+    "frontend-visual-qa": "0.1.0",
+    "html-blueprint": "0.1.0",
+    "uluo-doc-standards": "0.1.0",
+    "uluo-web-standards": "0.1.0",
+    "impeccable": "0.1.0",
+    "skill-creator": "0.1.0",
+    "memex": "0.1.0"
+  }
+}

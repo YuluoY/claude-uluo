@@ -10,7 +10,10 @@ Claude Code 前端研发扩展集——覆盖 UI 审查、组件蓝图、可视�
 # 1. 注册 marketplace（每台机器只需一次）
 claude plugin marketplace add YuluoY/claude-uluo
 
-# 2. 在项目中安装扩展
+# 2. 一键安装全部扩展
+claude plugin install claude-uluo-all@claude-uluo --scope project
+
+# 或者只装某一个
 claude plugin install diagram-compiler@claude-uluo --scope project
 ```
 
@@ -20,29 +23,29 @@ claude plugin install diagram-compiler@claude-uluo --scope project
 
 ## 安装
 
-### 命令行（推荐）
+### 全部安装（推荐）
 
 ```bash
 # 注册 marketplace
 claude plugin marketplace add YuluoY/claude-uluo
 
-# 安装扩展
+# 一键安装全部
+claude plugin install claude-uluo-all@claude-uluo --scope project
+```
+
+亦可一键脚本：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- all
+```
+
+### 按需安装
+
+```bash
 claude plugin install <扩展名>@claude-uluo --scope project
 ```
 
-Claude Code 自动从 GitHub 拉取 marketplace 和扩展，无需手动 clone。
-
-### 一键脚本
-
-```bash
-# 仅注册
-curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash
-
-# 注册并安装指定扩展
-curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- diagram-compiler
-```
-
-### 更新扩展
+### 更新
 
 ```bash
 claude plugin update <扩展名>
@@ -71,6 +74,7 @@ claude plugin uninstall diagram-compiler@claude-uluo
 
 | 名称 | 说明 |
 |------|------|
+| claude-uluo-all | 元插件——安装此插件自动拉取全部扩展 |
 | [memex](plugins/memex/) | 长期经验记忆——自动学习、四层知识提取、混合向量检索 |
 
 ### Skill
