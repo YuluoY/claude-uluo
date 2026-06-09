@@ -73,16 +73,30 @@ claude plugin uninstall diagram-compiler@claude-uluo
 
 ## 扩展列表
 
+### Plugin
+
 | 名称 | 说明 |
 |------|------|
 | [memex](plugins/memex/) | 长期经验记忆——自动学习、四层知识提取、混合向量检索 |
+
+### Skill
+
+**自研**
+
+| 名称 | 说明 |
+|------|------|
 | diagram-compiler | 技术图表编译——Mermaid/Matplotlib/Canvas，支持流程图、架构图、论文插图 |
 | frontend-visual-qa | 前端视觉 QA——设计 Token、组件库、响应式、无障碍、i18n 质检 |
 | html-blueprint | HTML-first 组件设计协议——data-* 标注的可渲染设计稿 |
-| impeccable | 前端 UI 设计与审查——UX 评审、视觉层级、无障碍、主题、排版、动效 |
-| skill-creator | Skill 创建与评测——含 evals 基准测试和方差分析 |
 | uluo-doc-standards | 文档规范——spec/plan/tasks/changelog/验收报告模板 |
 | uluo-web-standards | Web 工程规范——eslint/stylelint/tsc + DDD 架构 + 软规则 |
+
+**收录**
+
+| 名称 | 说明 | 来源 |
+|------|------|------|
+| impeccable | 前端 UI 设计与审查——UX 评审、视觉层级、无障碍、主题、排版、动效 | 第三方 |
+| skill-creator | Skill 创建与评测——含 evals 基准测试和方差分析 | Claude Code 官方 |
 
 ## 贡献
 
