@@ -4,16 +4,18 @@
 
 Claude Code 前端研发扩展集——覆盖 UI 审查、组件蓝图、可视化 QA、图表编译、文档规范等环节，通过 marketplace 分发，一条命令安装。
 
-## 快速开始
+> A marketplace of Claude Code extensions for frontend development — UI review, component blueprint, visual QA, diagram compilation, doc standards, and more. Install with a single command.
+
+## 快速开始 · Quick Start
 
 ```bash
 # 1. 注册 marketplace（每台机器只需一次）
 claude plugin marketplace add YuluoY/claude-uluo
 
-# 2. 一键安装全部扩展
+# 2. 一键安装全部扩展 · Install all at once
 claude plugin install claude-uluo-all@claude-uluo --scope project
 
-# 或者只装某一个
+# 或者只装某一个 · Or pick one
 claude plugin install diagram-compiler@claude-uluo --scope project
 ```
 
@@ -21,65 +23,65 @@ claude plugin install diagram-compiler@claude-uluo --scope project
 
 > 前提：已安装 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI。
 
-## 安装
+## 安装 · Installation
 
-### 全部安装（推荐）
+### 全部安装（推荐）· Install All
 
 ```bash
-# 注册 marketplace
+# 注册 marketplace · Register
 claude plugin marketplace add YuluoY/claude-uluo
 
-# 一键安装全部
+# 一键安装全部 · Install everything
 claude plugin install claude-uluo-all@claude-uluo --scope project
 ```
 
-亦可一键脚本：
+亦可一键脚本 · Or one-line script：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- all
 ```
 
-### 按需安装
+### 按需安装 · Install Individual
 
 ```bash
 claude plugin install <扩展名>@claude-uluo --scope project
 ```
 
-### 更新
+### 更新 · Update
 
 ```bash
 claude plugin update <扩展名>
 ```
 
-## 使用
+## 使用 · Usage
 
 在任意项目中：
 
 ```bash
-# 安装
+# 安装 · Install
 claude plugin install diagram-compiler@claude-uluo --scope project
 
-# 查看已安装
+# 查看已安装 · List installed
 claude plugin list
 
-# 卸载
+# 卸载 · Uninstall
 claude plugin uninstall diagram-compiler@claude-uluo
 ```
 
 在 Claude Code 对话中直接调用：`/diagram-compiler`
 
-## 扩展列表
+## 扩展列表 · Extensions
 
 ### Plugin
 
 | 名称 | 说明 |
 |------|------|
-| claude-uluo-all | 元插件——安装此插件自动拉取全部扩展 |
+| claude-uluo-all | 元插件——安装此插件自动拉取全部扩展 · Meta plugin, installs all extensions |
 | [memex](plugins/memex/) | 长期经验记忆——自动学习、四层知识提取、混合向量检索 |
 
 ### Skill
 
-**自研**
+**自研 · Built by claude-uluo**
 
 | 名称 | 说明 |
 |------|------|
@@ -89,14 +91,14 @@ claude plugin uninstall diagram-compiler@claude-uluo
 | uluo-doc-standards | 文档规范——spec/plan/tasks/changelog/验收报告模板 |
 | uluo-web-standards | Web 工程规范——eslint/stylelint/tsc + DDD 架构 + 软规则 |
 
-**收录**
+**收录 · Curated**
 
-| 名称 | 说明 | 来源 |
+| 名称 | 说明 | 来源 · Source |
 |------|------|------|
-| impeccable | 前端 UI 设计与审查——UX 评审、视觉层级、无障碍、主题、排版、动效 | 第三方 |
-| skill-creator | Skill 创建与评测——含 evals 基准测试和方差分析 | Claude Code 官方 |
+| impeccable | 前端 UI 设计与审查——UX 评审、视觉层级、无障碍、主题、排版、动效 | 第三方 · Third-party |
+| skill-creator | Skill 创建与评测——含 evals 基准测试和方差分析 | Claude Code 官方 · Official |
 
-## 贡献
+## 贡献 · Contributing
 
 欢迎贡献新的 skill 或 plugin，详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
