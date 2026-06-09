@@ -2,105 +2,101 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Claude Code 前端研发扩展集——覆盖 UI 审查、组件蓝图、可视化 QA、图表编译、文档规范等环节，通过 marketplace 分发，一条命令安装。
+[中文](./README_zh.md)
 
-> A marketplace of Claude Code extensions for frontend development — UI review, component blueprint, visual QA, diagram compilation, doc standards, and more. Install with a single command.
+A marketplace of Claude Code extensions for frontend development — UI review, component blueprint, visual QA, diagram compilation, doc standards, and more. Install with a single command.
 
-## 快速开始 · Quick Start
+## Quick Start
 
 ```bash
-# 1. 注册 marketplace（每台机器只需一次）
+# 1. Register the marketplace (once per machine)
 claude plugin marketplace add YuluoY/claude-uluo
 
-# 2. 一键安装全部扩展 · Install all at once
+# 2. Install all extensions at once
 claude plugin install claude-uluo-all@claude-uluo --scope project
 
-# 或者只装某一个 · Or pick one
+# Or install just one
 claude plugin install diagram-compiler@claude-uluo --scope project
 ```
 
-之后在 Claude Code 中直接 `/<扩展名>` 即可使用。
+> Requires [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI.
 
-> 前提：已安装 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI。
+## Installation
 
-## 安装 · Installation
-
-### 全部安装（推荐）· Install All
+### Install All (Recommended)
 
 ```bash
-# 注册 marketplace · Register
+# Register the marketplace
 claude plugin marketplace add YuluoY/claude-uluo
 
-# 一键安装全部 · Install everything
+# Install everything
 claude plugin install claude-uluo-all@claude-uluo --scope project
 ```
 
-亦可一键脚本 · Or one-line script：
+Or use the one-line script:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- all
 ```
 
-### 按需安装 · Install Individual
+### Install Individual
 
 ```bash
-claude plugin install <扩展名>@claude-uluo --scope project
+claude plugin install <name>@claude-uluo --scope project
 ```
 
-### 更新 · Update
+### Update
 
 ```bash
-claude plugin update <扩展名>
+claude plugin update <name>
 ```
 
-## 使用 · Usage
-
-在任意项目中：
+## Usage
 
 ```bash
-# 安装 · Install
+# Install
 claude plugin install diagram-compiler@claude-uluo --scope project
 
-# 查看已安装 · List installed
+# List installed
 claude plugin list
 
-# 卸载 · Uninstall
+# Uninstall
 claude plugin uninstall diagram-compiler@claude-uluo
 ```
 
-在 Claude Code 对话中直接调用：`/diagram-compiler`
+Invoke in Claude Code: `/diagram-compiler`
 
-## 扩展列表 · Extensions
+## Extensions
 
 ### Plugin
 
-| 名称 | 说明 |
-|------|------|
-| claude-uluo-all | 元插件——安装此插件自动拉取全部扩展 · Meta plugin, installs all extensions |
-| [memex](plugins/memex/) | 长期经验记忆——自动学习、四层知识提取、混合向量检索 |
+| Name | Description |
+|------|-------------|
+| claude-uluo-all | Meta plugin — installs all extensions as dependencies |
+| [memex](plugins/memex/) | Long-term experience memory — auto learning, knowledge extraction, hybrid vector search |
 
 ### Skill
 
-**自研 · Built by claude-uluo**
+**Built by claude-uluo**
 
-| 名称 | 说明 |
-|------|------|
-| diagram-compiler | 技术图表编译——Mermaid/Matplotlib/Canvas，支持流程图、架构图、论文插图 |
-| frontend-visual-qa | 前端视觉 QA——设计 Token、组件库、响应式、无障碍、i18n 质检 |
-| html-blueprint | HTML-first 组件设计协议——data-* 标注的可渲染设计稿 |
-| uluo-doc-standards | 文档规范——spec/plan/tasks/changelog/验收报告模板 |
-| uluo-web-standards | Web 工程规范——eslint/stylelint/tsc + DDD 架构 + 软规则 |
+| Name | Description |
+|------|-------------|
+| diagram-compiler | Technical diagram studio — Mermaid/Matplotlib/Canvas, flowcharts, architecture, paper figures |
+| frontend-visual-qa | Visual QA for AI-generated UI — design tokens, components, responsive, a11y, i18n |
+| html-blueprint | HTML-first component design protocol — data-* annotated renderable drafts |
+| uluo-doc-standards | AI coding doc standards — spec/plan/tasks/changelog templates and quality benchmarks |
+| uluo-web-standards | Web engineering standards — eslint/stylelint/tsc + DDD architecture + soft rules |
 
-**收录 · Curated**
+**Curated**
 
-| 名称 | 说明 | 来源 · Source |
-|------|------|------|
-| impeccable | 前端 UI 设计与审查——UX 评审、视觉层级、无障碍、主题、排版、动效 | 第三方 · Third-party |
-| skill-creator | Skill 创建与评测——含 evals 基准测试和方差分析 | Claude Code 官方 · Official |
+| Name | Description | Source |
+|------|-------------|--------|
+| impeccable | Frontend UI design & review — UX, visual hierarchy, a11y, theming, typography, motion | Third-party |
+| skill-creator | Skill creation & evaluation — evals, benchmarking, variance analysis | Claude Code Official |
 
-## 贡献 · Contributing
+## Contributing
 
-欢迎贡献新的 skill 或 plugin，详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
