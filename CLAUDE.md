@@ -54,32 +54,35 @@ claude-uluo/
 
 ## 使用方式
 
-**推荐：Plugin 安装（一条命令）**
+**推荐：curl 一行安装**
 
 ```bash
-git clone <repo-url> ~/claude-uluo
+# 注册 marketplace + 安装扩展，一步到位
+curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash -s -- <扩展名>
 
-# 在项目 .claude/settings.json 注册 marketplace（只需一次）：
-{
-  "extraKnownMarketplaces": {
-    "claude-uluo": {
-      "source": { "source": "directory", "path": "~/claude-uluo" }
-    }
-  }
-}
-
-# 安装任意 skill：
-claude plugin install diagram-compiler@claude-uluo --scope project
+# 或仅注册 marketplace
+curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/install.sh | bash
 ```
 
-**兼容旧方式：Symlink**
+**手动安装**
 
 ```bash
-# 一键链接全部：
-./scripts/setup.sh symlink
+git clone https://github.com/YuluoY/claude-uluo.git ~/claude-uluo
 
-# 或手动：
-ln -sfn ~/claude-uluo/skills/<name> .claude/skills/<name>
+# 在项目 .claude/settings.json 注册 marketplace：
+#   "extraKnownMarketplaces": {
+#     "claude-uluo": { "source": { "source": "directory", "path": "~/claude-uluo" } }
+#   }
+
+# 安装扩展
+claude plugin install <扩展名>@claude-uluo --scope project
+```
+
+**Symlink 兼容方式**
+
+```bash
+./scripts/setup.sh symlink
+# 或 ln -sfn ~/claude-uluo/skills/<name> .claude/skills/<name>
 ```
 
 ## 已注册
