@@ -201,6 +201,97 @@ def cmd_promote(node_id: int):
     print(f"   scope: project → framework")
 
 
+def _parse_edit_args(args: list[str]) -> dict:
+    """解析 edit 命令的 --key value 参数"""
+    data = {}
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        if arg.startswith("--"):
+            key = arg[2:]
+            if i + 1 < len(args) and not args[i + 1].startswith("--"):
+                data[key] = args[i + 1]
+                i += 2
+            else:
+                data[key] = "true"  # boolean flag
+                i += 1
+        else:
+            i += 1
+    return data
+
+
+def cmd_edit(node_id: int, args: list[str]):
+    """编辑知识节点的文本字段"""
+    data = _parse_edit_args(args)
+    if not data:
+        print("用法: python scripts/cli.py edit <id> --title '...' --key_takeaway '...' --scope project")
+        print("可编辑字段: title, key_takeaway, root_cause, solution_text, problem_statement, category_path, scope")
+        sys.exit(1)
+
+    db = _resolve_db("auto")
+    from db_ops import update_knowledge_node
+
+    # 显示当前值
+    import sqlite3
+    conn = sqlite3.connect(db)
+    row = conn.execute("SELECT id, title, scope, category_path, key_takeaway FROM knowledge_nodes WHERE id = ? AND scope != 'deleted'", (node_id,)).fetchone()
+    conn.close()
+    if not row:
+        print(f"错误: 不存在或已删除 #{node_id}")
+        sys.exit(1)
+    print(f"编辑 #{row[0]}: {row[1]}")
+    print(f"  当前 scope={row[2]} category={row[3]}")
+
+    ok = update_knowledge_node(db, node_id, data)
+    if ok:
+        print(f"✅ 已更新 #{node_id}")
+        for k, v in data.items():
+            print(f"   {k}: {v[:60] if len(v) > 60 else v}")
+    else:
+        print(f"❌ 更新失败 #{node_id}")
+
+
+def cmd_delete(node_id: int):
+    """软删除知识节点"""
+    db = _resolve_db("auto")
+    from db_ops import delete_knowledge_node
+
+    import sqlite3
+    conn = sqlite3.connect(db)
+    row = conn.execute("SELECT id, title, scope FROM knowledge_nodes WHERE id = ? AND scope != 'deleted'", (node_id,)).fetchone()
+    conn.close()
+    if not row:
+        print(f"错误: 不存在或已删除 #{node_id}")
+        sys.exit(1)
+
+    print(f"确认删除 #{row[0]}: {row[1]} (scope={row[2]})")
+    confirm = input("此操作将软删除该经验（标记为 deleted），不可撤销 [y/N] ")
+    if confirm.lower() != 'y':
+        print("已取消")
+        return
+
+    ok = delete_knowledge_node(db, node_id)
+    if ok:
+        print(f"✅ 已删除 #{node_id}")
+    else:
+        print(f"❌ 删除失败 #{node_id}")
+
+
+def cmd_retry(target: str = "auto"):
+    """列出有信号但可能未提取知识的 session，供手动重试"""
+    db = _resolve_db(target)
+    from db_ops import get_unprocessed_sessions
+    sessions = get_unprocessed_sessions(db, os.getcwd() if target != "global" else None)
+    if not sessions:
+        print("所有 session 已处理完毕")
+        return
+    print(f"潜在未处理 session ({len(sessions)} 个):\n")
+    for s in sessions:
+        print(f"  {s['session_id'][:8]}... cwd={s.get('cwd','?')} signals={s.get('signal_count',0)} time={s.get('created_at','?')}")
+    print(f"\n回放提取（需在对应项目目录下执行）:")
+    print(f"  python scripts/cli.py retry --run <session_id>")
+
+
 def cmd_graph(target: str = "auto"):
     db = _resolve_db(target)
     try:
@@ -249,8 +340,15 @@ USAGE = """Memex CLI — 记忆管理
   python scripts/cli.py list [global|project]   列出知识节点
   python scripts/cli.py search <query>          搜索经验
   python scripts/cli.py promote <id> [--force]  提升项目经验到全局库
+  python scripts/cli.py edit <id> --key value   编辑经验节点
+  python scripts/cli.py delete <id>             删除经验节点（软删除）
+  python scripts/cli.py retry                   列出未处理 session
   python scripts/cli.py graph [global|project]  生成知识图谱 HTML
   python scripts/cli.py reset                   重置全局记忆（自动备份）
+
+edit 可编辑字段:
+  --title --key_takeaway --root_cause --solution_text
+  --problem_statement --category_path --scope
 
 目标参数:
   global   — 操作全局库 (~/.claude/memex/global.db)
@@ -284,6 +382,19 @@ if __name__ == "__main__":
             print("用法: python scripts/cli.py promote <节点ID> [--force]")
         else:
             cmd_promote(int(sys.argv[2]))
+    elif cmd == "edit":
+        if len(sys.argv) < 3:
+            print("用法: python scripts/cli.py edit <节点ID> --title '...' --key_takeaway '...'")
+        else:
+            cmd_edit(int(sys.argv[2]), sys.argv[3:])
+    elif cmd == "delete":
+        if len(sys.argv) < 3:
+            print("用法: python scripts/cli.py delete <节点ID>")
+        else:
+            cmd_delete(int(sys.argv[2]))
+    elif cmd == "retry":
+        target = sys.argv[2] if len(sys.argv) > 2 else "auto"
+        cmd_retry(target)
     elif cmd == "graph":
         target = sys.argv[2] if len(sys.argv) > 2 else "auto"
         cmd_graph(target)

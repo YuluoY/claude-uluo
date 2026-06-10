@@ -8,7 +8,7 @@ from db_schema import get_conn
 
 
 def search_knowledge(db_path: str, query: str, limit: int = 10) -> list[dict]:
-    """FTS5 全文搜索 + TrueSkill 排序"""
+    """FTS5 全文搜索 + TrueSkill 排序（自动过滤已删除）"""
     conn = get_conn(db_path)
     rows = conn.execute(
         """SELECT k.id, k.title, k.category_path, k.key_takeaway,
@@ -16,7 +16,7 @@ def search_knowledge(db_path: str, query: str, limit: int = 10) -> list[dict]:
                   (k.trueskill_mu - 2*k.trueskill_sigma) as conservative_score
            FROM knowledge_fts f
            JOIN knowledge_nodes k ON f.rowid = k.id
-           WHERE knowledge_fts MATCH ?
+           WHERE knowledge_fts MATCH ? AND k.scope != 'deleted'
            ORDER BY conservative_score DESC
            LIMIT ?""",
         (query, limit)
@@ -26,10 +26,12 @@ def search_knowledge(db_path: str, query: str, limit: int = 10) -> list[dict]:
 
 
 def top_knowledge(db_path: str, limit: int = 15) -> list[dict]:
-    """Top N 按 TrueSkill 保守估计排序"""
+    """Top N 按 TrueSkill 保守估计排序（自动过滤已删除）"""
     conn = get_conn(db_path)
     rows = conn.execute(
-        "SELECT id, title, category_path, key_takeaway, trueskill_mu, trueskill_sigma, scope, occurrence_count FROM knowledge_nodes ORDER BY (trueskill_mu - 2*trueskill_sigma) DESC LIMIT ?",
+        "SELECT id, title, category_path, key_takeaway, trueskill_mu, trueskill_sigma, scope, occurrence_count "
+        "FROM knowledge_nodes WHERE scope != 'deleted' "
+        "ORDER BY (trueskill_mu - 2*trueskill_sigma) DESC LIMIT ?",
         (limit,)
     ).fetchall()
     return [_row_to_dict(row, ["id","title","category_path","key_takeaway","trueskill_mu","trueskill_sigma","scope","occurrence_count"]) for row in rows]
@@ -50,7 +52,7 @@ def top_knowledge_for_project(db_path: str, cwd: str, limit: int = 15) -> list[d
                   k.trueskill_mu, k.trueskill_sigma, k.scope, k.occurrence_count,
                   (k.trueskill_mu - 2*k.trueskill_sigma) as conservative_score
            FROM knowledge_nodes k
-           WHERE k.source_projects LIKE ?
+           WHERE k.source_projects LIKE ? AND k.scope != 'deleted'
            ORDER BY conservative_score DESC
            LIMIT ?""",
         (search_term, limit)
@@ -69,7 +71,7 @@ def top_knowledge_for_project(db_path: str, cwd: str, limit: int = 15) -> list[d
                        k.trueskill_mu, k.trueskill_sigma, k.scope, k.occurrence_count,
                        (k.trueskill_mu - 2*k.trueskill_sigma) as conservative_score
                 FROM knowledge_nodes k
-                WHERE 1=1 {exclude_clause}
+                WHERE k.scope != 'deleted' {exclude_clause}
                 ORDER BY conservative_score DESC
                 LIMIT ?""",
             tuple(params)
@@ -81,19 +83,45 @@ def top_knowledge_for_project(db_path: str, cwd: str, limit: int = 15) -> list[d
     return project_result + global_result
 
 
-def insert_knowledge_node(db_path: str, data: dict) -> int:
+def insert_knowledge_node(db_path: str, data: dict, dedup: bool = True) -> int:
+    """插入知识节点。dedup=True 时检查标题重复。
+
+    Args:
+        db_path: 数据库路径
+        data: 节点数据
+        dedup: 是否检查重复（默认 True）
+
+    Returns:
+        新节点 ID，或已存在节点的 ID（如果重复）
+    """
     conn = get_conn(db_path)
+    title = data.get("title", "")
+
+    # 去重：精确 title 匹配
+    if dedup and title:
+        dup = conn.execute(
+            "SELECT id FROM knowledge_nodes WHERE title = ? AND scope != 'deleted'",
+            (title,)
+        ).fetchone()
+        if dup:
+            conn.close()
+            return dup[0]  # 返回已有 ID
+
     source_projects = data.get("source_projects", [])
     if isinstance(source_projects, list):
         source_projects = json.dumps(source_projects)
+    source_incidents = data.get("source_incidents", [])
+    if isinstance(source_incidents, list):
+        source_incidents = json.dumps(source_incidents)
+
     cur = conn.execute(
         """INSERT INTO knowledge_nodes (title, scope, abstraction_level, category_path, problem_statement, root_cause, solution_text, key_takeaway, causal_chain, preconditions, source_incidents, source_projects)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-        (data.get("title",""), data.get("scope","personal"), data.get("abstraction_level","pattern"),
+        (title, data.get("scope","personal"), data.get("abstraction_level","pattern"),
          data.get("category_path",""), data.get("problem_statement",""), data.get("root_cause",""),
          data.get("solution_text",""), data.get("key_takeaway",""),
          data.get("causal_chain","[]"), data.get("preconditions","[]"),
-         data.get("source_incidents","[]"), source_projects)
+         source_incidents, source_projects)
     )
     lid = cur.lastrowid
     conn.commit()
@@ -165,6 +193,100 @@ def stats(db_path: str) -> dict:
         "signals": conn.execute("SELECT COUNT(*) FROM signals").fetchone()[0],
         "categories": conn.execute("SELECT COUNT(*) FROM categories").fetchone()[0],
     }
+
+
+def update_knowledge_node(db_path: str, node_id: int, data: dict) -> bool:
+    """更新知识节点的文本字段。不修改 TrueSkill 评分。
+
+    Args:
+        db_path: 数据库路径
+        node_id: 节点 ID
+        data: 要更新的字段 dict，支持 title/key_takeaway/root_cause/
+              solution_text/problem_statement/category_path/scope
+
+    Returns:
+        True 如果更新了至少一行，False 如果节点不存在
+    """
+    ALLOWED_FIELDS = {
+        "title", "key_takeaway", "root_cause", "solution_text",
+        "problem_statement", "category_path", "scope",
+        "abstraction_level", "causal_chain", "preconditions",
+    }
+    updates = {k: v for k, v in data.items() if k in ALLOWED_FIELDS}
+    if not updates:
+        return False
+
+    conn = get_conn(db_path)
+    set_clause = ", ".join(f"{k} = ?" for k in updates)
+    values = list(updates.values()) + ["datetime('now')", node_id]
+    cur = conn.execute(
+        f"UPDATE knowledge_nodes SET {set_clause}, updated_at = ? WHERE id = ?",
+        values
+    )
+    conn.commit()
+    affected = cur.rowcount
+    conn.close()
+    return affected > 0
+
+
+def delete_knowledge_node(db_path: str, node_id: int) -> bool:
+    """软删除知识节点（标记 scope='deleted'）。
+    数据和 TrueSkill 评分保留，用于审计。检索时自动过滤已删除节点。
+
+    Args:
+        db_path: 数据库路径
+        node_id: 节点 ID
+
+    Returns:
+        True 如果删除成功，False 如果节点不存在或已删除
+    """
+    conn = get_conn(db_path)
+    cur = conn.execute(
+        "UPDATE knowledge_nodes SET scope = 'deleted', updated_at = datetime('now') "
+        "WHERE id = ? AND scope != 'deleted'",
+        (node_id,)
+    )
+    conn.commit()
+    affected = cur.rowcount
+    conn.close()
+    return affected > 0
+
+
+def apply_decay_to_all(db_path: str) -> int:
+    """对指定库的所有节点执行一次衰减检查。"""
+    from rating_engine import apply_decay
+    return apply_decay(db_path)
+
+
+def get_unprocessed_sessions(db_path: str, cwd: str = None) -> list[dict]:
+    """查询有信号但尚未提取知识节点的 session。
+
+    判断标准：session 有 signal_count > 0，但没有关联的 knowledge_node
+    通过 session 的 cwd 和 knowledge_node 的 updated_at 时间窗口匹配。
+
+    Args:
+        db_path: 全局库路径
+        cwd: 可选，过滤特定项目
+
+    Returns:
+        [{session_id, cwd, signal_count, created_at}, ...]
+    """
+    conn = get_conn(db_path)
+    if cwd:
+        rows = conn.execute(
+            "SELECT session_id, cwd, signal_count, created_at FROM sessions "
+            "WHERE signal_count > 0 AND cwd = ? "
+            "ORDER BY created_at DESC LIMIT 20",
+            (cwd,)
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT session_id, cwd, signal_count, created_at FROM sessions "
+            "WHERE signal_count > 0 "
+            "ORDER BY created_at DESC LIMIT 20"
+        ).fetchall()
+    conn.close()
+    return [_row_to_dict(r, ["session_id", "cwd", "signal_count", "created_at"]) for r in rows]
 
 
 def _row_to_dict(row: tuple, cols: list[str]) -> dict:

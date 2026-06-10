@@ -33,7 +33,7 @@ try:
 
     if latest_signal.get('signal_type') != 'neutral':
         from rating_engine import update_lesson_rating
-        from db_ops import search_knowledge
+        from db_ops import search_knowledge, insert_signal
 
         keywords = latest_signal.get('text', '')
         signal_type = latest_signal['signal_type']
@@ -42,23 +42,45 @@ try:
 
         # 搜索并更新所有 DB（项目库 + 全局库）
         dbs_to_search = []
-
-        # 项目库
         if cwd:
             project_db = get_db_path(cwd)
             if Path(project_db).exists():
                 dbs_to_search.append(project_db)
-
-        # 全局库
         global_db = str(GLOBAL_DB)
         if Path(global_db).exists():
             dbs_to_search.append(global_db)
 
+        signal_db = dbs_to_search[0] if dbs_to_search else global_db
         for db_path in dbs_to_search:
             try:
                 results = search_knowledge(db_path, keywords, 3)
                 for r in results:
                     update_lesson_rating(db_path, r['id'], signal_type, intensity, confidence)
+                    # 持久化信号，关联知识节点
+                    insert_signal(db_path, {
+                        'incident_id': None,
+                        'knowledge_node_id': r['id'],
+                        'signal_type': signal_type,
+                        'intensity': intensity,
+                        'sentiment_score': latest_signal.get('sentiment_score', 0.5),
+                        'emotion_type': latest_signal.get('emotion', ''),
+                        'source_text': latest_signal.get('text', '')[:200],
+                    })
+            except Exception:
+                pass
+
+        # 无匹配节点时也记录信号（留待后续归因）
+        if not dbs_to_search or not any(True for _ in []):
+            try:
+                insert_signal(signal_db, {
+                    'incident_id': None,
+                    'knowledge_node_id': None,
+                    'signal_type': signal_type,
+                    'intensity': intensity,
+                    'sentiment_score': latest_signal.get('sentiment_score', 0.5),
+                    'emotion_type': latest_signal.get('emotion', ''),
+                    'source_text': latest_signal.get('text', '')[:200],
+                })
             except Exception:
                 pass
 

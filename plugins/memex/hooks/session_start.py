@@ -19,6 +19,15 @@ for db_path in [global_db, project_db]:
         from db_schema import init_db
         init_db(db_path)
 
+# 知识衰减：每次会话启动时执行一次
+for db_path in [global_db, project_db]:
+    if Path(db_path).exists():
+        try:
+            from rating_engine import apply_decay
+            decayed = apply_decay(db_path)
+        except Exception:
+            pass
+
 # 导入团队 patches
 try:
     from sync_engine import import_team_patches

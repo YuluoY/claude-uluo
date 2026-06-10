@@ -38,14 +38,23 @@ try:
         conn.commit()
         conn.close()
 
-    # 导出团队 patches
-    try:
-        from sync_engine import export_team_patches
-        patches = export_team_patches(global_db, cwd)
-    except Exception:
-        patches = []
-
     if signal_count > 0 and summary.get('signals'):
+        # 持久化所有信号到 DB
+        try:
+            from db_ops import insert_signal
+            for s in summary['signals']:
+                insert_signal(target_db, {
+                    'incident_id': None,
+                    'knowledge_node_id': None,
+                    'signal_type': s.get('signal_type', 'neutral'),
+                    'intensity': s.get('intensity', 0.5),
+                    'sentiment_score': s.get('sentiment_score', 0.5),
+                    'emotion_type': s.get('emotion', ''),
+                    'source_text': s.get('text', '')[:200],
+                })
+        except Exception:
+            pass
+
         # 提取前 5 个信号摘要
         signal_summaries = []
         for s in summary['signals'][:5]:
@@ -64,10 +73,18 @@ try:
 
 {json.dumps(signal_summaries, indent=2, ensure_ascii=False)}
 
-提取方法: 对每个信号，确定是否包含有价值的问题解决经验。如果有，用 Python 写入项目库:
+提取方法（两步，务必执行）:
+1. 先写入 incident（问题事件）获取 incident_id:
   PYTHONPATH={Path(__file__).resolve().parent.parent}/scripts python3 -c "
-  from db_ops import insert_knowledge_node; from rating_engine import update_lesson_rating;
-  kid = insert_knowledge_node('{target_db}', {{'title':'...', 'category_path':'...', 'root_cause':'...', 'key_takeaway':'...', 'scope':'project', 'source_projects': [{json.dumps(cwd)}]}});
+  from db_ops import insert_incident;
+  iid = insert_incident('{target_db}', {{'problem_statement':'...', 'context_project':'{Path(cwd).name if cwd else \"\"}', 'context_files':'[]', 'symptoms':'[]', 'solution_description':'...', 'verification_type':'user_confirmed', 'sentiment_score':0.9}});
+  print(f'incident_id={{iid}}')
+  "
+2. 再写入 knowledge_node 并关联 incident:
+  PYTHONPATH={Path(__file__).resolve().parent.parent}/scripts python3 -c "
+  from db_ops import insert_knowledge_node, insert_edge; from rating_engine import update_lesson_rating;
+  kid = insert_knowledge_node('{target_db}', {{'title':'...', 'category_path':'...', 'root_cause':'...', 'key_takeaway':'...', 'scope':'project', 'source_projects': [{json.dumps(cwd)}], 'source_incidents': ['<incident_id>']}});
+  insert_edge('{target_db}', 'knowledge_node', kid, 'incident', '<incident_id>', 'DERIVED_FROM', 1.0);
   update_lesson_rating('{target_db}', kid, 'confirm', 0.9, 1.0)
   "
 """

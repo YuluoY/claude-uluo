@@ -108,6 +108,43 @@ def update_lesson_rating(db_path: str, lesson_id: int, signal_type: str, intensi
     return rating.to_dict()
 
 
+def apply_decay(db_path: str, days_threshold: int = 30, sigma_increment: float = 0.5):
+    """
+    知识衰减：长时间未被验证的经验，不确定性（sigma）逐渐增大。
+
+    每 days_threshold 天未更新的节点，sigma += sigma_increment。
+    conservative_score (mu - 2*sigma) 自然降低，在检索排序中下沉。
+    不删除节点——被再次验证后 sigma 会下降。
+
+    Args:
+        db_path: 数据库路径
+        days_threshold: 衰减触发阈值（天）
+        sigma_increment: 每次衰减增加的 sigma 值
+
+    Returns:
+        受影响的节点数量
+    """
+    import sqlite3
+    conn = sqlite3.connect(db_path)
+    conn.execute("PRAGMA journal_mode=WAL")
+
+    cutoff = f"datetime('now', '-{days_threshold} days')"
+
+    updated = conn.execute(
+        f"""UPDATE knowledge_nodes
+            SET trueskill_sigma = MIN(trueskill_sigma + ?, 8.333),
+                updated_at = datetime('now')
+            WHERE updated_at < {cutoff}
+              AND scope != 'deleted'
+              AND trueskill_sigma < 8.333""",
+        (sigma_increment,)
+    ).rowcount
+
+    conn.commit()
+    conn.close()
+    return updated
+
+
 if __name__ == "__main__":
     # 验证 TrueSkill 连续颗粒度
     r = LessonRating()

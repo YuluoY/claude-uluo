@@ -84,4 +84,3 @@ def ensure_memex_dirs(cwd: str = None):
         project_dir = Path(cwd).resolve() / ".claude" / "memex"
         project_dir.mkdir(parents=True, exist_ok=True)
         (project_dir / "team" / "patches").mkdir(parents=True, exist_ok=True)
-        (project_dir / "personal").mkdir(parents=True, exist_ok=True)

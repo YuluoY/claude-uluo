@@ -1,18 +1,19 @@
 """
-Memex Sentiment Detector — SnowNLP + jieba + pysentimiento
-三层信号检测：情感分数 → 情绪分类 → 信号归类
+Memex Sentiment Detector — SnowNLP + jieba + pysentimiento + 情感词典
+四层信号检测：词典规则 → 情感分数 → 情绪分类 → 信号归类
 """
-
 import sys
 from pathlib import Path
 
-SKILL_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(SKILL_DIR))
+PLUGIN_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PLUGIN_ROOT))
 
 # 可选依赖的延迟导入
 _SNOW = None
 _JIEBA = None
 _PYSENT = None
+_POS_LEXICON = None
+_NEG_LEXICON = None
 
 
 def _get_snownlp():
@@ -48,6 +49,35 @@ def _get_pysentimiento():
     return _PYSENT
 
 
+def _load_lexicon(path: str):
+    """加载情感词典文件（每行一个词），返回 set"""
+    lexicon = set()
+    filepath = PLUGIN_ROOT / "scripts" / "lexicons" / path
+    if filepath.exists():
+        with open(filepath, "r") as f:
+            for line in f:
+                word = line.strip()
+                if word and not word.startswith("#"):
+                    lexicon.add(word)
+    return lexicon
+
+
+def _get_pos_lexicon():
+    """中文正向情感词集合"""
+    global _POS_LEXICON
+    if _POS_LEXICON is None:
+        _POS_LEXICON = _load_lexicon("positive.txt")
+    return _POS_LEXICON
+
+
+def _get_neg_lexicon():
+    """中文负向情感词集合"""
+    global _NEG_LEXICON
+    if _NEG_LEXICON is None:
+        _NEG_LEXICON = _load_lexicon("negative.txt")
+    return _NEG_LEXICON
+
+
 def detect(text: str) -> dict:
     """
     分析用户输入文本，返回结构化信号。
@@ -78,21 +108,17 @@ def detect(text: str) -> dict:
     if not text or not text.strip():
         return result
 
-    # 规则增强：SnowNLP 对短中文情绪识别不稳定，用规则补偿
+    # 规则增强：词典匹配做 soft boost（补偿 SnowNLP 对短文本的不稳定性）
     _rule_boost = 0.0
-    _strong_pos = ["完美", "解决了", "太好了", "真棒", "就是这样", "牛", "exactly", "perfect", "great"]
-    _pos = ["好了", "可以了", "能用", "works", "good", "nice", "fixed", "correct"]
-    _strong_neg = ["还是不行", "完全不对", "又错了", "一塌糊涂", "彻底错了", "搞错了", "still broken"]
-    _neg = ["不行", "没用", "失败", "wrong", "doesn't work", "incorrect"]
-    _correction = ["应该是", "要先", "不是这样", "改成", "换成", "以后要", "应该是先", "不对，"]
+    _correction_patterns = ["应该是", "要先", "不是这样", "改成", "换成", "以后要", "应该是先", "不对，",
+                           "不能直接", "需要先", "缺了", "漏了", "忘了", "没考虑到", "应该先"]
 
-    # 优先检测纠正信号（"不对，应该是X" 这个模式优先于普通否定）
+    # 优先检测纠正信号
     _is_correction = False
-    for kw in _correction:
+    for kw in _correction_patterns:
         if kw in text:
             _is_correction = True
             break
-    # 额外检测："不对" 后面跟 "应该" → 纠正而非单纯否定
     if "不对" in text and ("应该" in text or "要先" in text or "改成" in text):
         _is_correction = True
 
@@ -109,25 +135,44 @@ def detect(text: str) -> dict:
                 pass
         return result
 
-    # 正向/负向规则增强
-    for kw in _strong_pos:
-        if kw in text:
-            _rule_boost = 0.4
-            break
-    if _rule_boost == 0.0:
-        for kw in _pos:
-            if kw in text:
-                _rule_boost = 0.2
-                break
-    for kw in _strong_neg:
-        if kw in text:
-            _rule_boost = -0.4
-            break
-    if _rule_boost == 0.0:
-        for kw in _neg:
-            if kw in text:
-                _rule_boost = -0.2
-                break
+    # 词典规则增强（正向/负向 soft boost，双向匹配取优势方）
+    pos_lex = _get_pos_lexicon()
+    neg_lex = _get_neg_lexicon()
+
+    pos_boost = 0.0
+    neg_boost = 0.0
+
+    if pos_lex or neg_lex:
+        # 字符集预过滤：只检查首字在文本中的词（大幅减少匹配次数）
+        text_chars = set(text)
+        text_len = len(text)
+
+    if pos_lex:
+        pos_matches = [
+            w for w in pos_lex
+            if len(w) >= 2 and len(w) <= text_len and w[0] in text_chars and w in text
+        ]
+        if pos_matches:
+            max_len = max(len(w) for w in pos_matches)
+            pos_boost = 0.4 if max_len >= 3 else 0.2
+
+    if neg_lex:
+        neg_matches = [
+            w for w in neg_lex
+            if len(w) >= 2 and len(w) <= text_len and w[0] in text_chars and w in text
+        ]
+        if neg_matches:
+            max_len = max(len(w) for w in neg_matches)
+            neg_boost = -0.4 if max_len >= 3 else -0.2
+
+    # 取绝对值更大的方向。等长时偏向负向（技术对话中假阴性代价更高）
+    if abs(pos_boost) > abs(neg_boost):
+        _rule_boost = pos_boost
+    elif abs(neg_boost) > abs(pos_boost):
+        _rule_boost = neg_boost
+    else:
+        # 同强度时：负向优先（漏掉负面反馈比多给正向boost更危险）
+        _rule_boost = neg_boost if neg_boost != 0.0 else pos_boost
 
     # Layer 1: jieba 关键词（先提取，不受后续影响）
     JA = _get_jieba()
