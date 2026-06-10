@@ -62,7 +62,7 @@ try:
 提取方法: 对每个信号，确定是否包含有价值的问题解决经验。如果有，用 Python 写入 Memex DB:
   PYTHONPATH={Path(__file__).resolve().parent.parent}/scripts python3 -c "
   from db_ops import insert_knowledge_node; from rating_engine import update_lesson_rating;
-  kid = insert_knowledge_node('{global_db}', {{'title':'...', 'category_path':'...', 'root_cause':'...', 'key_takeaway':'...'}});
+  kid = insert_knowledge_node('{global_db}', {{'title':'...', 'category_path':'...', 'root_cause':'...', 'key_takeaway':'...', 'source_projects': [{json.dumps(cwd)}]}});
   update_lesson_rating('{global_db}', kid, 'confirm', 0.9, 1.0)
   "
 """

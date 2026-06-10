@@ -8,7 +8,5 @@
   "homepage": "https://github.com/memex-plugin/memex",
   "keywords": ["memory", "knowledge-graph", "lessons", "retrospective", "vector-search"],
   "license": "MIT",
-  "skills": "./skills/",
-  "agents": "./agents/",
-  "hooks": "./hooks/hooks.json"
+  "skills": "./skills/"
 }

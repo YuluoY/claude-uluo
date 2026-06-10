@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "claude-uluo",
+  "owner": {
+    "name": "YuluoY",
+    "email": "huyongle1027@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "claude-uluo-all",
+      "source": "./plugins/claude-uluo-all",
+      "description": "元插件——安装此插件即自动安装全部分扩展"
+    },
+    {
+      "name": "memex",
+      "source": "./plugins/memex",
+      "description": "长期经验记忆插件：自动从对话中学习，巴普洛夫条件反射 × TrueSkill 连续评分 × 四层知识提取 × 混合向量检索"
+    },
+    {
+      "name": "diagram-compiler",
+      "source": "./skills/diagram-compiler",
+      "description": "技术图表编译工坊——Mermaid/Matplotlib/Canvas 多后端，支持流程图、架构图、论文插图等"
+    },
+    {
+      "name": "frontend-visual-qa",
+      "source": "./skills/frontend-visual-qa",
+      "description": "AI 生成前端 UI 的视觉质量保障——设计 Token、组件库、响应式、无障碍、i18n"
+    },
+    {
+      "name": "html-blueprint",
+      "source": "./skills/html-blueprint",
+      "description": "HTML-first 组件设计协议——用 data-* 标注生成可渲染的 HTML/CSS 设计稿"
+    },
+    {
+      "name": "impeccable",
+      "source": "./skills/impeccable",
+      "description": "前端 UI 设计与审查——UX 评审、视觉层级、无障碍、主题、排版、动效一站式"
+    },
+    {
+      "name": "skill-creator",
+      "source": "./skills/skill-creator",
+      "description": "Skill 创建、修改与评测——含 evals 基准测试和方差分析"
+    },
+    {
+      "name": "uluo-doc-standards",
+      "source": "./skills/uluo-doc-standards",
+      "description": "AI 编程文档产出规范——spec/plan/tasks/changelog/验收报告模板与质量标准"
+    },
+    {
+      "name": "uluo-web-standards",
+      "source": "./skills/uluo-web-standards",
+      "description": "Web 工程规范——eslint/stylelint/tsc 工具链 + DDD 分层架构 + 软规则自检"
+    }
+  ]
+}

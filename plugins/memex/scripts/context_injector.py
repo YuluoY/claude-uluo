@@ -4,20 +4,29 @@ Memex Context Injector — SessionStart 上下文注入引擎
 """
 
 from pathlib import Path
-from db_ops import top_knowledge, get_recent_incidents
+from db_ops import top_knowledge, top_knowledge_for_project, get_recent_incidents
 
 
-def format_injection(db_path: str, project_db_path: str = None, team_dir: str = None) -> str:
-    """生成完整的 SessionStart 注入文本"""
+def format_injection(db_path: str, cwd: str = None, project_db_path: str = None, team_dir: str = None) -> str:
+    """生成完整的 SessionStart 注入文本
+
+    优先注入当前项目的经验 (cwd 匹配 source_projects)，不足时用全局高分经验补齐。
+    """
     lines = ["[Memex 经验上下文]\n"]
 
-    # 1. 全局高价值经验
+    # 1. 项目过滤 + 全局补齐的高价值经验
     try:
-        top = top_knowledge(db_path, limit=10)
-        if top:
+        if cwd:
+            top = top_knowledge_for_project(db_path, cwd, limit=10)
+            lines.append("## 高价值经验（本项目优先）")
+        else:
+            top = top_knowledge(db_path, limit=10)
             lines.append("## 高价值经验")
+
+        if top:
             for kn in top:
                 cs = kn.get("conservative_score", 0)
+                tag = "" if kn.get("source") == "global" else ""
                 lines.append(
                     f"- #{kn['id']} μ={kn.get('trueskill_mu',25):.1f} σ={kn.get('trueskill_sigma',8.3):.1f}"
                     f" | [{kn.get('category_path','')}] {kn['title']}"

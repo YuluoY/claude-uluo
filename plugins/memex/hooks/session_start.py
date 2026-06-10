@@ -29,7 +29,7 @@ except Exception:
 # 生成上下文注入
 try:
     team_dir = (Path(cwd) / '.claude' / 'memex' / 'team') if cwd else None
-    ctx = format_injection(global_db, project_db, str(team_dir) if team_dir and team_dir.exists() else None)
+    ctx = format_injection(global_db, cwd=cwd, project_db_path=project_db, team_dir=str(team_dir) if team_dir and team_dir.exists() else None)
     if result.get("imported", 0) > 0 or result.get("merged", 0) > 0:
         ctx = f"[Memex] 已同步团队经验: 新 {result['imported']} 条, 合并 {result['merged']} 条\n\n{ctx}"
     if ctx.strip():

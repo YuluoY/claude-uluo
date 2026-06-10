@@ -2,6 +2,7 @@
 Memex Database Operations — CRUD + FTS5 搜索 + TrueSkill 排序
 """
 
+import json
 import sqlite3
 from db_schema import get_conn
 
@@ -34,8 +35,57 @@ def top_knowledge(db_path: str, limit: int = 15) -> list[dict]:
     return [_row_to_dict(row, ["id","title","category_path","key_takeaway","trueskill_mu","trueskill_sigma","scope","occurrence_count"]) for row in rows]
 
 
+def top_knowledge_for_project(db_path: str, cwd: str, limit: int = 15) -> list[dict]:
+    """按项目过滤的 Top N 知识检索。
+
+    优先返回当前项目的知识（source_projects 中包含 cwd 的），
+    不足 limit 时用全局高分知识补齐。混合输出：项目知识在前，全局知识在后。
+    """
+    conn = get_conn(db_path)
+    search_term = f'%{cwd}%'
+
+    # 1. 查询本项目匹配的知识
+    project_rows = conn.execute(
+        """SELECT k.id, k.title, k.category_path, k.key_takeaway,
+                  k.trueskill_mu, k.trueskill_sigma, k.scope, k.occurrence_count,
+                  (k.trueskill_mu - 2*k.trueskill_sigma) as conservative_score
+           FROM knowledge_nodes k
+           WHERE k.source_projects LIKE ?
+           ORDER BY conservative_score DESC
+           LIMIT ?""",
+        (search_term, limit)
+    ).fetchall()
+
+    project_ids = {row[0] for row in project_rows}
+    project_result = [_row_to_dict(row, ["id","title","category_path","key_takeaway","trueskill_mu","trueskill_sigma","scope","occurrence_count","conservative_score"]) for row in project_rows]
+
+    # 2. 如果项目知识不足，用全局知识补齐
+    remaining = limit - len(project_result)
+    if remaining > 0:
+        exclude_clause = f"AND k.id NOT IN ({','.join('?' * len(project_ids))})" if project_ids else ""
+        params = list(project_ids) + [remaining]
+        global_rows = conn.execute(
+            f"""SELECT k.id, k.title, k.category_path, k.key_takeaway,
+                       k.trueskill_mu, k.trueskill_sigma, k.scope, k.occurrence_count,
+                       (k.trueskill_mu - 2*k.trueskill_sigma) as conservative_score
+                FROM knowledge_nodes k
+                WHERE 1=1 {exclude_clause}
+                ORDER BY conservative_score DESC
+                LIMIT ?""",
+            tuple(params)
+        ).fetchall()
+        global_result = [_row_to_dict(row, ["id","title","category_path","key_takeaway","trueskill_mu","trueskill_sigma","scope","occurrence_count","conservative_score"]) for row in global_rows]
+    else:
+        global_result = []
+
+    return project_result + global_result
+
+
 def insert_knowledge_node(db_path: str, data: dict) -> int:
     conn = get_conn(db_path)
+    source_projects = data.get("source_projects", [])
+    if isinstance(source_projects, list):
+        source_projects = json.dumps(source_projects)
     cur = conn.execute(
         """INSERT INTO knowledge_nodes (title, scope, abstraction_level, category_path, problem_statement, root_cause, solution_text, key_takeaway, causal_chain, preconditions, source_incidents, source_projects)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
@@ -43,7 +93,7 @@ def insert_knowledge_node(db_path: str, data: dict) -> int:
          data.get("category_path",""), data.get("problem_statement",""), data.get("root_cause",""),
          data.get("solution_text",""), data.get("key_takeaway",""),
          data.get("causal_chain","[]"), data.get("preconditions","[]"),
-         data.get("source_incidents","[]"), data.get("source_projects","[]"))
+         data.get("source_incidents","[]"), source_projects)
     )
     lid = cur.lastrowid
     conn.commit()
