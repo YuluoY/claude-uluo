@@ -3,7 +3,7 @@
 import sys, os, json
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts'))
 from pathlib import Path
-from lib import read_stdin, write_stdout, MEMEX_HOME, GLOBAL_DB, ensure_memex_dirs
+from lib import read_stdin, write_stdout, MEMEX_HOME, GLOBAL_DB, ensure_memex_dirs, get_db_path
 
 event = read_stdin()
 transcript_path = event.get('transcript_path', '')
@@ -21,12 +21,16 @@ try:
     summary = index_session(transcript_path)
     signal_count = summary.get('signal_count', 0)
 
-    # 记录 session
     ensure_memex_dirs(cwd)
     global_db = str(GLOBAL_DB)
-    if Path(global_db).exists():
+    project_db = get_db_path(cwd) if cwd else None
+    project_db_exists = project_db and Path(project_db).exists()
+
+    # Session 记录写入项目库（有项目上下文时）
+    target_db = project_db if project_db_exists else global_db
+    if Path(target_db).exists():
         import sqlite3
-        conn = sqlite3.connect(global_db)
+        conn = sqlite3.connect(target_db)
         conn.execute(
             "INSERT OR IGNORE INTO sessions (session_id, cwd, transcript_path, incident_count, signal_count) VALUES (?,?,?,?,?)",
             (session_id, cwd, transcript_path, 0, signal_count)
@@ -34,7 +38,6 @@ try:
         conn.commit()
         conn.close()
 
-    # 如果有强信号，通知 Claude 进行 LLM 知识提取
     # 导出团队 patches
     try:
         from sync_engine import export_team_patches
@@ -55,15 +58,17 @@ try:
 
         extraction_prompt = f"""[Memex] 会话归档完成: {signal_count} 个信号, {summary['tool_count']} 次工具调用。
 
+目标库: {target_db}
+
 请分析以下信号并提取结构化经验:
 
 {json.dumps(signal_summaries, indent=2, ensure_ascii=False)}
 
-提取方法: 对每个信号，确定是否包含有价值的问题解决经验。如果有，用 Python 写入 Memex DB:
+提取方法: 对每个信号，确定是否包含有价值的问题解决经验。如果有，用 Python 写入项目库:
   PYTHONPATH={Path(__file__).resolve().parent.parent}/scripts python3 -c "
   from db_ops import insert_knowledge_node; from rating_engine import update_lesson_rating;
-  kid = insert_knowledge_node('{global_db}', {{'title':'...', 'category_path':'...', 'root_cause':'...', 'key_takeaway':'...', 'source_projects': [{json.dumps(cwd)}]}});
-  update_lesson_rating('{global_db}', kid, 'confirm', 0.9, 1.0)
+  kid = insert_knowledge_node('{target_db}', {{'title':'...', 'category_path':'...', 'root_cause':'...', 'key_takeaway':'...', 'scope':'project', 'source_projects': [{json.dumps(cwd)}]}});
+  update_lesson_rating('{target_db}', kid, 'confirm', 0.9, 1.0)
   "
 """
 
