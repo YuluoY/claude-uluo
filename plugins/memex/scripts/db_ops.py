@@ -9,6 +9,8 @@ from db_schema import get_conn
 
 def search_knowledge(db_path: str, query: str, limit: int = 10) -> list[dict]:
     """FTS5 全文搜索 + TrueSkill 排序（自动过滤已删除）"""
+    if not query or not query.strip():
+        return []
     conn = get_conn(db_path)
     rows = conn.execute(
         """SELECT k.id, k.title, k.category_path, k.key_takeaway,

@@ -25,7 +25,7 @@ class LessonRating:
         if signal_type in ("confirm", "strong_confirm", "weak_confirm", "explicit_keep"):
             new, _ = rate_1vs1(self.rating, Rating())
             self._blend(new, q)
-        elif signal_type in ("failure", "failure_confirm", "repeat_failure"):
+        elif signal_type in ("failure", "failure_confirm", "repeat_failure", "negative", "strong_negative"):
             _, new = rate_1vs1(Rating(), self.rating)
             self._blend(new, q)
         elif signal_type == "correction":
@@ -100,7 +100,7 @@ def update_lesson_rating(db_path: str, lesson_id: int, signal_type: str, intensi
     # 更新信号计数
     if signal_type in ("confirm", "strong_confirm", "weak_confirm", "explicit_keep"):
         conn.execute("UPDATE knowledge_nodes SET positive_signals = positive_signals + 1 WHERE id = ?", (lesson_id,))
-    elif signal_type in ("failure", "failure_confirm", "repeat_failure"):
+    elif signal_type in ("failure", "failure_confirm", "repeat_failure", "negative", "strong_negative"):
         conn.execute("UPDATE knowledge_nodes SET negative_signals = negative_signals + 1 WHERE id = ?", (lesson_id,))
 
     conn.commit()
