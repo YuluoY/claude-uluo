@@ -108,6 +108,105 @@ def forge(profile_path: str, skill_name: str = "", output_dir: Optional[str] = N
 # SKILL.md generator
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Domain-aware workflow dispatch
+# ---------------------------------------------------------------------------
+
+WRITING_SIGNALS = {"writing", "essay", "author", "prose", "literature", "novel",
+                    "poetry", "creative", "narrative", "composition", "rhetoric",
+                    "创作", "写作", "文学", "散文", "小说", "诗歌"}
+CODE_SIGNALS = {"python", "react", "javascript", "typescript", "rust", "go",
+                "systems", "programming", "compiler", "api", "framework",
+                "frontend", "backend", "devops", "infrastructure", "testing"}
+
+
+def _detect_domain(profile: dict) -> str:
+    domains = " ".join(d.get("domain", "").lower() for d in profile.get("expertise", []))
+    if any(s in domains for s in WRITING_SIGNALS):
+        return "writing"
+    if any(s in domains for s in CODE_SIGNALS):
+        return "code"
+    return "generic"
+
+
+def _generate_workflow(profile: dict) -> list[str]:
+    domain = _detect_domain(profile)
+    if domain == "writing":
+        return _writer_workflow(profile)
+    elif domain == "code":
+        return _developer_workflow(profile)
+    return _generic_workflow(profile)
+
+
+def _writer_workflow(profile: dict) -> list[str]:
+    persona = profile.get("persona_name", "this author")
+    style = profile.get("style", {})
+    return [
+        "## How This Author Works",
+        "",
+        f"Channel {persona}'s creative process:",
+        "",
+        "1. **Opening**: How they start — " +
+        ("weather/time setting, personal anecdote, or direct thesis" if style.get("phrases") else "observe their characteristic opening move"),
+        "2. **Development**: How they build — " +
+        ("layered scenes, argument through narrative, or recursive theme exploration" if style.get("explanation_style") else "follow their structural rhythm"),
+        "3. **Voice**: Signature narrative techniques — " +
+        ("first-person intrusion, dialect-marked dialogue, nature-as-symbolism" if style.get("formality", 5) < 5 else "detached observation, precise language, irony-as-distance"),
+        "4. **Closure**: How they end — " +
+        ("recursive return to opening image, declarative statement, or open-ended reflection"),
+        "",
+        "## Stylistic Rules (Never Break)",
+        "",
+        f"These are {persona}'s non-negotiable patterns. See [Gotchas](#gotchas) for details.",
+        "",
+    ]
+
+
+def _developer_workflow(profile: dict) -> list[str]:
+    expertise = profile.get("expertise", [])
+    lines = [
+        "## Workflow Protocol",
+        "",
+        "Approach technical problems systematically:",
+        "",
+    ]
+    if expertise:
+        lines.append("1. **Domain Assessment**: Identify which domains apply:")
+        for exp in expertise[:5]:
+            lines.append(f"   - {exp['domain']} (level: {exp['level']})")
+        lines.append("")
+    lines.extend([
+        "2. **Pattern Matching**: Scan for established patterns before implementing",
+        "3. **Gotcha Check**: Review [Gotchas](#gotchas) for relevant warnings",
+        "4. **Decomposition**: Break into the smallest testable units",
+        "5. **Verification**: Run through the gotcha checklist again after implementation",
+        "",
+    ])
+    return lines
+
+
+def _generic_workflow(profile: dict) -> list[str]:
+    persona = profile.get("persona_name", "this person")
+    expertise = profile.get("expertise", [])
+    lines = [
+        "## How This Person Works",
+        "",
+        f"Approach tasks the way {persona} would:",
+        "",
+    ]
+    if expertise:
+        lines.append("**Key domains:** " + ", ".join(d["domain"] for d in expertise[:5]))
+        lines.append("")
+    lines.extend([
+        "1. **Assess**: Identify which domains and patterns apply",
+        "2. **Check**: Review the [Gotchas](#gotchas) section for relevant warnings",
+        "3. **Execute**: Apply the decision principles from Core Principles",
+        "4. **Verify**: Confirm the output matches quality expectations",
+        "",
+    ])
+    return lines
+
+
 def _generate_skill_md(skill_name: str, profile: dict) -> str:
     """Generate the main SKILL.md content."""
     lines = []
@@ -139,21 +238,31 @@ def _generate_skill_md(skill_name: str, profile: dict) -> str:
         "",
     ])
 
-    # ---- Principles (from heuristics) ----
+    # ---- Principles (from heuristics, domain-aware format) ----
+    domain = _detect_domain(profile)
     heuristics = profile.get("heuristics", [])
     for i, h in enumerate(heuristics[:8], 1):
         when = h.get("when", "")
         then = h.get("then", "")
         because = h.get("because", "")
-        parts = []
-        if when:
-            parts.append(f"When {when}")
-        if then:
-            parts.append(f"prefer {then}")
-        if because:
-            parts.append(f"because {because}")
-        if parts:
-            lines.append(f"{i}. {'; '.join(parts)}")
+        if domain == "writing":
+            # Writers: "Rule: X" format
+            if then:
+                line = f"{i}. {then}"
+                if because:
+                    line += f" — {because}"
+                lines.append(line)
+        else:
+            # Developers: "When X, prefer Y because Z" format
+            parts = []
+            if when:
+                parts.append(f"When {when}")
+            if then:
+                parts.append(f"prefer {then}")
+            if because:
+                parts.append(f"because {because}")
+            if parts:
+                lines.append(f"{i}. {'; '.join(parts)}")
     if not heuristics:
         lines.append("*(Insufficient heuristics data — the distiller needs more source material)*")
     lines.append("")
@@ -166,20 +275,11 @@ def _generate_skill_md(skill_name: str, profile: dict) -> str:
         "",
     ])
 
-    # Build workflow from expertise domains
+    # Build workflow from expertise domains — domain-aware dispatch
     expertise = profile.get("expertise", [])
-    if expertise:
-        lines.append("1. **Domain Assessment**: Identify which of the following domains apply:")
-        for exp in expertise[:5]:
-            lines.append(f"   - {exp['domain']} (level: {exp['level']})")
-        lines.append("")
-    lines.extend([
-        "2. **Pattern Matching**: Before implementing, scan for established patterns",
-        "3. **Gotcha Check**: Review the [Gotchas](#gotchas) section for relevant warnings",
-        "4. **Decomposition**: Break the problem into the smallest testable units",
-        "5. **Verification**: After implementing, run through the gotcha checklist again",
-        "",
-    ])
+    workflow = _generate_workflow(profile)
+    lines.extend(workflow)
+    lines.append("")
 
     # ---- Gotchas (HIGHEST SIGNAL section) ----
     lines.extend([

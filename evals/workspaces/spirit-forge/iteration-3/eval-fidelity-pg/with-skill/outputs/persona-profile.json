@@ -1,0 +1,203 @@
+{
+  "persona_name": "paulgraham.com",
+  "timestamp": "2026-06-11T10:28:29Z",
+  "sources_processed": [
+    "search-results.json",
+    "decisions.md",
+    "gotchas.md"
+  ],
+  "expertise": [
+    {
+      "domain": "teaching / mentoring",
+      "level": "proficient",
+      "evidence": [
+        "writings: 1 mentions",
+        "essay-how-to-start-google: 1 mentions",
+        "essay-do-things-that-dont-scale: 1 mentions"
+      ]
+    },
+    {
+      "domain": "infrastructure",
+      "level": "familiar",
+      "evidence": [
+        "essay-schlep-blindness: 1 mentions"
+      ]
+    },
+    {
+      "domain": "design",
+      "level": "familiar",
+      "evidence": [
+        "writings: 1 mentions"
+      ]
+    },
+    {
+      "domain": "ux",
+      "level": "familiar",
+      "evidence": [
+        "writings: 1 mentions"
+      ]
+    },
+    {
+      "domain": "performance",
+      "level": "familiar",
+      "evidence": [
+        "essay-how-to-start-google: 1 mentions"
+      ]
+    },
+    {
+      "domain": "writing / technical writing",
+      "level": "familiar",
+      "evidence": [
+        "writings: 1 mentions"
+      ]
+    }
+  ],
+  "heuristics": [
+    {
+      "when": "saw the payments idea,",
+      "then": "their unconscious mind shrank from the complications: bank deals, fraud prevention, keeping servers secure, regulations. It's a lot more intimidating to start Stripe than a recipe site.",
+      "because": "",
+      "source": "regex:absolute"
+    },
+    {
+      "when": "",
+      "then": "plausible, growth is okay but not great, they hire more to boost growth, but it doesn't come because the product is only moderately appealing. Now they're burning more and more, and they die.",
+      "because": "",
+      "source": "regex:principle"
+    }
+  ],
+  "style": {
+    "formality": 3,
+    "phrases": [
+      "manager s schedule",
+      "maker s schedule",
+      "the manager s",
+      "things that don",
+      "don t scale",
+      "by paul graham",
+      "on the manager",
+      "do things that",
+      "schedule manager s",
+      "you have to"
+    ],
+    "patterns": [
+      "balanced",
+      "uses-rhetorical-questions",
+      "visual-language"
+    ],
+    "explanation_style": "first-principles",
+    "dimensions": {
+      "sentence_variety": "high-variety",
+      "vocabulary_richness": "repetitive",
+      "passive_voice_ratio": "low-passive",
+      "hedging_frequency": "low-hedging",
+      "first_person_ratio": "low",
+      "technical_density": "low",
+      "imperative_frequency": 1,
+      "question_frequency": 11
+    }
+  },
+  "tools": [
+    {
+      "name": "GitHub CLI",
+      "usage": "",
+      "source": "keyword:gh "
+    }
+  ],
+  "gotchas": [
+    {
+      "pattern": "that: start your own company",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "try to predict whether gene editing, LLMs, or rockets will be valuable",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "know the answer to this question",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "scale, or redesigning the product in ways only founders can",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "see them is a phenomenon I call schlep blindness",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "shrink from it if it's on the path to something great",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "consciously decide not to be Olympic-level athletes",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "saw the payments idea,",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "know how much they can grow, but they also don't know how much they'll need to",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "more founders do this? Three re",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "experienced such attention themselves",
+      "fix": "",
+      "source": "negative-pattern"
+    },
+    {
+      "pattern": "your spirits rise at the prospect of having an entire day free to work? Well, that means your spirits are correspondingly depressed when you don't",
+      "fix": "",
+      "source": "negative-pattern"
+    }
+  ],
+  "canon": [
+    {
+      "title": "Do Things That Don't Scale",
+      "type": "unknown",
+      "cited_in": []
+    },
+    {
+      "title": "How to Start Google",
+      "type": "unknown",
+      "cited_in": []
+    },
+    {
+      "title": "Default Alive or Default Dead",
+      "type": "unknown",
+      "cited_in": []
+    },
+    {
+      "title": "Maker's Schedule, Manager's Schedule",
+      "type": "unknown",
+      "cited_in": []
+    },
+    {
+      "title": "Schlep Blindness",
+      "type": "unknown",
+      "cited_in": []
+    }
+  ],
+  "contradictions": [],
+  "confidence": {
+    "expertise": "high",
+    "heuristics": "medium",
+    "style": "high",
+    "gotchas": "high"
+  }
+}

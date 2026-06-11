@@ -110,20 +110,9 @@ def distill(raw_research_dir: str, output_path: Optional[str] = None) -> dict:
     print("  Extracting expertise domains ...")
     profile["expertise"] = _extract_expertise(research_texts, combined)
 
-    # ---- Extract heuristics ----
+    # ---- Extract heuristics (regex baseline) ----
     print("  Extracting decision heuristics ...")
     profile["heuristics"] = _extract_heuristics(research_texts, combined)
-    if len(profile["heuristics"]) < 3:
-        print("  Regex extraction found <3 heuristics, trying LLM fallback ...")
-        llm_heuristics = _llm_extract_heuristics(combined)
-        if llm_heuristics:
-            # Merge: LLM results supplement regex results
-            seen = {h["then"].lower()[:60] for h in profile["heuristics"]}
-            for h in llm_heuristics:
-                if h["then"].lower()[:60] not in seen:
-                    seen.add(h["then"].lower()[:60])
-                    profile["heuristics"].append(h)
-            print(f"  LLM added {len(llm_heuristics)} heuristics (total: {len(profile['heuristics'])})")
 
     # ---- Extract style markers ----
     print("  Extracting communication style ...")
@@ -133,19 +122,9 @@ def distill(raw_research_dir: str, output_path: Optional[str] = None) -> dict:
     print("  Extracting tool preferences ...")
     profile["tools"] = _extract_tools(combined)
 
-    # ---- Extract gotchas (highest-signal content) ----
+    # ---- Extract gotchas (regex baseline) ----
     print("  Extracting gotchas ...")
     profile["gotchas"] = _extract_gotchas(research_texts, combined)
-    if len(profile["gotchas"]) < 3:
-        print("  Regex extraction found <3 gotchas, trying LLM fallback ...")
-        llm_gotchas = _llm_extract_gotchas(combined)
-        if llm_gotchas:
-            seen = {g["pattern"].lower()[:60] for g in profile["gotchas"]}
-            for g in llm_gotchas:
-                if g["pattern"].lower()[:60] not in seen:
-                    seen.add(g["pattern"].lower()[:60])
-                    profile["gotchas"].append(g)
-            print(f"  LLM added {len(llm_gotchas)} gotchas (total: {len(profile['gotchas'])})")
 
     # ---- Extract canon ----
     print("  Extracting reference canon ...")
@@ -165,6 +144,35 @@ def distill(raw_research_dir: str, output_path: Optional[str] = None) -> dict:
             "reason": f"Low extraction yield: {len(profile['expertise'])} domains, {len(profile['gotchas'])} gotchas",
             "recommendation": "Re-run capture at L2 or L3 depth, or manually enrich raw-research/ with additional source content."
         }
+
+    # ---- Write extraction tasks for Claude (if regex insufficient) ----
+    tasks = []
+    if len(profile["gotchas"]) < 3:
+        tasks.append({
+            "task": "Gotcha Extraction",
+            "instruction": "Read all .md files in raw-research/. Identify patterns this person consistently catches that others miss. For each: describe the common mistake (pattern) and the correct approach (fix). Aim for 5-15 gotchas.",
+            "output_field": "gotchas",
+            "output_format": '[{"pattern": "...", "fix": "...", "source": "claude-extraction"}, ...]',
+        })
+    if len(profile["heuristics"]) < 3:
+        tasks.append({
+            "task": "Heuristic Extraction",
+            "instruction": "Read all .md files in raw-research/. Extract decision rules, principles, and patterns of thinking. For each: what condition triggers this response? What's the preferred action? Why? Aim for 5-10 heuristics.",
+            "output_field": "heuristics",
+            "output_format": '[{"when": "...", "then": "...", "because": "...", "source": "claude-extraction"}, ...]',
+        })
+    if tasks:
+        tasks_path = research / "extraction-tasks.md"
+        with open(tasks_path, "w") as f:
+            f.write("# Extraction Tasks for Claude\n\n")
+            f.write(f"Persona: {profile.get('persona_name', 'unknown')}\n\n")
+            for i, t in enumerate(tasks, 1):
+                f.write(f"## Task {i}: {t['task']}\n\n")
+                f.write(f"{t['instruction']}\n\n")
+                f.write(f"**Output field**: `{t['output_field']}`\n\n")
+                f.write(f"**Output format**:\n```json\n{t['output_format']}\n```\n\n")
+                f.write(f"Write results to the `{t['output_field']}` array in persona-profile.json.\n\n---\n\n")
+        print(f"  → Wrote {len(tasks)} extraction tasks to extraction-tasks.md for Claude to complete")
 
     # Write output
     if output_path is None:
@@ -718,76 +726,6 @@ def _technical_density(text_lower: str) -> str:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
-def _llm_extract_heuristics(text: str, max_items: int = 10) -> list[dict]:
-    """LLM-based heuristic extraction fallback.
-
-    Called when regex extraction produces fewer than 3 results.
-    Uses subprocess to call Claude CLI for semantic extraction.
-    """
-    try:
-        import subprocess
-        # Truncate text to avoid token limits
-        excerpt = text[:8000]
-        prompt = f"""Extract decision heuristics from this text about a person's technical preferences and working style.
-
-For each heuristic found, output a JSON object with:
-- "when": the condition or situation
-- "then": the preferred action/choice
-- "because": the rationale (can be empty string if not stated)
-
-Return ONLY a JSON array of these objects, nothing else. Maximum {max_items} items.
-If you cannot find any clear heuristics, return an empty array [].
-
-Text:
-{excerpt}
-"""
-        result = subprocess.run(
-            ["claude", "-p", prompt, "--output-format", "json"],
-            capture_output=True, text=True, timeout=60
-        )
-        if result.returncode == 0 and result.stdout.strip():
-            data = json.loads(result.stdout.strip())
-            if isinstance(data, list):
-                return [{"when": h.get("when", ""), "then": h.get("then", ""),
-                         "because": h.get("because", ""), "source": "llm-extraction"}
-                        for h in data if h.get("then")]
-    except Exception:
-        pass
-    return []
-
-
-def _llm_extract_gotchas(text: str, max_items: int = 10) -> list[dict]:
-    """LLM-based gotcha extraction fallback."""
-    try:
-        import subprocess
-        excerpt = text[:8000]
-        prompt = f"""Extract gotchas, common mistakes, and anti-patterns from this text about a person's technical expertise.
-
-For each gotcha, output a JSON object with:
-- "pattern": the common mistake or anti-pattern (what goes wrong)
-- "fix": the recommended approach or solution (can be empty string)
-
-Return ONLY a JSON array of these objects, nothing else. Maximum {max_items} items.
-If you cannot find any clear gotchas, return an empty array [].
-
-Text:
-{excerpt}
-"""
-        result = subprocess.run(
-            ["claude", "-p", prompt, "--output-format", "json"],
-            capture_output=True, text=True, timeout=60
-        )
-        if result.returncode == 0 and result.stdout.strip():
-            data = json.loads(result.stdout.strip())
-            if isinstance(data, list):
-                return [{"pattern": g.get("pattern", ""), "fix": g.get("fix", ""),
-                         "source": "llm-extraction"}
-                        for g in data if g.get("pattern")]
-    except Exception:
-        pass
-    return []
-
 
 def _load_json(path: Path) -> Optional[dict]:
     try:

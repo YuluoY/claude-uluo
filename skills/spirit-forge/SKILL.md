@@ -101,20 +101,27 @@ python scripts/distill.py .spirit-forge/<name>/raw-research/ \
   --output .spirit-forge/<name>/persona-profile.json
 ```
 
-This extracts structured patterns from raw research:
-- **Expertise domains** (ranked by evidence strength)
-- **Decision heuristics** (if-then rules, trade-off frameworks)
-- **Communication style** (formality, signature phrases, explanation patterns)
-- **Tool preferences** (IDE, terminal, libraries, workflows)
-- **Gotchas** (what they catch that others miss—the highest-signal content)
-- **Reference canon** (papers, books, repos, talks cited)
+The script runs regex extraction for all dimensions, then checks for gaps.
+If heuristics < 3 or gotchas < 3, it writes `extraction-tasks.md` to the
+raw-research directory.
+
+### Claude Semantic Extraction (when scripts are insufficient)
+
+**IMPORTANT**: If `extraction-tasks.md` exists in raw-research/,
+YOU MUST read it and complete the extraction tasks:
+
+1. Read the task file AND the raw-research/*.md files
+2. Use your semantic understanding to extract heuristics, gotchas,
+   style markers, and domain expertise
+3. Write the results into persona-profile.json following the
+   output format specified in each task
+4. This is the PRIMARY extraction path for non-code domains
+   (writing, design, teaching) where regex patterns fail
 
 **User review gate:** Present the persona-profile to the user:
 - Summarize what was found for each dimension
-- Flag any confidence gaps (e.g., "only 2 gotchas found, need more source material")
+- Flag any confidence gaps
 - Ask: "Does this capture the essence? Any dimensions I missed?"
-
-If the user says no, go back to Capture with adjusted focus.
 
 ## Phase 3: Forge (遣将—Deploying the General)
 
@@ -223,7 +230,7 @@ references/              # Protocol documentation (progressive disclosure L3)
 examples/                # JSON Schema + generation templates
 ```
 
-**Exraction strategy**: Regex-first (fast, deterministic) → LLM fallback (deep, semantic) when regex yields <3 results. LLM extraction uses `claude -p` subprocess for automatic enrichment.
+**Extraction strategy**: Regex baseline (fast, deterministic) → extraction-tasks.md output when regex insufficient → Claude reads tasks and does semantic extraction using its own understanding. No subprocess or API calls needed.
 
 ## Reference Files
 
