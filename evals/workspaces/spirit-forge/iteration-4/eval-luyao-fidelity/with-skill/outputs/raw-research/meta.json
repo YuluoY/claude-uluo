@@ -1,0 +1,24 @@
+{
+  "target_raw": "路遥, 作家",
+  "target_type": "name",
+  "depth": "L3",
+  "timestamp": "2026-06-11T18:55:32",
+  "sources_found": [
+    {
+      "type": "search",
+      "results": 1
+    },
+    {
+      "type": "github-fallback",
+      "username": "路遥"
+    }
+  ],
+  "files_written": [
+    "search-results.json",
+    "decisions.md",
+    "github-profile.json",
+    "code-patterns.md",
+    "gotchas.md"
+  ],
+  "capture_status": "ok"
+}

@@ -1,0 +1,51 @@
+{
+  "skill_name": "spirit-forge",
+  "iteration": 4,
+  "focus": "路遥 (Lu Yao) Chinese literary realist — domain-adaptive template + Claude semantic extraction",
+  "configurations": [
+    {
+      "name": "with-skill (spirit-forge v3)",
+      "evals": [{
+        "eval_name": "luyao-writing-fidelity",
+        "fidelity_score": "100/100",
+        "domain_template": "WRITING (auto-detected)",
+        "extraction_tasks_completed": "yes (2 tasks: heuristics + gotchas)",
+        "sentence_length": "39.0 chars (target: 30-45)",
+        "women_intrusion": "3 occurrences",
+        "exclamation": "4 in narrator voice",
+        "dialect": "10 unique / 12 occurrences (蓝格莹莹, 软格溜溜, 圪蹴, 烂包...)",
+        "narrator_intervention": "1 complete cycle + 2 additional",
+        "tokens": 61066,
+        "duration_seconds": 424.2
+      }]
+    },
+    {
+      "name": "baseline (manual, without-skill)",
+      "evals": [{
+        "eval_name": "luyao-writing-fidelity",
+        "fidelity_score": "91/100",
+        "sentence_length": "23.5 chars (too short — only weakness)",
+        "women_intrusion": "4 occurrences",
+        "exclamation": "4 in narrator voice",
+        "dialect": "6 words",
+        "narrator_intervention": "full 现身说法 paragraph",
+        "tokens": 36439,
+        "duration_seconds": 353.6
+      }]
+    }
+  ],
+  "key_findings": [
+    "DOMAIN TEMPLATE SUCCESS: forge.py auto-detected writing domain, used _writer_workflow (Opening/Development/Voice/Closure) instead of developer 5-step",
+    "EXTRACTION TASKS SUCCESS: distil.py generated extraction-tasks.md (regex found 0 heuristics in Chinese literary text), Claude completed both tasks via semantic extraction",
+    "PERFECT FIDELITY: 100/100 vs baseline 91/100. v3 with-skill OUTPERFORMS manual baseline.",
+    "SENTENCE LENGTH: v3 hit 39.0 chars (路遥 avg ~37) vs baseline 23.5. Domain template guides correct length.",
+    "A格BB重叠式: 蓝格莹莹, 软格溜溜 — authentic Shaanbei patterns correctly generated",
+    "V3 is the first iteration where with-skill BEATS baseline on fidelity. V1 was 78% vs 90%, V3 is 100% vs 91%."
+  ],
+  "trend": {
+    "v1_pg_with_skill": "78% fidelity",
+    "v1_pg_baseline": "90% fidelity",
+    "v3_luyao_with_skill": "100% fidelity",
+    "v3_luyao_baseline": "91% fidelity"
+  }
+}
