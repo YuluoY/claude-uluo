@@ -44,6 +44,19 @@ User provides target → [Capture] → [Distill] → [Forge] → [Validate] → 
 All heavy lifting is done by deterministic Python scripts in `scripts/`.
 Claude's role is composition, edge-case research, and quality review.
 
+## Quick Start (Unified Pipeline)
+
+```bash
+# One command, all 4 phases with quality gates:
+python scripts/pipeline.py <target> [--depth L2] [--skill-name <name>]
+
+# Examples:
+python scripts/pipeline.py gaearon --depth L2
+python scripts/pipeline.py "Dan Abramov, React" --depth L3 --skill-name dan-abramov
+```
+
+Or run phases individually for debugging:
+
 ## Phase 1: Capture (拘灵—Binding the Spirit)
 
 Run the deterministic capture script:
@@ -192,6 +205,25 @@ Spirit Forge is self-referential. To improve itself:
 5. Run Validate to verify the improvements
 
 This is the "dogfooding loop"—Spirit Forge eating its own cooking.
+
+## Architecture
+
+```
+scripts/
+├── pipeline.py          # Unified entry: runs all 4 phases
+├── _shared/scraper.py   # Scrapling + GitHub API utilities
+├── capture.py           # Phase 1: multi-source capture
+├── distill.py           # Phase 2: regex + LLM extraction
+├── forge.py             # Phase 3: template-driven skill generation
+└── validate.py          # Phase 4: 10 structural + content checks
+
+__tests__/               # Unit tests for extractors and validators
+agents/                  # Sub-agents for gap filling
+references/              # Protocol documentation (progressive disclosure L3)
+examples/                # JSON Schema + generation templates
+```
+
+**Exraction strategy**: Regex-first (fast, deterministic) → LLM fallback (deep, semantic) when regex yields <3 results. LLM extraction uses `claude -p` subprocess for automatic enrichment.
 
 ## Reference Files
 
