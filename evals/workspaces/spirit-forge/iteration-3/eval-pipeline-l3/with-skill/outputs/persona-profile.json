@@ -1,0 +1,43 @@
+{
+  "persona_name": "https://paulgraham.com",
+  "timestamp": "2026-06-11T10:25:51Z",
+  "sources_processed": [
+    "writings.md",
+    "gotchas.md"
+  ],
+  "expertise": [],
+  "heuristics": [],
+  "style": {
+    "formality": 5,
+    "phrases": [],
+    "patterns": [
+      "balanced"
+    ],
+    "explanation_style": "balanced",
+    "dimensions": {
+      "sentence_variety": "high-variety",
+      "vocabulary_richness": "rich",
+      "passive_voice_ratio": "low-passive",
+      "hedging_frequency": "low-hedging",
+      "first_person_ratio": "low",
+      "technical_density": "low",
+      "imperative_frequency": 1,
+      "question_frequency": 1
+    }
+  },
+  "tools": [],
+  "gotchas": [],
+  "canon": [],
+  "contradictions": [],
+  "confidence": {
+    "expertise": "low",
+    "heuristics": "low",
+    "style": "low",
+    "gotchas": "low"
+  },
+  "_quality_gate": {
+    "status": "insufficient",
+    "reason": "Low extraction yield: 0 domains, 0 gotchas",
+    "recommendation": "Re-run capture at L2 or L3 depth, or manually enrich raw-research/ with additional source content."
+  }
+}

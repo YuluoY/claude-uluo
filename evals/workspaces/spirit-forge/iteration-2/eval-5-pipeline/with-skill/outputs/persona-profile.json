@@ -1,0 +1,85 @@
+{
+  "persona_name": "gaearon",
+  "timestamp": "2026-06-11T08:38:29Z",
+  "sources_processed": [
+    "search-results.json",
+    "decisions.md",
+    "github-profile.json",
+    "code-patterns.md",
+    "gotchas.md"
+  ],
+  "expertise": [
+    {
+      "domain": "git",
+      "level": "expert",
+      "evidence": [
+        "code-patterns: 3 mentions",
+        "decisions: 3 mentions",
+        "search-results: 3 mentions"
+      ]
+    }
+  ],
+  "heuristics": [],
+  "style": {
+    "formality": 5,
+    "phrases": [
+      "gaearon dan github",
+      "github com gaearon"
+    ],
+    "patterns": [
+      "balanced"
+    ],
+    "explanation_style": "balanced",
+    "dimensions": {
+      "sentence_variety": "high-variety",
+      "vocabulary_richness": "moderate",
+      "passive_voice_ratio": "low-passive",
+      "hedging_frequency": "low-hedging",
+      "first_person_ratio": "low",
+      "technical_density": "low",
+      "imperative_frequency": 0,
+      "question_frequency": 0
+    }
+  },
+  "tools": [],
+  "gotchas": [],
+  "canon": [
+    {
+      "title": "https://github.com/gaearon",
+      "type": "url",
+      "cited_in": []
+    },
+    {
+      "title": "gaearon (dan) · GitHub",
+      "type": "unknown",
+      "cited_in": []
+    },
+    {
+      "title": "readme_themes",
+      "type": "unknown",
+      "cited_in": []
+    },
+    {
+      "title": "commit_style",
+      "type": "unknown",
+      "cited_in": []
+    },
+    {
+      "title": "https://github.com/gaearon",
+      "type": "unknown",
+      "cited_in": []
+    }
+  ],
+  "contradictions": [],
+  "confidence": {
+    "expertise": "low",
+    "heuristics": "low",
+    "style": "medium",
+    "gotchas": "low"
+  },
+  "_quality_gate": {
+    "status": "insufficient",
+    "reason": "Low extraction yield: 1 domains, 0 gotchas",
+    "recommendation": "Re-run capture at L2 or L3 depth, or manually enrich raw-research/ with additional source content."
+  }
+}

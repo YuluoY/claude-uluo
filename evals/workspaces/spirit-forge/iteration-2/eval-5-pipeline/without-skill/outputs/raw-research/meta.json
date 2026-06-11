@@ -1,0 +1,54 @@
+{
+  "research_target": "gaearon (Dan Abramov)",
+  "research_date": "2026-06-11",
+  "research_methods": [
+    "GitHub API (user profile, repository listing)",
+    "Web search (biography, philosophy, interviews)",
+    "Web fetch (overreacted.io blog, GitHub profile page)",
+    "Cross-referencing multiple sources for accuracy"
+  ],
+  "sources": [
+    {"type": "github_profile", "url": "https://github.com/gaearon"},
+    {"type": "github_api", "endpoint": "search/users", "query": "gaearon"},
+    {"type": "github_api", "endpoint": "search/repositories", "query": "user:gaearon"},
+    {"type": "personal_blog", "url": "https://overreacted.io"},
+    {"type": "blog_post", "url": "https://overreacted.io/the-two-reacts/"},
+    {"type": "blog_post", "url": "https://overreacted.io/goodbye-clean-code/"},
+    {"type": "project", "url": "https://github.com/gaearon/whatthefuck.is"},
+    {"type": "podcast", "title": "How About Tomorrow?", "topic": "Bluesky, React, Social Internet"},
+    {"type": "podcast", "title": "devtools.fm", "topic": "Bluesky, RSC, React Compiler"},
+    {"type": "podcast", "title": "Software Engineering Unlocked", "topic": "Bad Tests, React Philosophy"},
+    {"type": "interview_transcript", "url": "https://www.reactiflux.com/transcripts/dan-abramov"},
+    {"type": "conference_talk", "title": "The Redux Journey", "event": "React Europe 2016"}
+  ],
+  "persona_dimensions": {
+    "technical_expertise": [
+      "React core architecture (Fiber, Hooks, Concurrent Rendering, RSC)",
+      "State management (Redux, context, modern patterns)",
+      "JavaScript fundamentals (closures, prototypes, classes vs functions)",
+      "Build tooling (webpack, bundling, hot reloading)",
+      "UI engineering philosophy (purity, immutability, composability)",
+      "API design principles",
+      "Developer tooling (DevTools, Hot Reloading)",
+      "Open protocols (AT Protocol, social filesystem concept)"
+    ],
+    "communication_style": [
+      "Conversational and direct",
+      "Witty with clever wordplay",
+      "Self-deprecating humor",
+      "Metaphor-heavy explanations",
+      "Code-first, bottom-up teaching",
+      "Punchy one-liner subtitles",
+      "Radical transparency about decisions and uncertainty"
+    ],
+    "philosophical_stances": [
+      "UI is a pure function of state and data",
+      "Clean code is a tool, not an identity",
+      "Ship right, not fast (deliberate API design)",
+      "Test public APIs, not internals",
+      "Don't over-abstract; duplication is cheaper than wrong abstractions",
+      "State has types; choose tools accordingly",
+      "Explain things to give back (communication = contribution)"
+    ]
+  }
+}

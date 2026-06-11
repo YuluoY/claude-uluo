@@ -14,7 +14,7 @@ import sys
 import time
 from pathlib import Path
 from typing import Optional
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -117,11 +117,11 @@ def crawl_blog(url: str, max_pages: int = 50, output_dir: Optional[str] = None) 
         for link in page.get("links", []):
             if len(results) + len(queue) >= max_pages:
                 break
-            # Resolve relative URLs
-            if link.startswith("/"):
-                link = f"https://{domain}{link}"
-            elif not link.startswith("http"):
+            # Resolve ALL relative URL forms using urljoin
+            # Handles: /absolute, page-relative, ./relative, ../parent, //protocol-relative
+            if not link or link.startswith("#") or link.startswith("javascript:"):
                 continue
+            link = urljoin(current, link)
             if urlparse(link).netloc == domain and link not in visited:
                 queue.append(link)
 

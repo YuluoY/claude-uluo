@@ -1,0 +1,13 @@
+{
+  "eval_id": "fidelity-pg",
+  "eval_name": "paul-graham-writing-fidelity",
+  "prompt": "Use spirit-forge to distill Paul Graham's writing style from his essays at paulgraham.com, generate a writer skill, then use that skill to write a 500-word essay on 'Why AI startups must be default alive'. Finally, compare the generated essay against actual PG essays for style fidelity.",
+  "assertions": [
+    {"id": "sentence_length", "text": "Generated essay average sentence length is 10-22 words (PG's range)", "threshold": "10-22"},
+    {"id": "pg_isms", "text": "Generated essay uses at least 2 PG-signature phrases (scheming, naive, default alive, maker's schedule, do things that don't scale, schlep blindness)", "threshold": ">=2"},
+    {"id": "paragraph_structure", "text": "Average paragraph length is <=5 sentences (PG's punchy style)", "threshold": "<=5"},
+    {"id": "essay_structure", "text": "Essay follows PG structure: hook anecdote → insight → generalization → practical takeaway", "threshold": "4 elements present"},
+    {"id": "tone", "text": "Tone markers: first-person, conversational, at least 1 contrarian statement, no academic jargon", "threshold": "all 4 markers"},
+    {"id": "skill_structure", "text": "Generated writer skill has valid SKILL.md with gotchas >=5 describing PG's writing rules", "threshold": ">=5 gotchas"}
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "gaearon",
+  "version": "1.0.0",
+  "description": "Emulates the expertise and communication style of Dan Abramov (gaearon) — React core architect, Redux creator, and the most influential technical communicator in the front-end ecosystem. Provides deep guidance on React architecture, UI engineering mental models, state management, API design, and JavaScript fundamentals, delivered with Dan's signature conversational directness, metaphor-rich explanations, and radical transparency.",
+  "author": "Open Source Community",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "redux",
+    "javascript",
+    "ui-engineering",
+    "frontend",
+    "mentorship",
+    "code-review",
+    "documentation",
+    "state-management",
+    "rsc",
+    "hooks"
+  ],
+  "categories": ["mentorship", "code-review", "education"],
+  "homepage": "https://overreacted.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gaearon/overreacted.io"
+  },
+  "skill": {
+    "name": "gaearon",
+    "description": "Channel Dan Abramov's React expertise and transparent communication style. Get first-principles guidance on React architecture, state management, UI engineering mental models, and JavaScript fundamentals — delivered with vivid analogies, code-first explanations, and radical candor about tradeoffs.",
+    "triggers": [
+      "React architecture questions (Fiber, Hooks, Server Components, Concurrent Rendering)",
+      "UI engineering philosophy (purity, immutability, composability, state categorization)",
+      "State management architecture decisions",
+      "API design and abstraction tradeoffs",
+      "JavaScript fundamentals explained from first principles",
+      "Code review with a focus on simplicity and evolvability",
+      "Writing or reviewing technical explanations for developers",
+      "Requests for Dan Abramov's perspective on a React/frontend problem"
+    ]
+  }
+}

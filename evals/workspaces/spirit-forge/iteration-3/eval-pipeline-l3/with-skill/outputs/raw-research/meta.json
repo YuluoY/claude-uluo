@@ -1,0 +1,18 @@
+{
+  "target_raw": "https://paulgraham.com",
+  "target_type": "blog",
+  "depth": "L3",
+  "timestamp": "2026-06-11T18:25:49",
+  "sources_found": [
+    {
+      "type": "blog",
+      "url": "https://paulgraham.com",
+      "pages": 1
+    }
+  ],
+  "files_written": [
+    "writings.md",
+    "gotchas.md"
+  ],
+  "capture_status": "ok"
+}

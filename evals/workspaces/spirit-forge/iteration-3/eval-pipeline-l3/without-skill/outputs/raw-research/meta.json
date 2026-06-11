@@ -1,0 +1,84 @@
+{
+  "research_method": "manual",
+  "sources": [
+    {
+      "type": "primary",
+      "url": "https://paulgraham.com/talk.html",
+      "title": "Write Like You Talk",
+      "author": "Paul Graham",
+      "notes": "Core essay on conversational writing style. Argues that switching to 'written language' makes prose harder to read, more distant, and deceives the writer into thinking they're saying more than they are."
+    },
+    {
+      "type": "primary",
+      "url": "https://paulgraham.com/useful.html",
+      "title": "How to Write Usefully",
+      "author": "Paul Graham",
+      "notes": "Framework for useful writing: importance x novelty x correctness x strength. Introduces the Morris technique (don't publish what you didn't learn from). Discusses qualification as a skill, not a tax."
+    },
+    {
+      "type": "primary",
+      "url": "https://paulgraham.com/simply.html",
+      "title": "Write Simply",
+      "author": "Paul Graham",
+      "notes": "Advocates ordinary words and simple sentences. Introduces 'saltintesta' concept — ideas leaping into the reader's head with barely noticeable prose. Discusses longevity and honesty of simple writing."
+    },
+    {
+      "type": "primary",
+      "url": "https://paulgraham.com/avg.html",
+      "title": "Beating the Averages",
+      "author": "Paul Graham",
+      "notes": "Analyzed for stylistic patterns: personal anecdote as entry point, Blub paradox as extended analogy, aikido metaphor, conversational yet authoritative tone."
+    },
+    {
+      "type": "primary",
+      "url": "https://paulgraham.com/nerds.html",
+      "title": "Why Nerds are Unpopular",
+      "author": "Paul Graham",
+      "notes": "Analyzed for structural pattern: personal anecdote -> rephrased question -> layered causes -> structural critique. Uses extended analogies (prison, lapdogs vs working dogs), direct address to past self."
+    },
+    {
+      "type": "primary",
+      "url": "https://paulgraham.com/before.html",
+      "title": "Before the Startup",
+      "author": "Paul Graham",
+      "notes": "Analyzed for aphoristic density, bold section headers, numbered notes, self-deprecating humor, counterintuitive claims framed as plain facts."
+    },
+    {
+      "type": "primary",
+      "url": "https://paulgraham.com/greatwork.html",
+      "title": "How to Do Great Work",
+      "author": "Paul Graham",
+      "notes": "Analyzed for short paragraphs (2-4 sentences), paratactic sentence structure, direct address, enumeration, sailing metaphors, earnest but self-deprecating tone."
+    },
+    {
+      "type": "primary_condensed",
+      "url": "https://paulgraham.com/",
+      "title": "Writing, Briefly",
+      "author": "Paul Graham",
+      "notes": "Full text obtained via search. A compressed list of 33 writing tips written in 67 minutes. Key rules: write bad v1 fast, rewrite endlessly, cut everything unnecessary, conversational tone, read aloud, expect 80% of ideas to emerge during writing."
+    },
+    {
+      "type": "analysis",
+      "url": "https://news.ycombinator.com/item?id=143575",
+      "title": "HN Discussion on PG's Writing Style",
+      "author": "gruseom, PG, et al.",
+      "notes": "Critical analysis coining 'radically aphatic' — PG deliberately removes phatic language (social reassurance, hedging). PG confirms: 'I try to cut every unnecessary word' and avoids 'the hedging people usually surround ideas with.'"
+    },
+    {
+      "type": "analysis",
+      "url": "https://jesusiniesta.es/blog/how-paul-graham-writes-essays",
+      "title": "How Paul Graham Actually Writes Essays",
+      "author": "Jesus Iniesta",
+      "notes": "Three-phase process: surfacing questions, exploratory drafting, intensive rewriting. Details on notebook collection, question-framing, interest-following, extraction, loop rewriting, external readers, final shaping."
+    },
+    {
+      "type": "analysis",
+      "url": "https://www.lesswrong.com/posts/TECaEvFeRdjaYK7sM",
+      "title": "What Does It Mean to Write Like You Talk?",
+      "author": "Arjun Panickssery (LessWrong)",
+      "notes": "Critical analysis of Graham's advice. Notes tension between 'write conversationally' and his process of 50+ revisions. Distinguishes idealized conversation from actual speech."
+    }
+  ],
+  "research_date": "2026-06-11",
+  "total_sources": 11
+}
