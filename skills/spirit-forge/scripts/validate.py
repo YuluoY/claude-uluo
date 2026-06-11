@@ -153,77 +153,99 @@ def validate(skill_dir: str, persona_profile: Optional[str] = None, fidelity: bo
 # ---------------------------------------------------------------------------
 
 def _fidelity_basic(report: dict, profile: dict, skill_content: str, skill_dir: Path):
-    """Multi-dimensional fidelity scoring from persona profile.
+    """Two-tier fidelity scoring: Surface (measurable markers) + Deep (adversarial quality).
 
-    Scores 5 dimensions at 20 points each = 100 total.
+    Surface Fidelity (50 pts): quantifiable style metrics
+    Deep Fidelity (50 pts): qualitative structural authenticity
+    Total: 100 pts
     """
-    dims = {}
+    surface = {}
+    deep = {}
     total = 0
-    max_score = 100
 
-    # 1. Gotcha coverage (20pts): does the skill capture the profile's gotchas?
+    # === SURFACE FIDELITY (50 pts) ===
+
+    # 1. Sentence/line length adherence (10 pts)
+    dimensions = profile.get("style", {}).get("dimensions", {})
+    engine = dimensions.get("engine", "unknown")
+    if engine == "textacy":
+        n_words = dimensions.get("n_words", 0)
+        n_sentences = dimensions.get("n_sentences", 1)
+        avg_len = n_words / max(n_sentences, 1)
+        surface["sentence_length"] = {"score": 10 if 10 <= avg_len <= 35 else 5, "max": 10,
+                                        "detail": f"avg {avg_len:.1f} words/sentence"}
+    else:
+        surface["sentence_length"] = {"score": 5, "max": 10, "detail": f"engine={engine}, length not measured"}
+
+    # 2. Lexical diversity (TTR) (10 pts)
+    diversity = dimensions.get("diversity", {})
+    ttr = diversity.get("ttr", 0)
+    surface["lexical_diversity"] = {"score": 10 if 0.3 <= ttr <= 0.8 else 5, "max": 10,
+                                     "detail": f"TTR={ttr:.3f}"}
+
+    # 3. Gotcha coverage ratio (10 pts)
     profile_gotchas = len(profile.get("gotchas", []))
     skill_gotchas = skill_content.count("\n### ")
-    if profile_gotchas > 0:
-        ratio = min(skill_gotchas / profile_gotchas, 1.0)
-    else:
-        ratio = 0
-    score = round(ratio * 20)
-    dims["gotcha_coverage"] = {"score": score, "max": 20, "detail": f"{skill_gotchas}/{profile_gotchas} gotchas captured"}
-    total += score
+    ratio = min(skill_gotchas / max(profile_gotchas, 1), 1.0)
+    surface["gotcha_coverage"] = {"score": round(ratio * 10), "max": 10,
+                                   "detail": f"{skill_gotchas}/{profile_gotchas}"}
 
-    # 2. Expertise mapping (20pts): are profile domains reflected in the skill?
-    profile_domains = [d["domain"] for d in profile.get("expertise", [])]
-    found_domains = sum(1 for d in profile_domains if d.lower() in skill_content.lower())
-    if profile_domains:
-        dm_ratio = found_domains / len(profile_domains)
-    else:
-        dm_ratio = 0
-    score = round(dm_ratio * 20)
-    dims["expertise_mapping"] = {"score": score, "max": 20, "detail": f"{found_domains}/{len(profile_domains)} domains reflected"}
-    total += score
-
-    # 3. Style adherence (20pts): are style markers preserved?
-    style_markers = profile.get("style", {}).get("phrases", [])
-    found_phrases = sum(1 for p in style_markers if p.lower() in skill_content.lower())
-    if style_markers:
-        sm_ratio = found_phrases / len(style_markers)
-    else:
-        sm_ratio = 0
-    score = round(sm_ratio * 20)
-    dims["style_adherence"] = {"score": score, "max": 20, "detail": f"{found_phrases}/{len(style_markers)} style markers present"}
-    total += score
-
-    # 4. Reference quality (20pts): are reference files substantive?
+    # 4. Reference quality (10 pts)
     refs_dir = skill_dir / "references"
-    total_ref_size = 0
-    if refs_dir.exists():
-        for ref in refs_dir.glob("*.md"):
-            total_ref_size += len(ref.read_text(encoding="utf-8"))
-    score = 20 if total_ref_size > 1000 else 15 if total_ref_size > 300 else 5 if total_ref_size > 0 else 0
-    dims["reference_quality"] = {"score": score, "max": 20, "detail": f"{total_ref_size} chars across reference files"}
-    total += score
+    ref_size = sum(len(ref.read_text()) for ref in refs_dir.glob("*.md")) if refs_dir.exists() else 0
+    surface["reference_quality"] = {"score": 10 if ref_size > 500 else 5 if ref_size > 100 else 2, "max": 10,
+                                     "detail": f"{ref_size} chars"}
 
-    # 5. Heuristic preservation (20pts): are profile heuristics in the skill?
-    profile_heuristics = profile.get("heuristics", [])
-    heuristic_matches = 0
-    for h in profile_heuristics:
-        then = h.get("then", "")
-        if then and then[:50].lower() in skill_content.lower():
-            heuristic_matches += 1
-    if profile_heuristics:
-        hm_ratio = heuristic_matches / len(profile_heuristics)
-    else:
-        hm_ratio = 0
-    score = round(hm_ratio * 20)
-    dims["heuristic_preservation"] = {"score": score, "max": 20, "detail": f"{heuristic_matches}/{len(profile_heuristics)} heuristics encoded"}
-    total += score
+    # 5. Expertise mapping (10 pts)
+    profile_domains = [d["domain"] for d in profile.get("expertise", [])]
+    found = sum(1 for d in profile_domains if d.lower() in skill_content.lower())
+    dm_ratio = found / max(len(profile_domains), 1)
+    surface["expertise_mapping"] = {"score": round(dm_ratio * 10), "max": 10,
+                                     "detail": f"{found}/{len(profile_domains)}"}
+
+    # === DEEP FIDELITY (50 pts) ===
+
+    # 6. Named identity vs generic types (10 pts)
+    has_named = bool(re.search(r'[A-Z一-鿿]{1,4}\s*[A-Z一-鿿]{1,4}', skill_content[:500]))
+    has_generic = bool(re.search(r'(?:people|developers|users|他们|人们|后生们)', skill_content[:500]))
+    deep["named_identity"] = {"score": 10 if has_named and not has_generic else 5 if has_named else 2, "max": 10,
+                               "detail": f"named={'yes' if has_named else 'no'}, generic={'yes' if has_generic else 'no'}"}
+
+    # 7. Context anchoring (10 pts) — historical/social references
+    context_markers = re.findall(r'(?:\d{4}年|[A-Z][a-z]+\s\d{4}|in\s\d{4}|during|copyright)', skill_content[:500])
+    deep["context_anchoring"] = {"score": min(len(context_markers) * 3, 10), "max": 10,
+                                  "detail": f"{len(context_markers)} markers"}
+
+    # 8. Voice consistency (10 pts) — not randomly switching between styles
+    voice_switches = len(re.findall(
+        r'(?:however|nevertheless|on the other hand|in contrast|meanwhile|conversely|furthermore|additionally)',
+        skill_content[:1000].lower()
+    ))
+    deep["voice_consistency"] = {"score": 10 if voice_switches < 10 else 5, "max": 10,
+                                  "detail": f"{voice_switches} switch markers"}
+
+    # 9. Emotional range match (10 pts) — does it reflect the target's emotional polarity?
+    emotional = len(re.findall(r'(?:![!]*|[?!]{2,})', skill_content[:500]))
+    deep["emotional_range"] = {"score": 10 if emotional >= 2 else 5 if emotional >= 1 else 2, "max": 10,
+                                "detail": f"{emotional} exclamatory marks"}
+
+    # 10. Avoidance of wrong techniques (10 pts) — what this person would NEVER use
+    irony_markers = re.findall(r'(?:ironically|sarcastically|tongue.in.cheek|wink|nudge|meta|meta.fiction)', skill_content[:500].lower())
+    deep["avoidance"] = {"score": 10 if len(irony_markers) == 0 else 3, "max": 10,
+                          "detail": f"{len(irony_markers)} irony markers (fewer=better)"}
+
+    surface_total = sum(d["score"] for d in surface.values())
+    deep_total = sum(d["score"] for d in deep.values())
+    total = surface_total + deep_total
 
     report["fidelity_score"] = total
-    report["fidelity_details"] = dims
-    report["checks"].append({"label": f"Fidelity score: {total}/{max_score}", "passed": total >= 60, "status": "FIDELITY"})
+    report["fidelity_surface"] = {"score": surface_total, "max": 50, "details": surface}
+    report["fidelity_deep"] = {"score": deep_total, "max": 50, "details": deep}
+    report["fidelity_details"] = {"surface": surface, "deep": deep}
+    report["checks"].append({"label": f"Fidelity: {total}/100 (S:{surface_total}/50 D:{deep_total}/50)",
+                              "passed": total >= 60, "status": "FIDELITY"})
     if total < 60:
-        report["recommendations"].append(f"Fidelity score {total}/100 is below threshold (60). Consider enriching capture or using Claude semantic extraction.")
+        report["recommendations"].append(f"Fidelity {total}/100 below 60. Deeper capture needed.")
 
 
 # ---------------------------------------------------------------------------

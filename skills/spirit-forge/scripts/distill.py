@@ -102,17 +102,20 @@ def distill(raw_research_dir: str, output_path: Optional[str] = None) -> dict:
 
     combined = "\n\n".join(research_texts.values())
 
-    # ---- LLM extraction fallback (if regex extraction fails) ----
-    # Stored for use by individual extractors when they produce insufficient results
-    llm_cache: dict[str, list] = {}
+    # ---- Ingest Firecrawl structured JSON (if exists) ----
+    firecrawl_data = _ingest_firecrawl_json(str(research))
 
     # ---- Extract expertise domains ----
     print("  Extracting expertise domains ...")
     profile["expertise"] = _extract_expertise(research_texts, combined)
 
-    # ---- Extract heuristics (regex baseline) ----
-    print("  Extracting decision heuristics ...")
-    profile["heuristics"] = _extract_heuristics(research_texts, combined)
+    # ---- Extract heuristics (Firecrawl → regex baseline) ----
+    if firecrawl_data.get("heuristics"):
+        print(f"  → Using {len(firecrawl_data['heuristics'])} heuristics from Firecrawl extract")
+        profile["heuristics"] = firecrawl_data["heuristics"]
+    else:
+        print("  Extracting decision heuristics ...")
+        profile["heuristics"] = _extract_heuristics(research_texts, combined)
 
     # ---- Extract style markers ----
     print("  Extracting communication style ...")
@@ -122,9 +125,19 @@ def distill(raw_research_dir: str, output_path: Optional[str] = None) -> dict:
     print("  Extracting tool preferences ...")
     profile["tools"] = _extract_tools(combined)
 
-    # ---- Extract gotchas (regex baseline) ----
+    # ---- Extract gotchas (Firecrawl → regex baseline) ----
     print("  Extracting gotchas ...")
-    profile["gotchas"] = _extract_gotchas(research_texts, combined)
+    if firecrawl_data.get("gotchas"):
+        print(f"  → Using {len(firecrawl_data['gotchas'])} gotchas from Firecrawl extract")
+        profile["gotchas"] = firecrawl_data["gotchas"]
+    else:
+        profile["gotchas"] = _extract_gotchas(research_texts, combined)
+
+    # ---- Extract heuristics (Firecrawl → regex baseline) ----
+    if firecrawl_data.get("heuristics"):
+        print(f"  → Using {len(firecrawl_data['heuristics'])} heuristics from Firecrawl extract")
+        profile["heuristics"] = firecrawl_data["heuristics"]
+    # (heuristics already extracted above by regex if no firecrawl data)
 
     # ---- Extract canon ----
     print("  Extracting reference canon ...")
@@ -418,41 +431,158 @@ def _extract_style(texts: dict, combined: str) -> dict:
     if re.search(r'(?:imagine|picture this|visualize)', cleaned_lower):
         style["patterns"].append("visual-language")
 
-    # Add 8-dimension style analysis (ghost-writer subset)
-    style["dimensions"] = {
-        "sentence_variety": _sentence_variety(valid_sentences) if valid_sentences else "unknown",
-        "vocabulary_richness": _vocabulary_richness(cleaned),
-        "passive_voice_ratio": _passive_ratio(cleaned_lower),
-        "hedging_frequency": _hedging_frequency(cleaned_lower),
-        "first_person_ratio": _pronoun_ratio(cleaned_lower, "i|me|my|we|our"),
-        "technical_density": _technical_density(cleaned_lower),
-        "imperative_frequency": len(re.findall(r'^(?:do|don\'t|make|use|try|check|see|note|run|set|get)\b', cleaned_lower, re.MULTILINE)),
-        "question_frequency": cleaned.count("?"),
-    }
+    # Style analysis: textacy (English), jieba (Chinese), or fallback
+    cleaned = _strip_markdown(combined)
+    if _detect_chinese(cleaned):
+        ja = _jieba_style(cleaned)
+        style["dimensions"] = {
+            "engine": ja.get("engine", "unknown"),
+            "chinese_word_count": ja.get("word_count", 0),
+            "chinese_ttr": ja.get("ttr", 0),
+            "top_chinese_words": ja.get("top_words", [])[:10],
+        }
+    else:
+        ta = _textacy_style(cleaned)
+        if ta:
+            style["dimensions"] = {
+                "engine": "textacy",
+                "n_words": ta["n_words"],
+                "n_unique_words": ta["n_unique_words"],
+                "n_sentences": ta["n_sentences"],
+                "readability": ta["readability"],
+                "diversity": ta["diversity"],
+                "entropy": ta["entropy"],
+                "key_terms": ta["key_terms"],
+                "pos_distribution": ta["pos_distribution"],
+            }
+        else:
+            fb = _fallback_style(cleaned)
+            style["dimensions"] = {
+                "engine": "fallback",
+                "n_words": fb["n_words"],
+                "n_unique_words": fb["n_unique_words"],
+                "n_sentences": fb["n_sentences"],
+                "avg_sentence_length": fb["avg_sentence_length"],
+            }
 
     return style
 
 
+# ---------------------------------------------------------------------------
+# Textacy-based style analysis (replaces 7 hand-rolled functions)
+# ---------------------------------------------------------------------------
+
+def _detect_chinese(text: str) -> bool:
+    """Return True if text contains CJK Unified Ideographs."""
+    return bool(re.search(r'[一-鿿㐀-䶿豈-﫿]', text))
+
+
+def _ingest_firecrawl_json(raw_dir: str) -> dict[str, list]:
+    """Ingest Firecrawl extract JSON files directly into profile fields.
+
+    Firecrawl extract produces structured JSON matching persona-profile schema.
+    If these files exist, merge them directly — bypass regex extraction.
+    """
+    result: dict[str, list] = {}
+    raw = Path(raw_dir)
+
+    for field in ("gotchas", "heuristics"):
+        for candidate in (f"firecrawl-{field}.json", f"firecrawl-{field}.json"):
+            path = raw / candidate
+            if path.exists():
+                try:
+                    data = json.loads(path.read_text(encoding="utf-8"))
+                    if isinstance(data, dict) and field in data:
+                        items = data[field]
+                    elif isinstance(data, list):
+                        items = data
+                    else:
+                        continue
+                    if items:
+                        result[field] = items
+                        print(f"  → Ingested {len(items)} {field} from {candidate}")
+                except (json.JSONDecodeError, KeyError):
+                    pass
+    return result
+
+
+def _textacy_style(text: str) -> dict | None:
+    """Textacy-powered style analysis (50+ metrics vs previous 10 hand-rolled)."""
+    try:
+        from textacy import text_stats, load_spacy_lang, make_spacy_doc
+        from textacy.text_stats import readability, diversity, counts as ts_counts
+        from textacy.extract.keyterms.textrank import textrank
+
+        en = load_spacy_lang("en_core_web_sm", disable=("parser",))
+        doc = make_spacy_doc(text, lang=en)
+
+        return {
+            "engine": "textacy",
+            "n_words": text_stats.n_words(doc),
+            "n_unique_words": text_stats.n_unique_words(doc),
+            "n_sentences": text_stats.n_sents(doc),
+            "n_long_words": text_stats.n_long_words(doc),
+            "entropy": round(text_stats.entropy(doc), 4),
+            "readability": {
+                "flesch_kincaid": round(readability.flesch_kincaid_grade_level(doc), 2),
+                "flesch_ease": round(readability.flesch_reading_ease(doc), 2),
+                "smog": round(readability.smog(doc), 2) if hasattr(readability, "smog") else None,
+            },
+            "diversity": {
+                "ttr": round(diversity.ttr(doc), 4),
+                "mtld": round(diversity.mtld(doc), 2),
+            },
+            "pos_distribution": ts_counts.pos(doc),
+            "key_terms": [(t, round(s, 4)) for t, s in textrank(doc, topn=10)],
+        }
+    except (ImportError, OSError):
+        return None
+
+
+def _jieba_style(text: str) -> dict:
+    """Chinese text analysis via jieba segmentation (pure Python, no models)."""
+    try:
+        import jieba
+        words = jieba.lcut(text)
+        word_count = len(words)
+        unique = len(set(words))
+        top = Counter(words).most_common(20)
+        return {
+            "engine": "jieba",
+            "word_count": word_count,
+            "unique_words": unique,
+            "ttr": round(unique / max(word_count, 1), 4),
+            "top_words": [(w, c) for w, c in top if len(w) > 1],
+        }
+    except ImportError:
+        return {"engine": "fallback", "error": "jieba not installed"}
+
+
+def _fallback_style(text: str) -> dict:
+    """Minimal style metrics when neither textacy nor jieba is available."""
+    words = re.findall(r'\b\w+\b', text)
+    sentences = re.split(r'[.!?。！？]+', text)
+    sentences = [s for s in sentences if len(s.split()) >= 2]
+    return {
+        "engine": "fallback",
+        "n_words": len(words),
+        "n_unique_words": len(set(w.lower() for w in words)),
+        "n_sentences": len(sentences),
+        "avg_sentence_length": round(len(words) / max(len(sentences), 1), 1),
+    }
+
+
 def _strip_markdown(text: str) -> str:
     """Remove Markdown formatting to get clean prose for NLP analysis."""
-    # Remove headings
     text = re.sub(r'^#{1,6}\s+', '', text, flags=re.MULTILINE)
-    # Remove bold/italic
     text = re.sub(r'\*{1,3}(.+?)\*{1,3}', r'\1', text)
-    # Remove code blocks
     text = re.sub(r'```[\s\S]*?```', '', text)
-    # Remove inline code
     text = re.sub(r'`[^`]+`', '', text)
-    # Remove links [text](url) -> text
     text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
-    # Remove horizontal rules
     text = re.sub(r'^[-*_]{3,}\s*$', '', text, flags=re.MULTILINE)
-    # Remove blockquotes
     text = re.sub(r'^>\s+', '', text, flags=re.MULTILINE)
-    # Remove list markers
     text = re.sub(r'^[\s]*[-*+]\s+', '', text, flags=re.MULTILINE)
     text = re.sub(r'^[\s]*\d+\.\s+', '', text, flags=re.MULTILINE)
-    # Collapse whitespace
     text = re.sub(r'\n{3,}', '\n\n', text)
     return text.strip()
 
@@ -637,90 +767,6 @@ def _assess_confidence(profile: dict) -> dict:
         c["gotchas"] = "medium"
 
     return c
-
-
-# ---------------------------------------------------------------------------
-# Style dimension helpers (8-dimension ghost-writer subset)
-# ---------------------------------------------------------------------------
-
-def _sentence_variety(sentences: list[str]) -> str:
-    if not sentences:
-        return "unknown"
-    lengths = [len(s.split()) for s in sentences]
-    if max(lengths) - min(lengths) > 15:
-        return "high-variety"
-    if max(lengths) - min(lengths) < 5:
-        return "uniform"
-    return "moderate-variety"
-
-
-def _vocabulary_richness(text: str) -> str:
-    words = re.findall(r'\b\w+\b', text.lower())
-    if len(words) < 50:
-        return "too-short"
-    ttr = len(set(words)) / len(words)
-    if ttr > 0.6:
-        return "rich"
-    if ttr > 0.4:
-        return "moderate"
-    return "repetitive"
-
-
-def _passive_ratio(text_lower: str) -> str:
-    passive = len(re.findall(r'\b(?:is|are|was|were|been|be)\s+\w+(?:ed|en|t)\b', text_lower))
-    total = max(len(re.findall(r'[.!?]', text_lower)), 1)
-    if total == 0:
-        return "unknown"
-    ratio = passive / total
-    if ratio > 0.3:
-        return "high-passive"
-    if ratio > 0.1:
-        return "moderate-passive"
-    return "low-passive"
-
-
-def _hedging_frequency(text_lower: str) -> str:
-    hedges = len(re.findall(
-        r'\b(?:maybe|perhaps|possibly|probably|likely|tends?\s+to|seems?\s+to|'
-        r'appears?\s+to|might|may|could|would|should|generally|typically|often|'
-        r'usually|sort\s+of|kind\s+of|i\s+think|i\s+believe|in\s+my\s+opinion)\b',
-        text_lower
-    ))
-    sentences = max(len(re.findall(r'[.!?]', text_lower)), 1)
-    ratio = hedges / sentences
-    if ratio > 0.5:
-        return "high-hedging"
-    if ratio > 0.2:
-        return "moderate-hedging"
-    return "low-hedging"
-
-
-def _pronoun_ratio(text_lower: str, pattern: str) -> str:
-    matches = len(re.findall(rf'\b({pattern})\b', text_lower))
-    words = max(len(re.findall(r'\b\w+\b', text_lower)), 1)
-    ratio = matches / words
-    if ratio > 0.05:
-        return "high"
-    if ratio > 0.02:
-        return "moderate"
-    return "low"
-
-
-def _technical_density(text_lower: str) -> str:
-    tech_terms = len(re.findall(
-        r'\b(?:api|sdk|cli|http|json|xml|sql|css|html|dom|rest|rpc|'
-        r'function|method|class|module|package|library|framework|'
-        r'compiler|interpreter|runtime|binary|protocol|endpoint|'
-        r'server|client|database|cache|queue|stream|pipeline)\b',
-        text_lower
-    ))
-    words = max(len(re.findall(r'\b\w+\b', text_lower)), 1)
-    ratio = tech_terms / words
-    if ratio > 0.04:
-        return "high"
-    if ratio > 0.02:
-        return "moderate"
-    return "low"
 
 
 # ---------------------------------------------------------------------------

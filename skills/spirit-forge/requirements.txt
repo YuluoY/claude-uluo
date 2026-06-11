@@ -1,3 +1,6 @@
-scrapling>=0.3.0
-requests>=2.28
-beautifulsoup4>=4.11
+scrapling>=0.3.0,<1.0.0
+requests>=2.28.0,<3.0.0
+beautifulsoup4>=4.11.0,<5.0.0
+textacy>=0.13.0,<0.14.0
+spacy>=3.8.0,<3.9.0
+jieba>=0.42.1,<0.43.0

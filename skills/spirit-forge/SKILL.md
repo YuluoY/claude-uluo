@@ -92,6 +92,64 @@ After capture runs, review the output in `raw-research/`:
 > target. Focus on [dimension: code/writing/decisions/gotchas].
 > Write findings to .spirit-forge/<name>/raw-research/<dimension>-extra.md"
 
+### Phase 1a: MCP-Enhanced Research (when available)
+
+Before running the distill script, check which MCP tools are available and
+use them to enrich the raw research with higher-quality data. These tools
+operate at the AGENT level (not Python scripts) — they complement, not
+replace, the deterministic scripts.
+
+**Firecrawl Extract** (highest priority — structured extraction):
+```
+Use firecrawl_extract on the top 5 search result URLs with this JSON schema:
+{
+  "type": "object",
+  "properties": {
+    "gotchas": {
+      "type": "array", "items": {
+        "type": "object", "properties": {
+          "pattern": {"type": "string"}, "fix": {"type": "string"}
+        }
+      }
+    },
+    "heuristics": {
+      "type": "array", "items": {
+        "type": "object", "properties": {
+          "when": {"type": "string"}, "then": {"type": "string"}, "because": {"type": "string"}
+        }
+      }
+    }
+  }
+}
+Write results to raw-research/firecrawl-gotchas.json and firecrawl-heuristics.json.
+distill.py will automatically ingest these files — no regex needed.
+```
+
+**Brave LLM Context** (bulk content retrieval):
+```
+Use brave_llm_context to fetch multi-article content blocks in a single call.
+Better than page-by-page scraping for blog-heavy targets.
+Write results to raw-research/brave-content.md.
+```
+
+**GitHub MCP** (deep code analysis):
+```
+For developer targets, use:
+- search_code(user=target) → code patterns
+- search_commits(author=target) → commit message style
+- search_pull_requests(author=target) → PR review tone
+Write results to raw-research/github-deep.md.
+```
+
+**Firecrawl Crawl** (blog discovery):
+```
+For blog-heavy targets, use firecrawl_crawl(limit=50, maxDiscoveryDepth=3)
+instead of the Python BFS crawler. Handles rate limiting automatically.
+```
+
+**Fallback**: If any MCP tool is unavailable, the Python scripts (capture.py
+with Scrapling + requests + BeautifulSoup) handle everything independently.
+
 ## Phase 2: Distill (炼—Refining the Spirit)
 
 Run the deterministic distill script:
@@ -104,6 +162,19 @@ python scripts/distill.py .spirit-forge/<name>/raw-research/ \
 The script runs regex extraction for all dimensions, then checks for gaps.
 If heuristics < 3 or gotchas < 3, it writes `extraction-tasks.md` to the
 raw-research directory.
+
+### Adversarial Verification
+
+After extraction, verify each gotcha and heuristic:
+
+1. **Claim**: "[Person] believes/practices X"
+2. **Evidence**: Which source? What date?
+3. **Counter-evidence**: Can you find a source where this person CONTRADICTS this?
+   Did they change their mind? Does context change the meaning?
+4. **Verdict**: High (multiple sources agree) / Medium (single source, plausible) /
+   Low (uncorroborated) / Contested (found evidence both ways)
+
+Mark contested gotchas in persona-profile.json with `"verification": "contested"`.
 
 ### Claude Semantic Extraction (when scripts are insufficient)
 
