@@ -1,0 +1,11 @@
+{
+  "run_id": "eval-5-baseline",
+  "expectations": [
+    {"text": "Research phase produces structured findings", "passed": true, "evidence": "187-line research-notes.md + 68-line meta.json"},
+    {"text": "Persona profile is generated with expertise, heuristics, style", "passed": true, "evidence": "179-line persona-profile.json with all required fields"},
+    {"text": "Generated skill directory has SKILL.md, references/, plugin.json", "passed": true, "evidence": "96-line SKILL.md + 2 references (351-line domain-knowledge, 153-line communication-guide) + plugin.json"},
+    {"text": "8 output files created across all phases", "passed": true, "evidence": "8 files in output: research-notes.md, meta.json, persona-profile.json, SKILL.md, 2 references, plugin.json, summary.md"}
+  ],
+  "score": "4/4",
+  "notes": "Manual pipeline produced 1,284 lines across 8 files. Research was thorough (8 blog posts, 10+ GitHub issues, 5 Bluesky commits, 3 podcasts). Generated skill captures philosophy, do's/don'ts, and voice well."
+}

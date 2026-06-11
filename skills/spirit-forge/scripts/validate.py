@@ -80,11 +80,19 @@ def validate(skill_dir: str, persona_profile: Optional[str] = None) -> dict:
                has_desc, "Add 'description: >- ...' to frontmatter")
 
         # Description should be non-trivial (not just a one-liner)
+        # Handle YAML fold scalars (">"," >-") correctly
         desc_start = fm_text.find("description:")
         if desc_start >= 0:
             desc_text = fm_text[desc_start:]
-            desc_text = desc_text.split("\n", 1)[0] if "\n" in desc_text else desc_text
-            desc_long_enough = len(desc_text) > 30
+            # Check if this is a fold scalar (>-)
+            desc_line = desc_text.split("\n", 1)[0] if "\n" in desc_text else desc_text
+            if ">-" in desc_line or "> " in desc_line:
+                # Fold scalar: read subsequent indented lines
+                remaining = desc_text.split("\n", 1)[1] if "\n" in desc_text else ""
+                desc_full = " ".join(line.strip() for line in remaining.split("\n") if line.strip() and not line.startswith("---"))
+                desc_long_enough = len(desc_full) > 30
+            else:
+                desc_long_enough = len(desc_line) > 30
             _check(report, skill, "Description is substantive (>30 chars)",
                    desc_long_enough, "Write a longer description with trigger keywords")
 

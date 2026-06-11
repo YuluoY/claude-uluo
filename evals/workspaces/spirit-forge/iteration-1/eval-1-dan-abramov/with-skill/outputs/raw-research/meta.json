@@ -1,0 +1,36 @@
+{
+  "target_raw": "gaearon (Dan Abramov)",
+  "target_type": "github",
+  "depth": "L2",
+  "timestamp": "2026-06-11T15:33:02",
+  "sources_found": [
+    {
+      "type": "github",
+      "username": "gaearon",
+      "note": "React core team alumnus, Redux co-creator, 90.8k followers"
+    },
+    {
+      "type": "blog",
+      "url": "https://overreacted.io/",
+      "posts_analyzed": 57,
+      "note": "Full blog crawl: 2018-2026, coverage of React architecture, Hooks, RSC, software philosophy, debugging, formal verification"
+    },
+    {
+      "type": "search",
+      "results": 10
+    },
+    {
+      "type": "deep_research",
+      "note": "Manually enriched via WebFetch of 7+ key blog posts, GitHub MCP profile analysis"
+    }
+  ],
+  "files_written": [
+    "writings.md",
+    "code-patterns.md",
+    "decisions.md",
+    "gotchas.md",
+    "github-profile.json",
+    "search-results.json",
+    "meta.json"
+  ]
+}

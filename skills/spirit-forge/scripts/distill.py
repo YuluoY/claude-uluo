@@ -129,6 +129,18 @@ def distill(raw_research_dir: str, output_path: Optional[str] = None) -> dict:
     # ---- Assess confidence ----
     profile["confidence"] = _assess_confidence(profile)
 
+    # ---- Quality gate ----
+    if len(profile["expertise"]) < 1 or len(profile["gotchas"]) < 3:
+        print("  ⚠ DISTILL QUALITY GATE: insufficient signal extracted")
+        print(f"     expertise: {len(profile['expertise'])} domains")
+        print(f"     gotchas: {len(profile['gotchas'])} patterns")
+        print(f"     heuristics: {len(profile['heuristics'])} rules")
+        profile["_quality_gate"] = {
+            "status": "insufficient",
+            "reason": f"Low extraction yield: {len(profile['expertise'])} domains, {len(profile['gotchas'])} gotchas",
+            "recommendation": "Re-run capture at L2 or L3 depth, or manually enrich raw-research/ with additional source content."
+        }
+
     # Write output
     if output_path is None:
         parent = research.parent
@@ -145,38 +157,94 @@ def distill(raw_research_dir: str, output_path: Optional[str] = None) -> dict:
 # ---------------------------------------------------------------------------
 
 def _extract_expertise(texts: dict, combined: str) -> list[dict]:
-    """Extract expertise domains from research texts."""
+    """Extract expertise domains from research texts using word-boundary matching.
+
+    Uses \b boundaries to prevent false positives (e.g., 'go' matching in 'gotcha').
+    Applies a blacklist for common short words that slip through.
+    """
     expertise = []
-    # Look for technology/domain mentions with frequency
-    tech_keywords = [
-        "react", "javascript", "typescript", "python", "rust", "go", "golang",
-        "clojure", "haskell", "elixir", "scala", "java", "c++", "c#",
-        "frontend", "backend", "full-stack", "devops", "infrastructure",
-        "distributed systems", "compiler", "database", "machine learning",
-        "ai", "design", "ux", "accessibility", "performance", "security",
-        "testing", "architecture", "api design", "open source",
-        "vue", "angular", "svelte", "node", "deno", "graphql", "rest",
-        "docker", "kubernetes", "aws", "cloud", "linux", "git",
+
+    # Domain keywords: (display_name, regex_pattern)
+    # Patterns use \b for word boundary to avoid substring false positives
+    tech_domains: list[tuple[str, str]] = [
+        ("react", r"\breact\b"),
+        ("javascript", r"\bjavascript\b"),
+        ("typescript", r"\btype\s*script\b"),
+        ("python", r"\bpython\b"),
+        ("rust", r"\brust\b"),
+        ("go (golang)", r"\bgolang\b|\bgo\s+language\b|\bgo\s+programming\b"),
+        ("clojure", r"\bclojure\b"),
+        ("haskell", r"\bhaskell\b"),
+        ("elixir", r"\belixir\b"),
+        ("scala", r"\bscala\b"),
+        ("java", r"\bjava\b"),
+        ("c++", r"\bc\+\+\b"),
+        ("c#", r"\bc#\b"),
+        ("frontend", r"\bfront[\s-]*end\b"),
+        ("backend", r"\bback[\s-]*end\b"),
+        ("full-stack", r"\bfull[\s-]*stack\b"),
+        ("devops", r"\bdevops\b"),
+        ("infrastructure", r"\binfrastructure\b"),
+        ("distributed systems", r"\bdistributed\s+systems?\b"),
+        ("compilers", r"\bcompilers?\b"),
+        ("databases", r"\bdatabases?\b|\bsql\b"),
+        ("machine learning", r"\bmachine\s+learning\b|\bml\b"),
+        ("ai / llm", r"\bai\b|\bllms?\b|\blarge\s+language\s+models?\b"),
+        ("design", r"\bdesign\b"),
+        ("ux", r"\bux\b|\buser\s+experience\b"),
+        ("accessibility", r"\baccessibility\b|\ba11y\b"),
+        ("performance", r"\bperformance\b|\boptimization\b"),
+        ("security", r"\bsecurity\b"),
+        ("testing", r"\btesting\b|\btest\s+driven\b|\bunit\s+tests?\b"),
+        ("architecture", r"\barchitecture\b|\bdesign\s+patterns?\b"),
+        ("api design", r"\bapi\s+design\b|\brest\s+api\b|\bgraphql\b"),
+        ("open source", r"\bopen[\s-]*source\b"),
+        ("vue", r"\bvue\b"),
+        ("angular", r"\bangular\b"),
+        ("svelte", r"\bsvelte\b"),
+        ("node.js", r"\bnode\.?js\b|\bnode\b"),
+        ("deno", r"\bdeno\b"),
+        ("docker", r"\bdocker\b"),
+        ("kubernetes", r"\bkubernetes\b|\bk8s\b"),
+        ("aws", r"\baws\b|\bamazon\s+web\s+services\b"),
+        ("cloud", r"\bcloud\b"),
+        ("linux", r"\blinux\b"),
+        ("git", r"\bgit\b|\bgithub\b"),
+        ("functional programming", r"\bfunctional\s+programming\b|\bfp\b"),
+        ("writing / technical writing", r"\btechnical\s+writing\b|\bwriting\s+style\b|\bauthor\b"),
+        ("teaching / mentoring", r"\bteaching\b|\bmentoring\b|\beducation\b|\bspeaking\b"),
     ]
 
-    lower = combined.lower()
-    domain_counts = Counter()
-    for kw in tech_keywords:
-        count = lower.count(kw)
-        if count > 0:
-            domain_counts[kw] = count
+    # Blacklist: common short words that might match domain patterns as substrings
+    blacklist = {"go", "ai", "it", "we", "can", "set", "run", "use", "new", "one", "two", "top", "get", "put", "api", "css", "dom", "web", "app", "ide", "npm", "ci"}
 
-    for domain, count in domain_counts.most_common(10):
+    lower = combined.lower()
+    domain_counts: dict[str, int] = {}
+    domain_patterns: dict[str, str] = {}
+
+    for display_name, pattern in tech_domains:
+        matches = re.findall(pattern, lower, re.IGNORECASE)
+        if matches:
+            count = len(matches)
+            # Filter blacklist: if the display_name maps to a blacklisted word and
+            # the match count is suspiciously low (< 5 in a long text), skip it
+            if display_name.split()[0] in blacklist and count < 5:
+                continue
+            domain_counts[display_name] = count
+            domain_patterns[display_name] = pattern
+
+    for domain, count in sorted(domain_counts.items(), key=lambda x: -x[1])[:10]:
         level = "expert" if count >= 8 else "proficient" if count >= 3 else "familiar"
         evidence = []
-        # Find specific mentions in research files
+        pattern = domain_patterns.get(domain, domain)
         for fname, text in texts.items():
-            if domain in text.lower():
-                evidence.append(f"{fname}: found {text.lower().count(domain)} mentions")
+            found = len(re.findall(pattern, text, re.IGNORECASE))
+            if found > 0:
+                evidence.append(f"{fname}: {found} mentions")
         expertise.append({
             "domain": domain,
             "level": level,
-            "evidence": evidence[:3],  # Keep top 3 evidence items
+            "evidence": evidence[:3],
         })
 
     return expertise
@@ -185,20 +253,31 @@ def _extract_expertise(texts: dict, combined: str) -> list[dict]:
 def _extract_heuristics(texts: dict, combined: str) -> list[dict]:
     """Extract decision heuristics from research texts.
 
-    Looks for patterns like:
-    - "When X, I prefer Y because Z"
-    - "The rule of thumb is X"
-    - "If X, then Y"
-    - "Always/never X"
+    Supports both first-person (I prefer) and third-person (he prefers, the author chooses)
+    patterns. Also handles declarative rules and principles.
     """
     heuristics = []
 
-    # Pattern-based extraction
+    # Pattern-based extraction — first + third person variants
     patterns = [
-        (r"(?:when|if)\s+(.+?),\s*(?:I\s+)?(?:prefer|use|choose|go with|reach for)\s+(.+?)(?:because|since|as)\s+(.+)", "conditional"),
+        # First-person conditional: "When X, I prefer Y because Z"
+        (r"(?:when|if)\s+(.+?),\s*(?:I\s+)?(?:prefer|use|choose|go with|reach for|recommend)\s+(.+?)(?:because|since|as)\s+(.+)", "conditional"),
+        # Third-person conditional: "When X, he prefers Y because Z"
+        (r"(?:when|if)\s+(.+?),\s*(?:he|she|they|the\s+author)\s+(?:prefers?|uses?|chooses?|reaches?\s+for|recommends?)\s+(.+?)(?:because|since|as)\s+(.+)", "conditional-3p"),
+        # Absolute rules: "Always/never X because Y"
         (r"(?:always|never)\s+(.+?)(?:because|since)\s+(.+)", "absolute"),
+        # Rule of thumb: "The rule of thumb is X"
         (r"(?:the\s+)?rule\s+(?:of\s+)?thumb\s+(?:is|:)\s*(.+)", "rule_of_thumb"),
-        (r"(?:I've\s+found|I find|in my experience)\s+(?:that\s+)?(.+?)(?:because|since)\s+(.+)", "experiential"),
+        # Experiential (first-person): "I've found X because Y"
+        (r"(?:I've\s+found|I\s+find|in\s+my\s+experience)\s+(?:that\s+)?(.+?)(?:because|since)\s+(.+)", "experiential"),
+        # Experiential (third-person): "He's found X because Y"
+        (r"(?:he's|she's|they've)\s+found\s+(?:that\s+)?(.+?)(?:because|since)\s+(.+)", "experiential-3p"),
+        # Principle statement: "The key insight/principle/approach is X"
+        (r"(?:the|a|one)\s+(?:key\s+)?(?:insight|principle|approach|pattern|idea)\s+(?:is|:)\s*(.+)", "principle"),
+        # Trade-off framing: "X vs Y" or "X over Y when Z"
+        (r"(?:prefers?|chooses?|goes?\s+with)\s+(.+?)\s+(?:over|rather\s+than|instead\s+of)\s+(.+?)(?:when|because|for)\s+(.+)", "tradeoff"),
+        # "Don't X, instead Y"
+        (r"(?:don't|do\s+not)\s+(.+?),\s*(?:instead|rather|prefer)\s+(.+)", "correction"),
     ]
 
     for pattern, htype in patterns:
@@ -213,7 +292,7 @@ def _extract_heuristics(texts: dict, combined: str) -> list[dict]:
                         "because": parts[2].strip()[:200] if len(parts) > 2 else "",
                         "source": f"regex:{htype}",
                     })
-            elif isinstance(match, str):
+            elif isinstance(match, str) and len(match.strip()) > 15:
                 heuristics.append({
                     "when": "",
                     "then": match.strip()[:200],
@@ -221,11 +300,28 @@ def _extract_heuristics(texts: dict, combined: str) -> list[dict]:
                     "source": f"regex:{htype}",
                 })
 
-    return heuristics[:15]  # Cap at 15 most relevant heuristics
+    # Deduplicate by 'then' field (most distinctive)
+    seen = set()
+    unique = []
+    for h in heuristics:
+        key = h["then"].lower()[:80]
+        if key not in seen:
+            seen.add(key)
+            unique.append(h)
+
+    return unique[:20]  # Cap at 20 most relevant heuristics
 
 
 def _extract_style(texts: dict, combined: str) -> dict:
-    """Extract communication style markers."""
+    """Extract communication style markers.
+
+    Filters out Markdown formatting before analysis to avoid extracting
+    headings and syntax markers as style patterns.
+    """
+    # Strip Markdown formatting before analysis
+    cleaned = _strip_markdown(combined)
+    cleaned_lower = cleaned.lower()
+
     style = {
         "formality": 5,
         "phrases": [],
@@ -234,13 +330,10 @@ def _extract_style(texts: dict, combined: str) -> dict:
     }
 
     # Formality heuristics
-    lowercase = combined.lower()
-    # Count exclamation marks, contractions, emojis as informality indicators
-    informal_signals = len(re.findall(r'!{1,3}', combined)) + \
-                       len(re.findall(r"\b(don't|can't|won't|i'm|you're|it's|that's|we're|they're)\b", lowercase)) + \
-                       len(re.findall(r'[\U0001F300-\U0001F9FF]', combined))
-    # Count formal signals
-    formal_signals = len(re.findall(r"\b(therefore|however|consequently|furthermore|nevertheless|accordingly)\b", lowercase))
+    informal_signals = len(re.findall(r'!{1,3}', cleaned)) + \
+                       len(re.findall(r"\b(don't|can't|won't|i'm|you're|it's|that's|we're|they're)\b", cleaned_lower)) + \
+                       len(re.findall(r'[\U0001F300-\U0001F9FF]', cleaned))
+    formal_signals = len(re.findall(r"\b(therefore|however|consequently|furthermore|nevertheless|accordingly|moreover|thus|hence)\b", cleaned_lower))
 
     if informal_signals > formal_signals * 3:
         style["formality"] = 3
@@ -249,34 +342,86 @@ def _extract_style(texts: dict, combined: str) -> dict:
     else:
         style["formality"] = 5
 
-    # Common phrases (2-4 word ngrams that appear ≥3 times)
-    words = re.findall(r'\b\w+\b', lowercase)
+    # Common phrases from cleaned text (2-4 word ngrams, ≥3 occurrences)
+    words = re.findall(r'\b[a-z]+\b', cleaned_lower)
     trigrams = Counter()
+    # Common stop words to skip when building ngrams
+    stop_ngrams = {"the", "this", "that", "with", "from", "have", "been", "were", "they", "their", "them"}
     for i in range(len(words) - 2):
         trigram = " ".join(words[i:i+3])
-        if len(trigram) > 15:  # Skip very long ngrams
+        if trigram in stop_ngrams:
+            continue
+        if 10 < len(trigram) < 40:
             trigrams[trigram] += 1
-    style["phrases"] = [p for p, c in trigrams.most_common(20) if c >= 3][:10]
+    style["phrases"] = [p for p, c in trigrams.most_common(30) if c >= 3][:10]
 
     # Explanation style
-    if "for example" in lowercase or "e.g." in lowercase:
+    if "for example" in cleaned_lower or "e.g." in cleaned_lower or "here's an example" in cleaned_lower:
         style["explanation_style"] = "example-first"
-    elif "because" in lowercase or "the reason" in lowercase:
+    elif "because" in cleaned_lower or "the reason" in cleaned_lower or "why" in cleaned_lower:
         style["explanation_style"] = "first-principles"
-    elif "think of it" in lowercase or "imagine" in lowercase or "like" in lowercase:
+    elif "think of it" in cleaned_lower or "imagine" in cleaned_lower or "like" in cleaned_lower:
         style["explanation_style"] = "analogy-driven"
-
-    # Sentence patterns
-    sentences = re.split(r'[.!?]+', combined)
-    avg_len = sum(len(s.split()) for s in sentences[:100]) / max(len(sentences[:100]), 1)
-    if avg_len < 10:
-        style["patterns"].append("short-sentences")
-    elif avg_len > 25:
-        style["patterns"].append("long-sentences")
     else:
-        style["patterns"].append("balanced")
+        style["explanation_style"] = "balanced"
+
+    # Sentence patterns (filtered text)
+    sentences = re.split(r'[.!?]+', cleaned)
+    valid_sentences = [s for s in sentences[:100] if len(s.split()) >= 3]
+    if valid_sentences:
+        avg_len = sum(len(s.split()) for s in valid_sentences) / len(valid_sentences)
+        if avg_len < 10:
+            style["patterns"].append("short-sentences")
+        elif avg_len > 30:
+            style["patterns"].append("long-sentences")
+        else:
+            style["patterns"].append("balanced")
+
+    # Rhetorical devices
+    if re.search(r'\?', cleaned) and len(re.findall(r'\?', cleaned)) > 3:
+        style["patterns"].append("uses-rhetorical-questions")
+    if re.search(r'(?:not X, but Y|not only.*but also)', cleaned):
+        style["patterns"].append("contrast-heavy")
+    if re.search(r'(?:imagine|picture this|visualize)', cleaned_lower):
+        style["patterns"].append("visual-language")
+
+    # Add 8-dimension style analysis (ghost-writer subset)
+    style["dimensions"] = {
+        "sentence_variety": _sentence_variety(valid_sentences) if valid_sentences else "unknown",
+        "vocabulary_richness": _vocabulary_richness(cleaned),
+        "passive_voice_ratio": _passive_ratio(cleaned_lower),
+        "hedging_frequency": _hedging_frequency(cleaned_lower),
+        "first_person_ratio": _pronoun_ratio(cleaned_lower, "i|me|my|we|our"),
+        "technical_density": _technical_density(cleaned_lower),
+        "imperative_frequency": len(re.findall(r'^(?:do|don\'t|make|use|try|check|see|note|run|set|get)\b', cleaned_lower, re.MULTILINE)),
+        "question_frequency": cleaned.count("?"),
+    }
 
     return style
+
+
+def _strip_markdown(text: str) -> str:
+    """Remove Markdown formatting to get clean prose for NLP analysis."""
+    # Remove headings
+    text = re.sub(r'^#{1,6}\s+', '', text, flags=re.MULTILINE)
+    # Remove bold/italic
+    text = re.sub(r'\*{1,3}(.+?)\*{1,3}', r'\1', text)
+    # Remove code blocks
+    text = re.sub(r'```[\s\S]*?```', '', text)
+    # Remove inline code
+    text = re.sub(r'`[^`]+`', '', text)
+    # Remove links [text](url) -> text
+    text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
+    # Remove horizontal rules
+    text = re.sub(r'^[-*_]{3,}\s*$', '', text, flags=re.MULTILINE)
+    # Remove blockquotes
+    text = re.sub(r'^>\s+', '', text, flags=re.MULTILINE)
+    # Remove list markers
+    text = re.sub(r'^[\s]*[-*+]\s+', '', text, flags=re.MULTILINE)
+    text = re.sub(r'^[\s]*\d+\.\s+', '', text, flags=re.MULTILINE)
+    # Collapse whitespace
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    return text.strip()
 
 
 def _extract_tools(combined: str) -> list[dict]:
@@ -310,51 +455,97 @@ def _extract_tools(combined: str) -> list[dict]:
 def _extract_gotchas(texts: dict, combined: str) -> list[dict]:
     """Extract gotchas and anti-patterns — the highest-signal content.
 
-    Looks for:
-    - Explicit "gotcha" / "watch out" / "be careful" / "trap" / "pitfall" mentions
-    - Bug-related patterns: "don't" / "avoid" / "never" + technical context
-    - "common mistake" / "common error" / "footgun"
+    Captures both the pattern (what goes wrong) AND the fix (how to resolve it)
+    by reading the sentence following each gotcha mention.
     """
     gotchas = []
     lower = combined.lower()
 
-    # Explicit gotcha markers
-    patterns = [
+    # Split into sentences for fix-text extraction
+    sentences_raw = re.split(r'(?<=[.!?])\s+', combined)
+    sentences_lower = [s.lower() for s in sentences_raw]
+
+    # Explicit gotcha markers — capture the pattern + next sentence as fix
+    explicit_patterns = [
         r"(?:gotcha|watch out|be careful|beware|trap|pitfall|footgun):\s*(.+)",
         r"(?:common\s+(?:mistake|error|bug|pitfall))(?:\s+(?:is|with))?:\s*(.+)",
-        r"(?:don't|do not|never|avoid)\s+(.+?)(?:because|since|as|—|\.)",
-        r"(?:one thing|something)\s+(?:people|developers?|engineers?)\s+(?:often|always|frequently)\s+(?:get wrong|miss|forget|overlook)\s+(?:is|:)\s*(.+)",
-        r"(?:the\s+(?:trick|key|secret|catch))\s+(?:is|:)\s*(.+)",
     ]
 
-    for pattern in patterns:
+    for pattern in explicit_patterns:
         matches = re.findall(pattern, combined, re.IGNORECASE)
         for match in matches:
-            if isinstance(match, tuple):
-                match = match[0] if match else ""
-            text = match.strip()[:300]
-            if text and len(text) > 20:  # Filter noise
+            text = (match[0] if isinstance(match, tuple) else match).strip()[:300]
+            if text and len(text) > 15:
+                # Try to find a fix in the next sentence
+                fix = ""
+                for i, s in enumerate(sentences_raw):
+                    if text[:50].strip() in s:
+                        if i + 1 < len(sentences_raw):
+                            next_s = sentences_raw[i + 1].strip()
+                            # Check if the next sentence looks like a fix
+                            if re.search(r'(?:fix|instead|rather|solution|correct|should|use|try|replace)', next_s.lower()):
+                                fix = next_s[:300]
+                        break
                 gotchas.append({
                     "pattern": text,
-                    "fix": "",
+                    "fix": fix,
                     "source": "text-extraction",
                 })
 
-    # If we found fewer than 5 from explicit patterns, add inferred gotchas
+    # Negative pattern gotchas: "don't X because Y" or "avoid X"
+    neg_patterns = [
+        r"(?:don't|do\s+not|never|avoid)\s+(.+?)(?:because|since|as|—|\.)",
+    ]
+    for pattern in neg_patterns:
+        matches = re.findall(pattern, combined, re.IGNORECASE)
+        for match in matches:
+            text = (match[0] if isinstance(match, tuple) else match).strip()[:300]
+            if text and len(text) > 15:
+                gotchas.append({
+                    "pattern": text,
+                    "fix": "",
+                    "source": "negative-pattern",
+                })
+
+    # People-often-get-wrong patterns
+    crowd_patterns = [
+        r"(?:one thing|something)\s+(?:people|developers?|engineers?)\s+(?:often|always|frequently|typically)\s+(?:get wrong|miss|forget|overlook|don't realize)\s+(?:is|:)\s*(.+)",
+        r"(?:the\s+(?:trick|key|secret|catch))\s+(?:is|:)\s*(.+)",
+    ]
+    for pattern in crowd_patterns:
+        matches = re.findall(pattern, combined, re.IGNORECASE)
+        for match in matches:
+            text = (match[0] if isinstance(match, tuple) else match).strip()[:300]
+            if text and len(text) > 15:
+                gotchas.append({
+                    "pattern": text,
+                    "fix": "",
+                    "source": "crowd-wisdom",
+                })
+
+    # Fallback: "make sure / ensure / verify / check" patterns
     if len(gotchas) < 5:
-        # Look for technical "watch out" signals
-        tech_gotchas = re.findall(
-            r"(?:make sure|ensure|verify|check)\s+(?:that\s+)?(.+?)(?:\.|$)",
+        fallback_matches = re.findall(
+            r"(?:make sure|ensure|verify|check)\s+(?:that\s+)?(.+?)(?:\.|$|\n)",
             combined, re.IGNORECASE
         )
-        for tg in tech_gotchas[:10 - len(gotchas)]:
+        for fm in fallback_matches[:10 - len(gotchas)]:
             gotchas.append({
-                "pattern": tg.strip()[:300],
+                "pattern": fm.strip()[:300],
                 "fix": "",
                 "source": "check-pattern",
             })
 
-    return gotchas[:20]  # Rich gotcha list
+    # Deduplicate
+    seen = set()
+    unique = []
+    for g in gotchas:
+        key = g["pattern"].lower()[:80]
+        if key not in seen:
+            seen.add(key)
+            unique.append(g)
+
+    return unique[:20]  # Rich gotcha list
 
 
 def _extract_canon(combined: str) -> list[dict]:
@@ -413,6 +604,90 @@ def _assess_confidence(profile: dict) -> dict:
         c["gotchas"] = "medium"
 
     return c
+
+
+# ---------------------------------------------------------------------------
+# Style dimension helpers (8-dimension ghost-writer subset)
+# ---------------------------------------------------------------------------
+
+def _sentence_variety(sentences: list[str]) -> str:
+    if not sentences:
+        return "unknown"
+    lengths = [len(s.split()) for s in sentences]
+    if max(lengths) - min(lengths) > 15:
+        return "high-variety"
+    if max(lengths) - min(lengths) < 5:
+        return "uniform"
+    return "moderate-variety"
+
+
+def _vocabulary_richness(text: str) -> str:
+    words = re.findall(r'\b\w+\b', text.lower())
+    if len(words) < 50:
+        return "too-short"
+    ttr = len(set(words)) / len(words)
+    if ttr > 0.6:
+        return "rich"
+    if ttr > 0.4:
+        return "moderate"
+    return "repetitive"
+
+
+def _passive_ratio(text_lower: str) -> str:
+    passive = len(re.findall(r'\b(?:is|are|was|were|been|be)\s+\w+(?:ed|en|t)\b', text_lower))
+    total = max(len(re.findall(r'[.!?]', text_lower)), 1)
+    if total == 0:
+        return "unknown"
+    ratio = passive / total
+    if ratio > 0.3:
+        return "high-passive"
+    if ratio > 0.1:
+        return "moderate-passive"
+    return "low-passive"
+
+
+def _hedging_frequency(text_lower: str) -> str:
+    hedges = len(re.findall(
+        r'\b(?:maybe|perhaps|possibly|probably|likely|tends?\s+to|seems?\s+to|'
+        r'appears?\s+to|might|may|could|would|should|generally|typically|often|'
+        r'usually|sort\s+of|kind\s+of|i\s+think|i\s+believe|in\s+my\s+opinion)\b',
+        text_lower
+    ))
+    sentences = max(len(re.findall(r'[.!?]', text_lower)), 1)
+    ratio = hedges / sentences
+    if ratio > 0.5:
+        return "high-hedging"
+    if ratio > 0.2:
+        return "moderate-hedging"
+    return "low-hedging"
+
+
+def _pronoun_ratio(text_lower: str, pattern: str) -> str:
+    matches = len(re.findall(rf'\b({pattern})\b', text_lower))
+    words = max(len(re.findall(r'\b\w+\b', text_lower)), 1)
+    ratio = matches / words
+    if ratio > 0.05:
+        return "high"
+    if ratio > 0.02:
+        return "moderate"
+    return "low"
+
+
+def _technical_density(text_lower: str) -> str:
+    tech_terms = len(re.findall(
+        r'\b(?:api|sdk|cli|http|json|xml|sql|css|html|dom|rest|rpc|'
+        r'function|method|class|module|package|library|framework|'
+        r'compiler|interpreter|runtime|binary|protocol|endpoint|'
+        r'server|client|database|cache|queue|stream|pipeline)\b',
+        text_lower
+    ))
+    words = max(len(re.findall(r'\b\w+\b', text_lower)), 1)
+    ratio = tech_terms / words
+    if ratio > 0.04:
+        return "high"
+    if ratio > 0.02:
+        return "moderate"
+    return "low"
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,37 @@
+{
+  "persona_name": "gaearon",
+  "timestamp": "2026-06-11T07:31:51Z",
+  "sources_processed": [
+    "search-results.json",
+    "decisions.md",
+    "gotchas.md"
+  ],
+  "expertise": [
+    {
+      "domain": "go",
+      "level": "familiar",
+      "evidence": [
+        "gotchas: found 2 mentions"
+      ]
+    }
+  ],
+  "heuristics": [],
+  "style": {
+    "formality": 5,
+    "phrases": [],
+    "patterns": [
+      "balanced"
+    ],
+    "explanation_style": ""
+  },
+  "tools": [],
+  "gotchas": [],
+  "canon": [],
+  "contradictions": [],
+  "confidence": {
+    "expertise": "low",
+    "heuristics": "low",
+    "style": "low",
+    "gotchas": "low"
+  }
+}

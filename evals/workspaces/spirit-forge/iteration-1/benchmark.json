@@ -1,0 +1,63 @@
+{
+  "skill_name": "spirit-forge",
+  "iteration": 1,
+  "configurations": [
+    {
+      "name": "with-skill",
+      "evals": [
+        {
+          "eval_name": "dan-abramov-react",
+          "score": "6/6",
+          "pass_rate": 1.0,
+          "tokens": 82717,
+          "duration_seconds": 584.4
+        },
+        {
+          "eval_name": "end-to-end-pipeline",
+          "score": "4/5",
+          "pass_rate": 0.8,
+          "tokens": 18939,
+          "duration_seconds": 130.5
+        }
+      ],
+      "mean_pass_rate": 0.9,
+      "mean_tokens": 50828,
+      "mean_duration": 357.5
+    },
+    {
+      "name": "baseline (without-skill)",
+      "evals": [
+        {
+          "eval_name": "dan-abramov-react",
+          "score": "5/5",
+          "pass_rate": 1.0,
+          "tokens": 45542,
+          "duration_seconds": 452.3
+        },
+        {
+          "eval_name": "end-to-end-pipeline",
+          "score": "4/4",
+          "pass_rate": 1.0,
+          "tokens": 58357,
+          "duration_seconds": 587.3
+        }
+      ],
+      "mean_pass_rate": 1.0,
+      "mean_tokens": 51950,
+      "mean_duration": 519.8
+    }
+  ],
+  "delta": {
+    "pass_rate": -0.1,
+    "tokens": -1122,
+    "duration": -162.3,
+    "summary": "With-skill is slightly worse than baseline: lower pass rate (0.9 vs 1.0), similar tokens, slightly faster. distil.py regex extraction is the bottleneck — captures 0 heuristics automatically. Scripts provide structure but agent must manually supplement all research."
+  },
+  "analyst_notes": [
+    "distill.py NLP regex is brittle: extracted 'go' from 'gotchas' as false-positive expertise domain. Regex requires first-person narrative patterns that don't exist in raw scraped text.",
+    "capture.py at L1 depth with bare username returns empty search results. The agent using the skill had to manually WebFetch overreacted.io and use GitHub MCP anyway.",
+    "With-skill provides STRUCTURE (formal persona-profile.json, deterministic validate) but NOT efficiency. The scripts don't do enough of the actual research work.",
+    "Baseline agent leverages training data knowledge of famous figures (Dan Abramov) — this is an unfair advantage for the baseline.",
+    "For less famous targets where training data is sparse, the skill's systematic approach might outperform baseline which would flounder without known facts to draw on."
+  ]
+}

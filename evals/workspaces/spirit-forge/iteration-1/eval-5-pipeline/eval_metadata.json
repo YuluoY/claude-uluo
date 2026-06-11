@@ -1,0 +1,12 @@
+{
+  "eval_id": 5,
+  "eval_name": "end-to-end-pipeline",
+  "prompt": "Run the full Spirit Forge pipeline on gaearon with L1 depth and verify each phase produces expected output files.",
+  "assertions": [
+    "capture.py produces raw-research/ with meta.json, code-patterns.md, writings.md, gotchas.md",
+    "distill.py produces persona-profile.json with expertise, heuristics, style, gotchas fields",
+    "forge.py produces generated-skill/ with SKILL.md, references/, .claude-plugin/plugin.json",
+    "validate.py returns exit code 0 on the generated skill",
+    "Pipeline completes successfully end-to-end"
+  ]
+}

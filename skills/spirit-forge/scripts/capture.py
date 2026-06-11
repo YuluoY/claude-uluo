@@ -78,7 +78,6 @@ def detect_target_type(target: str) -> dict:
         parsed = urlparse(target)
 
         if "github.com" in parsed.netloc:
-            # github.com/username or github.com/username/repo
             parts = [p for p in parsed.path.split("/") if p]
             if parts:
                 return {"type": "github", "username": parts[0], "url": target}
@@ -88,6 +87,18 @@ def detect_target_type(target: str) -> dict:
             parts = [p for p in parsed.path.split("/") if p]
             if parts:
                 return {"type": "twitter", "handle": parts[0], "url": target}
+
+        if "bsky.app" in parsed.netloc or "bluesky" in parsed.netloc:
+            return {"type": "bluesky", "url": target}
+
+        if "medium.com" in parsed.netloc:
+            parts = [p for p in parsed.path.split("/") if p]
+            username = parts[1] if len(parts) > 1 and parts[0] == "@" else (parts[0] if parts else "")
+            return {"type": "medium", "username": username, "url": target}
+
+        if "dev.to" in parsed.netloc:
+            parts = [p for p in parsed.path.split("/") if p]
+            return {"type": "devto", "username": parts[0] if parts else "", "url": target}
 
         # Generic blog/site
         return {"type": "blog", "url": target}
@@ -100,6 +111,10 @@ def detect_target_type(target: str) -> dict:
     if target.startswith("github.com/"):
         username = target.split("/", 1)[1].split("/")[0]
         return {"type": "github", "username": username, "url": f"https://github.com/{username}"}
+
+    if target.startswith("twitter.com/") or target.startswith("x.com/"):
+        handle = target.split("/", 1)[1].split("/")[0]
+        return {"type": "twitter", "handle": handle}
 
     # "Name, Domain" pattern
     if "," in target:
@@ -163,10 +178,17 @@ def capture(target: str, depth: str = "L2", output_dir: Optional[str] = None) ->
 
     # ---- Source 2: GitHub profile ----
     if target_info["type"] == "github":
-        _print_step(2, "Extracting GitHub profile")
+        _print_step(2, "Extracting GitHub profile (API + scraping)")
         gh_data = extract_github(target_info["username"])
         gh_data["depth"] = depth
         gh_data["max_repos"] = config["max_github_repos"]
+
+        # GitHub API fallback: if scraping returned empty, try REST API
+        if not gh_data.get("bio") and not gh_data.get("languages"):
+            _print_step(2, "Scraping returned minimal data, trying GitHub API")
+            api_data = _github_api_fetch(target_info["username"])
+            if api_data:
+                gh_data.update(api_data)
 
         with open(out / "github-profile.json", "w") as f:
             json.dump(gh_data, f, ensure_ascii=False, indent=2)
@@ -176,12 +198,15 @@ def capture(target: str, depth: str = "L2", output_dir: Optional[str] = None) ->
         _write_markdown(str(out / "code-patterns.md"), _format_github_data(gh_data))
         meta["files_written"].append("code-patterns.md")
 
-    # ---- Source 3: Web search ----
+    # ---- Source 3: Web search (with dedup) ----
     name_for_search = target_info.get("name") or target_info.get("username", "")
     domain = target_info.get("domain", "")
     if name_for_search:
-        _print_step(3, "Web search for person")
-        search_results = search_person(name_for_search, domain)
+        _print_step(3, "Web search for person (with dedup)")
+        raw_results = search_person(name_for_search, domain)
+
+        # Deduplicate and filter results
+        search_results = _dedup_search_results(raw_results, name_for_search)
         search_results = search_results[:config["max_search_results"]]
 
         with open(out / "search-results.json", "w") as f:
@@ -189,7 +214,7 @@ def capture(target: str, depth: str = "L2", output_dir: Optional[str] = None) ->
         meta["sources_found"].append({"type": "search", "results": len(search_results)})
         meta["files_written"].append("search-results.json")
 
-        # Also scrape top search results for deeper content
+        # Scrape top results for deeper content
         _print_step(4, "Scraping top search results")
         top_pages = []
         for sr in search_results[:5]:
@@ -204,9 +229,32 @@ def capture(target: str, depth: str = "L2", output_dir: Optional[str] = None) ->
         _write_markdown(str(out / "decisions.md"), _format_search_content(search_results, top_pages))
         meta["files_written"].append("decisions.md")
 
-    # ---- Source 4: Gotcha extraction hints ----
+    # ---- Source 4: Fallback — if name type, also try github.com/<name> ----
+    if target_info["type"] == "name" and name_for_search:
+        _print_step(5, "Trying GitHub fallback for name query")
+        username = _slugify(name_for_search.split(",")[0].strip())
+        alt_gh = extract_github(username)
+        if alt_gh.get("bio") or alt_gh.get("languages"):
+            with open(out / "github-profile.json", "w") as f:
+                json.dump(alt_gh, f, ensure_ascii=False, indent=2)
+            meta["sources_found"].append({"type": "github-fallback", "username": username})
+            meta["files_written"].append("github-profile.json")
+            _write_markdown(str(out / "code-patterns.md"), _format_github_data(alt_gh))
+            if "code-patterns.md" not in meta["files_written"]:
+                meta["files_written"].append("code-patterns.md")
+
+    # ---- Source 5: Gotcha extraction hints ----
     _write_markdown(str(out / "gotchas.md"), _format_gotcha_hints(target_info))
     meta["files_written"].append("gotchas.md")
+
+    # ---- Quality gate ----
+    total_sources = sum(1 for s in meta["sources_found"] if s.get("pages", 0) > 0 or s.get("results", 0) > 0 or s.get("username"))
+    if total_sources == 0 or (not any(f.endswith(".md") for f in meta["files_written"] if f not in ("meta.json", "search-results.json", "github-profile.json"))):
+        meta["capture_status"] = "failed"
+        meta["capture_reason"] = "No meaningful content captured from any source. Try L2 or L3 depth, or provide a more specific target (URL, full name with domain)."
+        print(f"  ⚠ CAPTURE QUALITY GATE: failed — {meta['capture_reason']}")
+    else:
+        meta["capture_status"] = "ok"
 
     # Write meta
     with open(out / "meta.json", "w") as f:
@@ -215,6 +263,99 @@ def capture(target: str, depth: str = "L2", output_dir: Optional[str] = None) ->
 
     _print_footer(str(out))
     return meta
+
+
+# ---------------------------------------------------------------------------
+# Capture helpers
+# ---------------------------------------------------------------------------
+
+def _github_api_fetch(username: str) -> dict | None:
+    """Fetch GitHub profile data via REST API (no auth needed for public profiles)."""
+    try:
+        import requests
+        resp = requests.get(
+            f"https://api.github.com/users/{username}",
+            timeout=15,
+            headers={"User-Agent": "SpiritForge/0.2", "Accept": "application/vnd.github.v3+json"}
+        )
+        if resp.status_code == 200:
+            data = resp.json()
+            return {
+                "bio": data.get("bio", ""),
+                "company": data.get("company", ""),
+                "blog_url": data.get("blog", ""),
+                "location": data.get("location", ""),
+                "public_repos": data.get("public_repos", 0),
+                "followers": data.get("followers", 0),
+                "name": data.get("name", ""),
+                "twitter_username": data.get("twitter_username", ""),
+                "api_source": True,
+            }
+    except Exception:
+        pass
+    return None
+
+
+def _dedup_search_results(results: list[dict], target_name: str) -> list[dict]:
+    """Deduplicate and filter search results.
+
+    - Keep at most one result per domain
+    - Boost results from quality domains
+    - Filter out clearly irrelevant results
+    """
+    quality_domains = {
+        "github.com", "medium.com", "dev.to", "stackoverflow.com",
+        "twitter.com", "x.com", "linkedin.com", "reddit.com",
+        "youtube.com", "scholar.google.com", "arxiv.org",
+        "news.ycombinator.com", "lobste.rs",
+    }
+
+    # Noise domains — likely not useful for persona research
+    noise_domains = {
+        "pinterest.com", "instagram.com", "facebook.com", "tiktok.com",
+        "amazon.com", "ebay.com", "etsy.com", "wikipedia.org",
+    }
+
+    from urllib.parse import urlparse
+    seen_domains = set()
+    filtered = []
+
+    for r in results:
+        url = r.get("url", "")
+        if not url:
+            continue
+
+        try:
+            domain = urlparse(url).netloc.lower()
+            # Strip www prefix
+            if domain.startswith("www."):
+                domain = domain[4:]
+        except Exception:
+            domain = ""
+
+        # Skip noise domains
+        if domain in noise_domains:
+            continue
+
+        # One result per domain
+        if domain in seen_domains:
+            continue
+        seen_domains.add(domain)
+
+        # Boost quality domains
+        if domain in quality_domains:
+            r["relevance"] = r.get("relevance", 0.5) + 0.2
+
+        # Demote results unlikely to be about the target
+        snippet = (r.get("snippet", "") + r.get("title", "")).lower()
+        if snippet and target_name.lower() not in snippet:
+            r["relevance"] = r.get("relevance", 0.5) - 0.3
+
+        filtered.append(r)
+
+    # Sort by relevance
+    filtered.sort(key=lambda x: x.get("relevance", 0.5), reverse=True)
+    return filtered
 
 
 # ---------------------------------------------------------------------------
