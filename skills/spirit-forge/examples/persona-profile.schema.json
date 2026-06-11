@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "persona-profile",
+  "type": "object",
+  "required": ["persona_name", "expertise", "gotchas"],
+  "properties": {
+    "persona_name": {
+      "type": "string",
+      "description": "Target person's name or identifier"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sources_processed": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "List of source files processed"
+    },
+    "expertise": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["domain", "level"],
+        "properties": {
+          "domain": {"type": "string"},
+          "level": {"enum": ["expert", "proficient", "familiar"]},
+          "evidence": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "heuristics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "when": {"type": "string"},
+          "then": {"type": "string"},
+          "because": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "style": {
+      "type": "object",
+      "properties": {
+        "formality": {"type": "integer", "minimum": 1, "maximum": 10},
+        "phrases": {"type": "array", "items": {"type": "string"}},
+        "patterns": {"type": "array", "items": {"type": "string"}},
+        "explanation_style": {"type": "string"}
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "usage": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "gotchas": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "properties": {
+          "pattern": {"type": "string", "description": "What the person catches that others miss"},
+          "fix": {"type": "string", "description": "Recommended resolution"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "canon": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {"type": "string"},
+          "type": {"enum": ["paper", "book", "talk", "repo", "url", "unknown"]},
+          "cited_in": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "stated": {"type": "string"},
+          "observed": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "properties": {
+        "expertise": {"enum": ["high", "medium", "low"]},
+        "heuristics": {"enum": ["high", "medium", "low"]},
+        "style": {"enum": ["high", "medium", "low"]},
+        "gotchas": {"enum": ["high", "medium", "low"]}
+      }
+    }
+  }
+}

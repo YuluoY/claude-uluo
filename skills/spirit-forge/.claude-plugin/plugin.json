@@ -1,0 +1,9 @@
+{
+  "name": "spirit-forge",
+  "version": "0.1.0",
+  "description": "Research a target person, capture their expertise, decision frameworks, and style — then forge a working Claude Code skill that emulates them (拘灵遣将).",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["persona", "research", "skill-generation", "emulation", "拘灵遣将", "蒸馏", "forge"],
+  "license": "MIT",
+  "skills": "./"
+}
