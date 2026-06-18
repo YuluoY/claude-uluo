@@ -45,6 +45,9 @@ html-blueprint 的校验规则按严重程度分为三级：
 | 禁止 *:not() | check-forbidden-selectors.js |
 | 表单字段建议声明 data-type | check-form-model.js |
 | 提交按钮建议 data-event | check-form-model.js |
+| 设计稿 HTML 缺少 <!-- @theme --> 声明 | check-theme-consistency.js |
+| HTML 中 <style> 重复定义主题已有的 :root token | check-theme-consistency.js |
+| var() 引用主题 CSS 中不存在的 token | check-theme-consistency.js |
 
 ## WARN（提示约束）
 
@@ -58,6 +61,8 @@ html-blueprint 的校验规则按严重程度分为三级：
 - 单个页面 data-component 超过 15 个（可能过度拆解）
 - 设计稿中使用了大量硬编码像素值而非 token
 - 装饰效果过于复杂（超过 3 层叠加的渐变/阴影/模糊）
+- 项目存在多个不同 tokens.css（主题文件应唯一）
+- 多个 HTML 设计稿引用不同主题文件
 
 ## 执行协议
 

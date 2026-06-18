@@ -12,6 +12,7 @@
  *   6. check-class-names.js        → class 命名规范
  *   7. check-forbidden-selectors.js → CSS 反模式
  *   8. check-responsive-viewport.js → viewport 声明
+ *   9. check-theme-consistency.js   → 跨蓝图主题一致性
  *
  * 用法：
  *   node scripts/validate-all.js <file-or-dir> [...more]
@@ -36,6 +37,7 @@ const CHECKS = [
   { name: 'check-class-names', file: 'check-class-names.js', desc: 'class 命名规范' },
   { name: 'check-forbidden-selectors', file: 'check-forbidden-selectors.js', desc: 'CSS 反模式' },
   { name: 'check-responsive-viewport', file: 'check-responsive-viewport.js', desc: 'viewport 声明' },
+  { name: 'check-theme-consistency', file: 'check-theme-consistency.js', desc: '跨蓝图主题一致性' },
 ]
 
 function runCheck(name, file, inputs) {

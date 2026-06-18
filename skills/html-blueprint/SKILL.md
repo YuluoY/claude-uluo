@@ -18,20 +18,23 @@ AI 生成「可组件化 HTML 设计稿」的协议与护栏。HTML/CSS 保证�
 
 ## 强制工作协议
 
+0. **检查项目主题**：生成新设计稿前，先检查项目根目录是否存在 `tokens.css`。如果存在，读取并继承其 token（颜色/间距/圆角/字号），HTML 通过 `<link>` 引入。如果不存在且项目将有多页设计稿，同步生成主题 CSS。详见 `references/theme-consistency.md`。
 1. **识别任务类型**：判断是生成新设计稿、review 已有设计稿、还是转换 HTML→Vue/React。
 2. **生成前加载协议**：任何生成 HTML 设计稿的任务，必须先读取 `references/protocol-spec.md` 了解完整属性字典和组件分类规则。
-3. **写 CSS 时加载约定**：任何涉及 CSS 的任务，读取 `references/css-conventions.md`。
+3. **写 CSS 时加载约定**：任何涉及 CSS 的任务，读取 `references/css-conventions.md`。如果项目已有 `tokens.css`，还需读取 `references/theme-consistency.md`。
 4. **理解约束分级**：读取 `references/constraint-tiers.md` 区分 HARD（阻断）/ SHOULD（建议）/ WARN（提示）。
 5. **转换时加载指南**：将 HTML 设计稿转为 Vue/React 前，读取 `references/conversion-guide.md`。
 6. **HTML 负责视觉保真**：允许 flex、grid、gradient、box-shadow、backdrop-filter、animation。不要为了"好转换"而牺牲视觉效果。
 7. **data-* 负责语义标注**：每个组件用 data-component（PascalCase）、动态数据用 data-prop、交互用 data-event、可替换区域用 data-slot、转换策略用 data-convert。
 8. **生成后自检**：HTML 输出后立即运行 `node scripts/validate-all.js <output.html>`，HARD 违规必须修复后才呈现给用户。
-9. **输出转换报告**：每次生成设计稿必须附带转换置信度报告（JSON 格式，每个组件一个）。
+9. **跨蓝图一致性校验**：如果项目中有多个 HTML 设计稿，validate-all 会自动运行主题一致性检查（token 继承、var() 引用、主题 CSS 唯一性）。
+10. **输出转换报告**：每次生成设计稿必须附带转换置信度报告（JSON 格式，每个组件一个）。
 
 ## 模块加载表
 
 - `references/protocol-spec.md`：完整属性字典、组件分类决策树、转换报告格式、禁止模式。**生成或 review 时默认必读。**
 - `references/css-conventions.md`：BEM 命名、hybrid token 模式、禁止选择器、装饰元素样式、响应式声明。**写 CSS 时加载。**
+- `references/theme-consistency.md`：项目主题 CSS 协议、token 继承规则、跨蓝图一致性校验。**项目有多页设计稿或首次生成时加载。**
 - `references/constraint-tiers.md`：HARD/SHOULD/WARN 三级约束体系与执行协议。**需要理解规则严重程度时加载。**
 - `references/conversion-guide.md`：HTML→Vue/React 转换流程（component→文件、prop→props、event→emits、slot→slot、list→v-for/map、convert→转换深度）。**转换任务时加载。**
 
@@ -61,6 +64,24 @@ AI 生成「可组件化 HTML 设计稿」的协议与护栏。HTML/CSS 保证�
 - 不是所有元素都是组件——用 data-convert 显式区分 component/layout/static/decorative/manual。
 - 装饰元素走 absolute + blur + aria-hidden，业务内容走正常文档流。
 - 当视觉保真和组件可维护性冲突：保留视觉稿、标记 data-risk、不强行转换、输出人工处理建议。
+
+## 项目目录约定
+
+```
+<项目根>/
+├── tokens.css           ← 项目唯一设计 token（:root 变量）
+├── pages/                ← 整页布局设计稿（含 data-page 声明）
+│   ├── dashboard.html
+│   └── settings.html
+└── components/           ← 可复用模块设计稿（弹窗、表单、通知等）
+    ├── confirm-dialog.html
+    └── notification-toast.html
+```
+
+- 整页设计稿（含 `data-page`）→ `pages/`
+- 可复用模块（无 `data-page`）→ `components/`
+- 两者均通过 `<link rel="stylesheet" href="../tokens.css">` 引入主题
+- `<!-- @theme -->` 声明统一为 `../tokens.css`
 
 ## 最少提问规则
 

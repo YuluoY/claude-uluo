@@ -37,6 +37,8 @@ html-blueprint 的 CSS 规范：BEM 命名 + Hybrid Token + 视觉保真允许�
 
 默认使用 hybrid 模式：主色/文本色/间距/圆角/字号 token 化，复杂视觉效果保留原始 CSS。
 
+**优先从项目主题 CSS 继承 token**。如果项目根目录存在 `tokens.css`，设计稿 HTML 通过 `<link rel="stylesheet" href="...">` 引入，组件样式用 `var()` 引用已有 token。仅在项目尚无主题 CSS 时内联定义 `:root` token。详见 `references/theme-consistency.md`。
+
 ### Token 命名空间
 
 ```css
