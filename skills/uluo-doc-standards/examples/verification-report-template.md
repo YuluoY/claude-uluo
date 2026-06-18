@@ -9,7 +9,7 @@
 ```markdown
 # [特性名称] 验收报告
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 关联: [spec.md](./spec.md) | [CHANGELOG](../../CHANGELOG.md)
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 关联: [spec.md](./spec.md) | [CHANGELOG](../../CHANGELOG.md)
 
 ## 验收概要
 

@@ -9,7 +9,7 @@
 ```markdown
 # [特性名称] 总结复盘
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 关联: [spec.md](./spec.md) | [验收报告](./verification-report.md)
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 关联: [spec.md](./spec.md) | [验收报告](./verification-report.md)
 
 ## 基本数据
 

@@ -11,7 +11,7 @@
 ```markdown
 # [特性名称] 调研报告
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 关联 spec: [spec.md](./spec.md) | 状态: 进行中/已完成
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 关联 spec: [spec.md](./spec.md) | 状态: 进行中/已完成
 
 ## 调研目标
 

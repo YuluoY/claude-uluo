@@ -9,7 +9,7 @@
 ```markdown
 # [特性名称] 需求规格说明
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 状态: 草稿/评审中/已确认
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 状态: 草稿/评审中/已确认
 
 ## 背景与动机
 

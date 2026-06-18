@@ -21,7 +21,7 @@ tasks/
 ```markdown
 # [特性名称] 任务总览
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 关联: [../plans/README.md](../plans/README.md)
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 关联: [../plans/README.md](../plans/README.md)
 
 ## 全局统计
 
@@ -68,7 +68,7 @@ flowchart LR
 ```markdown
 # [特性名称] Phase [N]: [阶段名称] 任务清单
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 关联: [../plans/README.md](../plans/README.md) | 上一阶段: [phase<N-1>.md](./phase<N-1>.md)
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 关联: [../plans/README.md](../plans/README.md) | 上一阶段: [phase<N-1>.md](./phase<N-1>.md)
 
 ## 本阶段任务
 

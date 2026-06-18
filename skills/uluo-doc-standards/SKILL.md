@@ -50,6 +50,8 @@ Layer 4: 记录层 (Record & Learn)
 AI 接到实现任务后，按五层递进执行。中功能及以上建议在 Phase 2 和 Phase 8 启用子代理（见 [子代理调度](#子代理调度)）：
 
 ```
+Phase 0: 获取作者 → 运行 git config user.name，将输出作为所有文档的「作者」字段值。
+                   禁止使用占位符或字面量 "git config user.name"。
 Phase 1: 识别场景 → 判断任务类型，查场景表，确定文档清单和要加载的 reference
 Phase 2: 信息调研 → 🎯 启动 researcher 子代理                         ←─┐ 调研层
           产出 research-report.md（加载 examples/research-report-template）│

@@ -105,7 +105,52 @@ function summary() {
   }
 }
 
+// ── Author metadata check ────────────────────────────────────
+
+// 占位符模式：AI 没有正确获取作者名时会残留这些
+const AUTHOR_PLACEHOLDERS = [
+  /`git config user\.name`/,  // 未执行的命令
+  /git config user\.name/,
+  /\[Author Name\]/i,
+  /\[作者\]/,
+  /TODO/i,
+  /FIXME/i,
+  /$^/,                       // 空字符串视为未填写
+]
+
+/**
+ * Check that the document metadata line contains a valid author name.
+ * Metadata line format: "> 日期: YYYY-MM-DD | 作者: <name> | ..."
+ * Returns null if valid, or a failure message string if invalid.
+ */
+function checkAuthor(content, fname) {
+  // Look for the metadata line starting with "> 日期:"
+  const metaLine = content.match(/^> 日期:\s*\d{4}-\d{2}-\d{2}\s*\|\s*作者:\s*([^|\n]+?)\s*(?:\||$)/m)
+  if (!metaLine) {
+    return `${fname}: 缺少元数据行——应包含 "> 日期: YYYY-MM-DD | 作者: <姓名> | ..."`
+  }
+
+  const authorRaw = metaLine[1].trim()
+  if (!authorRaw) {
+    return `${fname}: 作者字段为空——必须从 git config user.name 获取真实姓名填入`
+  }
+
+  for (const pattern of AUTHOR_PLACEHOLDERS) {
+    if (pattern.test(authorRaw)) {
+      return `${fname}: 作者字段仍是占位符 "${authorRaw}"——必须运行 git config user.name 获取真实姓名后替换`
+    }
+  }
+
+  // 作者名至少 2 个字符（中英文名）
+  if (authorRaw.length < 2) {
+    return `${fname}: 作者名过短 "${authorRaw}"——应为真实姓名`
+  }
+
+  return null // valid
+}
+
 module.exports = {
   reset, pass, fail, warn, section, summary,
   fileExists, dirExists, collectMdFiles, detectDocType, hasHeading, relative,
+  checkAuthor,
 };

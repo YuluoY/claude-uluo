@@ -23,7 +23,7 @@ plans/
 ```markdown
 # [特性名称] 执行计划
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 关联 spec: [../spec.md](../spec.md) | 子 plan: [子文件名](./子文件名)
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 关联 spec: [../spec.md](../spec.md) | 子 plan: [子文件名](./子文件名)
 
 ## 架构概览
 

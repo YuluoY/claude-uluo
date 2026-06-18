@@ -1,6 +1,7 @@
 // plan.md / plans/README.md 专有校验
 const fs = require('fs');
 const path = require('path');
+const { checkAuthor } = require('../lib/utils');
 
 function parseSections(content) {
   // Only split on ## (level 2) headings — ### and below are treated as content
@@ -30,6 +31,11 @@ function check(filePath) {
   let content;
   try { content = fs.readFileSync(filePath, 'utf-8'); }
   catch { findings.push({ type: 'fail', msg: `${fname}: 无法读取文件` }); return findings; }
+
+  // ── 0. 元数据 author 校验 ──────────────────────────────────
+  const authorErr = checkAuthor(content, fname);
+  if (authorErr) findings.push({ type: 'fail', msg: authorErr });
+  else findings.push({ type: 'pass', msg: `${fname}: 作者字段有效` });
 
   const sections = parseSections(content);
 
