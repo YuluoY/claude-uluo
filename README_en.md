@@ -95,7 +95,7 @@ Invoke in Claude Code: `/diagram-compiler`
 | diagram-compiler | Technical diagram studio — Mermaid/Matplotlib/Canvas, flowcharts, architecture, paper figures |
 | frontend-visual-qa | Visual QA for AI-generated UI — design tokens, components, responsive, a11y, i18n |
 | html-blueprint | HTML-first component design protocol — data-* annotated renderable drafts |
-| uluo-doc-standards | AI coding doc standards — spec/plan/tasks/changelog templates and quality benchmarks |
+| uluo-spec-driven | Spec-Driven design engine — design docs (strategy/domain/component) + refinement flow (spec/plan/tasks) + records |
 | uluo-web-standards | Web engineering standards — eslint/stylelint/tsc + DDD architecture + soft rules |
 
 **Curated**

@@ -4,7 +4,7 @@ How to research a target person online — methodology, tools, and best practice
 
 ## Information Sources
 
-Adapted from the uluo-doc-standards research protocol.
+Adapted from the uluo-spec-driven research protocol.
 
 | Source | What It Reveals | Priority | Tools |
 |--------|----------------|----------|-------|

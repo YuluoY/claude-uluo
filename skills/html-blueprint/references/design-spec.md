@@ -2,7 +2,7 @@
 
 Design Spec 是 html-blueprint 的**单一真相源**。HTML 设计稿和工程代码都从 Spec 生成，确保 100% 一致。
 
-**Design Spec 是 AI 提取的中间契约，用户不手写。** AI 按 [requirement-extraction-guide.md](./requirement-extraction-guide.md) 从需求（uluo-doc-standards 的 spec.md 或自然语言）提取，用户确认后生成 HTML。
+**Design Spec 是 AI 提取的中间契约，用户不手写。** AI 按 [requirement-extraction-guide.md](./requirement-extraction-guide.md) 从需求（uluo-spec-driven 的 spec.md 或自然语言）提取，用户确认后生成 HTML。
 
 本文件定义 Spec 的 YAML/JSON 结构、字段语义和校验规则。
 
@@ -34,7 +34,7 @@ Spec 包含 HTML 能表达的视觉信息 + HTML 无法表达的工程信息（A
 
 AI 提取 Design Spec 的两条路径：
 
-- **路径 A（对齐口径）**：AI 用 uluo-doc-standards 生成 spec.md，再从 spec.md 的功能需求提取 component/props/events，用验收标准验证覆盖度
+- **路径 A（对齐口径）**：AI 用 uluo-spec-driven 生成 spec.md，再从 spec.md 的功能需求提取 component/props/events，用验收标准验证覆盖度
 - **路径 B（独立工作）**：AI 从自然语言需求用模式匹配规则提取 props/events/states/dataSource
 
 提取规则详见 [requirement-extraction-guide.md](./requirement-extraction-guide.md)。

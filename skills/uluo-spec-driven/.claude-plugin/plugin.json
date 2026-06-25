@@ -1,0 +1,9 @@
+{
+  "name": "uluo-spec-driven",
+  "version": "0.2.0",
+  "description": "Spec-Driven 设计稿引擎——覆盖项目全生命周期的设计文档产出：设计稿（战略/领域/组件）+ 细化流程（spec/plan/tasks）+ 记录（changelog/验收/复盘）。",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["spec", "design", "roadmap", "architecture", "documentation", "standards"],
+  "license": "MIT",
+  "skills": "./"
+}

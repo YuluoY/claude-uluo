@@ -42,9 +42,9 @@
       "description": "Skill 创建、修改与评测——含 evals 基准测试和方差分析"
     },
     {
-      "name": "uluo-doc-standards",
-      "source": "./skills/uluo-doc-standards",
-      "description": "AI 编程文档产出规范——spec/plan/tasks/changelog/验收报告模板与质量标准"
+      "name": "uluo-spec-driven",
+      "source": "./skills/uluo-spec-driven",
+      "description": "Spec-Driven 设计稿引擎——覆盖项目全生命周期：设计稿（路线图/技术选型/架构/领域/组件）+ 细化流程（spec/plan/tasks）+ 记录"
     },
     {
       "name": "uluo-web-standards",

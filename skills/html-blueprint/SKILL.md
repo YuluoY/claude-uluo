@@ -1,7 +1,7 @@
 ---
 name: html-blueprint
-version: 0.1.0
-description: "HTML-first Component Design Protocol. Generate browser-renderable HTML/CSS design drafts annotated with data-* attributes (data-component, data-prop, data-event, data-action, data-convert) encoding component semantics for reliable later conversion to Vue/React. Use this skill when the user mentions any of: 生成页面, 设计稿, HTML原型, 组件化HTML, UI设计稿转代码, HTML转Vue, HTML转React, 前端设计稿, 页面重构, 表单设计, component blueprint, HTML design draft, design-to-code, UI prototype."
+version: 0.2.0
+description: "HTML-first Component Design Protocol with professional design system integration. Generate browser-renderable HTML/CSS design drafts annotated with data-* attributes, powered by on-demand remote skills: ui-ux-pro-max (67 styles, 161 color palettes, 57 font pairings, 99 UX rules) and design-taste-frontend (anti-slop premium design taste). Use this skill when the user mentions any of: 生成页面, 设计稿, HTML原型, 组件化HTML, UI设计稿转代码, HTML转Vue, HTML转React, 前端设计稿, 页面重构, 表单设计, component blueprint, HTML design draft, design-to-code, UI prototype."
 ---
 
 # HTML Blueprint — 需求到设计稿的 AI 转换协议
@@ -12,13 +12,13 @@ description: "HTML-first Component Design Protocol. Generate browser-renderable 
 
 ## 两条工作路径
 
-**路径选择**：路径 A 对齐 uluo-doc-standards，路径 B 独立工作。
+**路径选择**：路径 A 对齐 uluo-spec-driven，路径 B 独立工作。
 
-### 路径 A: AI 同时使用 uluo-doc-standards 和 html-blueprint（对齐口径）
+### 路径 A: AI 同时使用 uluo-spec-driven 和 html-blueprint（对齐口径）
 
 ```mermaid
 flowchart TD
-    A[用户描述需求] --> B[AI 用 uluo-doc-standards 生成 spec.md]
+    A[用户描述需求] --> B[AI 用 uluo-spec-driven 生成 spec.md]
     B --> C[AI 按 requirement-extraction-guide.md 提取 Design Spec]
     C --> D[AI 用 html-blueprint 生成 HTML 设计稿]
     D --> E[AI 运行校验门禁]
@@ -35,21 +35,80 @@ flowchart TD
 
 两条路径下游流程一致：提取 Design Spec → 校验 → 生成 HTML → 校验。
 
+## 远程设计知识加载（按需）
+
+html-blueprint 内置了两个远程设计类 skill，**按需远程加载**，无需用户手动安装。首次使用时从 GitHub 拉取核心文件，缓存到项目本地复用。
+
+### 已集成的远程 Skill
+
+| 名称 | 作用 | 触发条件 |
+|------|------|---------|
+| **ui-ux-pro-max** | 设计系统生成：67 种风格、161 配色、57 字体、99 UX 规则 | 生成 Landing Page、营销页、作品集、仪表盘等视觉要求高的页面 |
+| **design-taste-frontend** | 品味纠偏：AI TELLS 禁令、三旋钮配置、创意武器库 | 用户要求"高端设计"、"避免 AI 味"、"专业设计感" |
+
+### 加载方式
+
+```bash
+# 加载指定远程 skill
+node scripts/fetch-remote-skill.js <skill-name>
+
+# 查看可用列表
+node scripts/fetch-remote-skill.js --list
+
+# 强制刷新缓存
+node scripts/fetch-remote-skill.js <skill-name> --force
+```
+
+缓存位置：`<项目根>/.cache/html-blueprint/remote-skills/
+缓存有效期：7 天
+
+详细规则见 [remote-skills.md](references/remote-skills.md)。
+
+### 设计系统生成流程
+
+当需要专业设计支持时，在提取 Design Spec 之前，先加载远程设计知识：
+
+1. **判断是否需要**：视觉要求高的页面（Landing、作品集、营销页、仪表盘）→ 加载 ui-ux-pro-max
+2. **加载设计知识**：调用 `fetch-remote-skill.js` 拉取对应 skill 的 SKILL.md
+3. **生成设计系统**：基于用户需求 + 远程 skill 知识，生成设计方案（风格/配色/字体/间距/圆角/阴影/动效）
+4. **融入 Design Spec**：将设计系统写入 Design Spec 的 `visual` 字段
+5. **生成 tokens.css**：将设计系统映射为标准 CSS 变量（见 [theme-consistency.md](references/theme-consistency.md)）
+6. **品味纠偏**：加载 design-taste-frontend，检查 AI 味模式，替换为高级替代方案
+
+设计系统 → tokens.css 映射规则：
+
+| 设计系统项 | CSS 变量 |
+|-----------|---------|
+| 主色 | `--color-primary` |
+| 主色悬停 | `--color-primary-hover` |
+| 正文文字 | `--color-text-primary` |
+| 次要文字 | `--color-text-secondary` |
+| 页面背景 | `--color-bg-page` |
+| 卡片背景 | `--color-bg-surface` |
+| 成功/警告/错误色 | `--color-success` / `--color-warning` / `--color-error` |
+| 正文字号 | `--font-size-base` |
+| 标题字体 | `--font-family-heading` |
+| 正文字体 | `--font-family-body` |
+| ... | ... |
+
 ## 工作流程
 
 ```mermaid
 flowchart TD
-    A[提取 Design Spec] --> B{validate-spec.js 通过?}
-    B -->|失败| A
-    B -->|通过| C[生成 HTML 设计稿]
-    C --> D{validate-all.js 通过?}
+    A[判断是否需要专业设计支持] -->|需要| B[远程加载设计知识]
+    A -->|不需要| C[提取 Design Spec]
+    B --> C
+    C --> D{validate-spec.js 通过?}
     D -->|失败| C
-    D -->|通过| E{check-spec-fidelity.js 通过?}
-    E -->|失败| C
-    E -->|通过| F[交付]
+    D -->|通过| E[生成 HTML 设计稿]
+    E --> F{validate-all.js 通过?}
+    F -->|失败| E
+    F -->|通过| G{check-spec-fidelity.js 通过?}
+    G -->|失败| E
+    G -->|通过| H[交付]
 ```
 
-**流程编排**：提取 Spec → Spec 校验 → 生成 HTML → HTML 校验 → 一致性校验 → 交付。三道 HARD 门禁，任一失败回退修复。
+**流程编排**：设计知识加载（按需）→ 提取 Spec → Spec 校验 → 生成 HTML → HTML 校验 → 一致性校验 → 交付。三道 HARD 门禁，任一失败回退修复。
 
 ## Spec-First 工作流
 
@@ -59,7 +118,7 @@ flowchart TD
 
 AI 从需求提取 Design Spec，规则见 `references/requirement-extraction-guide.md`。
 
-**当 spec.md 存在时（uluo-doc-standards 产出）**:
+**当 spec.md 存在时（uluo-spec-driven 产出）**:
 1. 读取 spec.md 的功能需求章节
 2. 每个 FR 提取为一个 component（FR 标题的名词 → PascalCase）
 3. FR 的预期行为提取为 props（展示数据）和 events（交互行为）

@@ -1,9 +1,0 @@
-{
-  "name": "uluo-doc-standards",
-  "version": "0.1.0",
-  "description": "AI 编程文档产出规范——定义 spec/plan/tasks/changelog/验收报告等文档模板和质量标准，面向开发者同行。",
-  "author": { "name": "claude-uluo" },
-  "keywords": ["documentation", "spec", "plan", "changelog", "standards"],
-  "license": "MIT",
-  "skills": "./"
-}

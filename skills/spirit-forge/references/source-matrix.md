@@ -1,6 +1,6 @@
 # Information Source Matrix
 
-What each source type reveals about a target persona. Adapted from uluo-doc-standards
+What each source type reveals about a target persona. Adapted from uluo-spec-driven
 research protocol and customized for persona research.
 
 | Source Type | Reveals | Best Tools | Depth Needed |

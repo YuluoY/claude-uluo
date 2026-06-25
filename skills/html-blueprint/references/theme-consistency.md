@@ -2,6 +2,8 @@
 
 html-blueprint 的项目级主题管理：通过一个共享 CSS 文件统一定义 design token，所有设计稿通过 `<link>` 引入，保证多页面的色彩、间距、圆角、字号体系一致。
 
+**主题来源**：主题 token 可从远程设计 skill（ui-ux-pro-max）生成的设计系统映射而来，也可手动定义。
+
 ---
 
 ## 核心原则
@@ -10,6 +12,50 @@ html-blueprint 的项目级主题管理：通过一个共享 CSS 文件统一定
 2. **设计稿 HTML 通过 `<link>` 引入主题** — 不重复定义 `:root` token
 3. **组件样式用 `var()` 引用 token** — `color: var(--color-text-primary)` 而非硬编码
 4. **每个 HTML 独立可渲染** — `<link>` 使用相对路径，主题 CSS 在则页面正常展示
+
+---
+
+## 设计系统生成（远程 skill 对接）
+
+当项目首次需要 `tokens.css` 时，可通过远程加载 ui-ux-pro-max 生成专业设计系统，再映射为标准 CSS 变量。
+
+### 生成流程
+
+```
+用户需求 → 远程加载 ui-ux-pro-max → 生成设计系统 → 映射为 tokens.css
+                              ↑
+                           design-taste-frontend（品味纠偏）
+```
+
+### 输入参数
+
+| 参数 | 说明 | 示例 |
+|------|------|------|
+| 产品类型 | 决定风格和配色倾向 | SaaS / 电商 / 作品集 / 仪表盘 |
+| 行业 | 影响配色和语义 | 金融 / 医疗 / 教育 / 科技 |
+| 风格关键词 | 主风格选择 | 极简 / 玻璃拟态 / 粗野主义 / 高端 |
+| 目标受众 | 影响视觉密度和复杂度 | B2B / B2C / 开发者 / 消费者 |
+
+### 设计系统 → Token 映射
+
+| 设计系统维度 | 映射到 CSS 变量 |
+|-------------|----------------|
+| **配色** | `--color-primary`、`--color-secondary`、`--color-success/warning/error`、`--color-text-*`、`--color-bg-*`、`--color-border-*` |
+| **字体** | `--font-family-heading`、`--font-family-body`、`--font-family-mono`、`--font-size-*`、`--font-weight-*` |
+| **间距** | `--space-1` 到 `--space-16`（4px 步长）、`--gap-*` |
+| **圆角** | `--radius-sm`、`--radius-md`、`--radius-lg`、`--radius-xl`、`--radius-full` |
+| **阴影** | `--shadow-sm`、`--shadow-md`、`--shadow-lg`、`--shadow-xl` |
+| **动效** | `--duration-fast`、`--duration-base`、`--duration-slow`、`--ease-default` |
+
+### 三旋钮配置（来自 design-taste-frontend）
+
+设计系统生成后，通过三个旋钮微调风格强度：
+
+| 旋钮 | 范围 | 影响 |
+|------|------|------|
+| **DESIGN_VARIANCE** | 1-10 | 布局实验程度。低=居中/干净，高=非对称/现代 |
+| **MOTION_INTENSITY** | 1-10 | 动画深度。低=hover 反馈，高=滚动/磁吸/视差 |
+| **VISUAL_DENSITY** | 1-10 | 信息密度。低=宽松留白，高=数据密集仪表盘 |
 
 ---
 

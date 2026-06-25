@@ -24,7 +24,7 @@ ALL=(
   diagram-compiler
   frontend-visual-qa
   html-blueprint
-  uluo-doc-standards
+  uluo-spec-driven
   uluo-web-standards
   impeccable
   skill-creator

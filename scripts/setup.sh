@@ -25,7 +25,7 @@ SKILLS=(
   "html-blueprint"
   "impeccable"
   "skill-creator"
-  "uluo-doc-standards"
+  "uluo-spec-driven"
   "uluo-web-standards"
 )
 

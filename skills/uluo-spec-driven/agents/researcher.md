@@ -19,7 +19,7 @@
   - `depth`: 调研深度要求（L1/L2/L3）
   - `context`: 为什么这个问题重要
 - **tech_stack**: 项目技术栈（语言/框架/数据库等），用于定向搜索
-- **output_path**: 调研报告输出路径（`specs/<feature>/research-report.md`）
+- **output_path**: 调研报告输出路径（`specs/<feature>/research-report.md` 或 `specs/<domain>/<feature>/research-report.md`，由调用方 Phase 1 根据 specs/ 冲突识别、布局模式、文档形态判定结果确定）
 
 ## Process
 

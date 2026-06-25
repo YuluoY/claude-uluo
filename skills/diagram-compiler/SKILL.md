@@ -213,9 +213,9 @@ python scripts/_shared/mermaid.py export doc.md -o output.pdf
 
 Mermaid CLI 不支持的类型（radar/sankey/swimlane）需使用 Matplotlib `render()` 直出。详见 [references/troubleshooting.md](references/troubleshooting.md)。
 
-## 与 uluo-doc-standards 的集成
+## 与 uluo-spec-driven 的集成
 
-当同时使用 uluo-doc-standards skill 时：
+当同时使用 uluo-spec-driven skill 时：
 - 架构图 → `plans/README.md`
 - ER 图 → `plans/` (数据模型章节)
 - 流程图 → `spec.md` 或 `plans/`

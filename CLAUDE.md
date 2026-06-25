@@ -115,7 +115,7 @@ claude-uluo workspace 内的 skill 需创建 `.claude-plugin/plugin.json` 用于
 | Plugin | skill-creator | `skills/skill-creator/` |
 | Plugin | spirit-forge | `skills/spirit-forge/` |
 | Plugin | uluo-change-flow | `skills/uluo-change-flow/` |
-| Plugin | uluo-doc-standards | `skills/uluo-doc-standards/` |
+| Plugin | uluo-spec-driven | `skills/uluo-spec-driven/` |
 | Plugin | uluo-skill-creator | `skills/uluo-skill-creator/` |
 | Plugin | uluo-web-standards | `skills/uluo-web-standards/` |
 | Plugin | ui-component-creator | `skills/ui-component-creator/` |

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const WORKSPACE = process.argv[2] || '/Users/huyongle/Desktop/workspace/skills/uluo-doc-standards-workspace/iteration-2';
+const WORKSPACE = process.argv[2] || '/Users/huyongle/Desktop/workspace/skills/uluo-spec-driven-workspace/iteration-2';
 const VALIDATOR = path.join(__dirname, '..', 'validate-docs.js');
 
 function findFiles(dir, ext) {

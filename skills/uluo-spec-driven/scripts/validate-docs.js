@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ─────────────────────────────────────────────────────────
-// uluo-doc-standards 文档规范校验工具
+// uluo-spec-driven 文档规范校验工具
 //
 // 校验管线:
 //   Step 1: 目录结构（文件/目录是否存在）
@@ -13,7 +13,7 @@
 // 用法:
 //   node validate-docs.js <specs/feature-dir>
 //   node validate-docs.js <specs/feature-dir> --strict
-//   node validate-docs.js --ci <project-root>
+//   node validate-docs.js --ci <project-root>   // 递归扫描 specs/，自动跳过设计文档
 // ─────────────────────────────────────────────────────────
 
 const fs = require('fs');
@@ -21,7 +21,7 @@ const path = require('path');
 
 const {
   reset, pass, fail, warn, section, summary,
-  fileExists, dirExists, collectMdFiles, hasHeading,
+  fileExists, dirExists, collectMdFiles, findFeatureDirs, hasHeading,
 } = require('./lib/utils');
 
 // Check modules for each document type
@@ -59,21 +59,27 @@ const projectRoot = process.env.PROJECT_ROOT || process.cwd();
 
 if (ciMode) {
   const specsDir = path.join(target, 'specs');
-  console.log(`CI 模式：扫描 ${specsDir}`);
+  console.log(`CI 模式：递归扫描 ${specsDir}`);
 
   if (!fs.existsSync(specsDir) || !fs.statSync(specsDir).isDirectory()) {
     console.log('未找到 specs/ 目录，跳过校验。');
     process.exit(0);
   }
 
-  let overallPass = 0, overallFail = 0;
-  for (const entry of fs.readdirSync(specsDir, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const dir = path.join(specsDir, entry.name);
-    console.log(`\n─────────────────────────────────────────`);
-    console.log(`\x1b[1m校验 specs/${entry.name}/\x1b[0m`);
-    console.log(`─────────────────────────────────────────`);
+  // 递归定位所有含 spec.md 的特性目录（自动跳过设计文档目录与单文件）
+  const featureDirs = findFeatureDirs(specsDir);
 
+  if (featureDirs.length === 0) {
+    console.log('未找到特性目录（含 spec.md 的目录），跳过校验。');
+    process.exit(0);
+  }
+
+  let overallPass = 0, overallFail = 0;
+  for (const dir of featureDirs) {
+    const relPath = path.relative(specsDir, dir);
+    console.log(`\n─────────────────────────────────────────`);
+    console.log(`\x1b[1m校验 specs/${relPath}/\x1b[0m`);
+    console.log(`─────────────────────────────────────────`);
     runChecks(dir, strict) ? overallPass++ : overallFail++;
   }
 

@@ -37,7 +37,7 @@
 - `skills/html-blueprint/`
 - `skills/impeccable/`
 - `skills/skill-creator/`
-- `skills/uluo-doc-standards/`
+- `skills/uluo-spec-driven/`
 - `skills/uluo-web-standards/`
 
 ### 2. marketplace.json 新增全部条目

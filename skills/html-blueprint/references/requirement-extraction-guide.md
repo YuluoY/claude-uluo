@@ -1,17 +1,17 @@
 # 需求到 Design Spec 提取指南
 
-AI 从需求（uluo-doc-standards 的 spec.md 或自然语言）提取 Design Spec 的规则。Design Spec 是 AI 提取的中间契约，用户不手写。
+AI 从需求（uluo-spec-driven 的 spec.md 或自然语言）提取 Design Spec 的规则。Design Spec 是 AI 提取的中间契约，用户不手写。
 
 ---
 
 ## 两条工作路径
 
-### 路径 A: AI 同时使用 uluo-doc-standards 和 html-blueprint
+### 路径 A: AI 同时使用 uluo-spec-driven 和 html-blueprint
 
 ```
 用户描述需求
   ↓
-AI 用 uluo-doc-standards 生成 spec.md（需求文档）
+AI 用 uluo-spec-driven 生成 spec.md（需求文档）
   ↓
 AI 按本指南从 spec.md 提取 Design Spec（对齐口径）
   ↓
@@ -40,7 +40,7 @@ AI 运行校验门禁
 
 ### 对齐映射表
 
-| uluo-doc-standards spec.md | html-blueprint Design Spec | 映射规则 |
+| uluo-spec-driven spec.md | html-blueprint Design Spec | 映射规则 |
 |---------------------------|---------------------------|---------|
 | 功能需求 FR-N: [组件名] | components[].name | FR 标题中的名词 → PascalCase 组件名 |
 | FR 的"预期行为"-展示数据 | props[] | "显示/展示 XX" → prop（XX 为数据名） |
@@ -87,7 +87,7 @@ AI 运行校验门禁
 
 ### 示例：从 spec.md 提取
 
-**输入**（uluo-doc-standards spec.md 片段）：
+**输入**（uluo-spec-driven spec.md 片段）：
 
 ```markdown
 ### FR-1: 统计卡片
