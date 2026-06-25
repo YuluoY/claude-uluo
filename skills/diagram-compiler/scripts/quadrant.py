@@ -41,11 +41,19 @@ items:                                # 至少1个
   - label: "项目A"
     x: 0.75                           # 0.0-1.0，在X轴上的位置
     y: 0.85                           # 0.0-1.0，在Y轴上的位置
-    radius: 12                        # 可选，气泡大小（默认10）
+    radius: 12                        # 可选，气泡大小（默认10，最大12，过大将覆盖文字）
   - label: "项目B"
     x: 0.35
     y: 0.60
     radius: 10
+
+定位约束（避免文字覆盖）：
+  - 有数据点时，象限文字渲染在象限顶部：Q1[0.75,0.90] Q2[0.25,0.90] Q3[0.25,0.40] Q4[0.75,0.40]
+  - 数据点与象限文字距离 > 0.15，否则点覆盖象限标签
+  - 数据点与象限中心距离 > 0.12：Q1[0.75,0.75] Q2[0.25,0.75] Q3[0.25,0.25] Q4[0.75,0.25]
+  - 相邻数据点距离 > 0.08，否则标签互相重叠
+  - 建议将点放在象限中下部，远离顶部文字区域
+  - radius 默认 10，最大 12，过大将覆盖周边文字
 """
 
 
@@ -188,6 +196,62 @@ def validate(diagram: str) -> list[dict]:
             "message": f"数据点 ({len(points)} 个) 过多，象限图会拥挤",
             "fix": "精简到 20 个以内，或拆分为多个象限图"
         })
+
+    # 检查数据点与象限标签重叠
+    # Mermaid 渲染规则：有数据点时，象限文字渲染在象限顶部（非中心）
+    # Q1 文字约在 [0.75, 0.90]，Q2 文字约在 [0.25, 0.90]
+    # Q3 文字约在 [0.25, 0.40]，Q4 文字约在 [0.75, 0.40]
+    quadrant_text_pos = [(0.75, 0.90), (0.25, 0.90), (0.25, 0.40), (0.75, 0.40)]
+    quadrant_centers = [(0.75, 0.75), (0.25, 0.75), (0.25, 0.25), (0.75, 0.25)]
+    point_coords = []
+    for line in diagram.split("\n"):
+        m = re.search(r'"([^"]+)"\s*:\s*\[\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\]', line)
+        if m and not line.strip().startswith(("%%", "title", "quadrant", "x-axis", "y-axis")):
+            point_coords.append((m.group(1), float(m.group(2)), float(m.group(3))))
+
+    for label, px, py in point_coords:
+        # 检查与象限文字位置的距离
+        for i, (tx, ty) in enumerate(quadrant_text_pos, 1):
+            dist = math.sqrt((px - tx) ** 2 + (py - ty) ** 2)
+            if dist < 0.15:
+                problems.append({
+                    "type": "quality",
+                    "message": f"数据点 '{label}' [{px}, {py}] 距象限 {i} 文字位置过近（距离 {dist:.2f}），点将覆盖象限标签",
+                    "fix": f"调整 '{label}' 坐标，远离象限 {i} 文字位置 [{tx}, {ty}]（建议距离 > 0.15）"
+                })
+        # 检查与象限中心的距离
+        for i, (cx, cy) in enumerate(quadrant_centers, 1):
+            dist = math.sqrt((px - cx) ** 2 + (py - cy) ** 2)
+            if dist < 0.12:
+                problems.append({
+                    "type": "quality",
+                    "message": f"数据点 '{label}' [{px}, {py}] 距象限 {i} 中心过近（距离 {dist:.2f}）",
+                    "fix": f"调整 '{label}' 坐标，远离象限 {i} 中心 [{cx}, {cy}]（建议距离 > 0.12）"
+                })
+
+    # 检查数据点之间重叠
+    for i, (label_a, ax, ay) in enumerate(point_coords):
+        for label_b, bx, by in point_coords[i + 1:]:
+            dist = math.sqrt((ax - bx) ** 2 + (ay - by) ** 2)
+            if dist < 0.08:
+                problems.append({
+                    "type": "quality",
+                    "message": f"数据点 '{label_a}' [{ax}, {ay}] 与 '{label_b}' [{bx}, {by}] 距离过近（{dist:.2f}），标签将重叠",
+                    "fix": "调整坐标，使相邻数据点距离 > 0.08"
+                })
+
+    # 检查数据点半径过大（覆盖文字）
+    for line in diagram.split("\n"):
+        m = re.search(r'"([^"]+)"\s*:\s*\[[\d.]+,\s*[\d.]+\]\s*radius:\s*(\d+)', line)
+        if m:
+            label = m.group(1)
+            radius = int(m.group(2))
+            if radius > 12:
+                problems.append({
+                    "type": "quality",
+                    "message": f"数据点 '{label}' radius={radius} 过大，气泡将覆盖周边文字",
+                    "fix": f"将 radius 调整到 ≤ 12（默认 10），当前 {radius}"
+                })
 
     return problems
 

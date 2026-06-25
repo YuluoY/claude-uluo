@@ -1,5 +1,6 @@
 ---
 name: frontend-visual-qa
+version: 0.1.0
 description: >-
   Visual quality assurance for AI-generated frontend UI. Enforces design tokens,
   component library usage, responsive layout, accessibility, i18n, visual hierarchy,
@@ -13,15 +14,44 @@ description: >-
 
 # 前端 UI 审美与产品化护栏
 
-本 skill 用于约束 AI 前端实现，使输出符合现代 UI/UX、项目设计系统、组件库、响应式布局、可访问性、国际化、主题切换和可维护样式架构。
+约束 AI 前端实现，使输出符合现代 UI/UX、项目设计系统、组件库、响应式布局、可访问性、国际化、主题切换和可维护样式架构。本 skill 是**编排器**——阻止低质量 AI 前端模式，让模型根据产品场景、组件生态和已有设计系统做出稳定、克制、可落地的 UI 判断。
 
-本 skill 不把所有产品压成同一种视觉风格。它的职责是阻止低质量 AI 前端模式，让模型根据产品场景、用户任务、组件生态和已有设计系统做出稳定、克制、可落地的 UI 判断。
+## 工作流程
+
+```mermaid
+flowchart TD
+    A[识别任务类型] --> B{已有项目?}
+    B -->|是| C[扫描组件库/tokens/样式架构]
+    B -->|否| D[加载设计基础]
+    C --> D
+    D --> E[按需加载模块 references]
+    E --> F[实现/审查 UI]
+    F --> G{validate-all.js 通过?}
+    G -->|失败| H[修复问题]
+    H --> F
+    G -->|通过| I[完成]
+```
+
+**流程编排**：先识别任务类型 → 扫描已有项目体系 → 加载设计基础 → 按需加载模块 → 实现/审查 → 硬约束校验。
+
+## 质量闸门
+
+**硬约束校验**：用户可见 UI 完成前必须运行 `node scripts/validate-all.js <files>`。
+
+- 校验失败 → 修复问题 → 重新校验（loop）
+- 校验通过 → 交付
+- 项目无前端文件时跳过脚本校验，改用人工自检清单
 
 ## 强制工作协议
 
+**工作协议**：9 步强制流程，从任务识别到自检纠偏。
+
 1. **先识别任务类型**：判断当前任务是新建页面、改造 UI、组件开发、设计系统、响应式修复、主题/i18n、还是前端 review。
 2. **已有项目先扫描**：实现前必须识别组件库、图标库、tokens、样式架构、布局范式和响应式规则。若项目已加载 uluo-web-standards，其已验证的硬约束默认不再重复确认，本 skill 专注于 uluo 未覆盖的视觉和交互层面。
-   改造已有项目时先判定模式：Greenfield（全新）/ Redesign-Preserve（保留品牌，现代化 UI）/ Redesign-Overhaul（新视觉，保留内容和 IA）。若无法判断，问一次。Redesign 必须先审计 brand tokens、IA、content blocks、patterns to preserve/retire、SEO baseline——现代化按 typography → spacing → color → motion → hero → full block 逐级加杠杆，URL/nav label/form field name/brand logo/legal copy 不可沉默改变。
+   - 改造已有项目时先判定模式：Greenfield（全新）/ Redesign-Preserve（保留品牌，现代化 UI）/ Redesign-Overhaul（新视觉，保留内容和 IA）。若无法判断，问一次。
+   - Redesign 必须先审计 brand tokens、IA、content blocks、patterns to preserve/retire、SEO baseline。
+   - 现代化按 typography → spacing → color → motion → hero → full block 逐级加杠杆。
+   - URL/nav label/form field name/brand logo/legal copy 不可沉默改变。
 3. **默认加载设计基础**：任何前端任务都必须读取 `references/design-foundations.md`，保证设计判断不退化成纯工程清单。
 4. **按需加载其他模块**：根据任务类型读取下方 reference 文件；不要把所有细则塞进当前上下文。
 5. **优先沿用项目体系**：除非现有体系缺失或明显错误，否则不要另造一套视觉语言。
@@ -39,9 +69,27 @@ description: >-
 - `references/review-antipatterns.md`：前端 review、一票否决项、AI 常见 UI 反模式和修复方向（Hero/文案/布局/装饰/数据五类）。
 - `references/copy-rules.md`：文案护栏，任何产生用户可见文案的任务加载。覆盖 copy self-audit、假精确数字、填充动词、按钮标签、文案语域。
 
+## references 引用时机
+
+| references 文件 | 何时读取 |
+|----------------|---------|
+| design-foundations.md | 任何前端任务默认必读 |
+| tokens.md | 设计系统/tokens/主题切换任务 |
+| layout-responsive.md | 布局/响应式/移动端任务 |
+| i18n-accessibility.md | 国际化/可访问性/表单任务 |
+| review-antipatterns.md | 前端 review/反模式检查 |
+| copy-rules.md | 产生用户可见文案时 |
+
+## 软硬约束分工
+
+| 约束 | 载体 | 适用 |
+|------|------|------|
+| 软约束 | SKILL.md + references/ | 设计判断、审美方向、review 标准 |
+| 硬约束 | scripts/ | emoji 检测、硬编码颜色、响应式、Tailwind 合规、状态完整性 |
+
 ## 一票否决项
 
-以下问题视为硬失败，必须修正：
+**硬失败项**：以下问题视为硬失败，必须修正。
 
 - 使用 emoji、表情符号或文本符号充当 UI 图标，而不是使用项目图标库。
 - 移动端或窄屏出现横向溢出、内容裁切、元素重叠、控件不可操作或非预期双向滚动。
@@ -56,6 +104,8 @@ description: >-
 
 ## 默认审美方向
 
+**审美优先级**：先产品任务后视觉装饰，先信息架构后视觉表现。
+
 - 先产品任务，后视觉装饰。
 - 先信息架构，后视觉表现。
 - 先系统规则，后单页样式。
@@ -67,6 +117,8 @@ description: >-
 - 信息过载时优先做渐进呈现：把高频核心任务留在主界面，把低频、高级、辅助内容放到分页、分段、折叠、标签页、抽屉、弹层或局部滚动区域中。
 
 ## 最小 AQ 规则
+
+**提问原则**：需求模糊时一次只问一个关键问题。
 
 需求模糊时不要展开长问卷。一次只问一个关键问题，例如：
 

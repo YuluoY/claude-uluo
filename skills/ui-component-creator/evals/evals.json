@@ -5,7 +5,7 @@
       "id": 1,
       "prompt": "用 ui-component-creator skill 创建一个 Vue 3 的 Pagination 分页组件，支持页码切换、每页条数选择、快速跳转。这是原子层通用组件，需要支持 Apple 和 Vercel 两种风格预设切换。组件目录放在 src/components/Pagination/ 下。",
       "expected_output": "产出完整的 Vue 3 分页组件，包含目录结构（README.md/docs/index.vue/types.ts/__tests__）、README（9 个 H2 节、API 表格、四态说明）、component-spec 设计文档",
-      "expectations": [
+      "assertions": [
         "产出包含 src/components/Pagination/README.md 文件",
         "产出包含 src/components/Pagination/index.vue 入口文件",
         "产出包含 src/components/Pagination/types.ts 类型定义",
@@ -25,7 +25,7 @@
       "id": 2,
       "prompt": "用 ui-component-creator skill 创建一个 React 的 DatePicker 日期选择器组件，支持日期范围选择、禁用日期、自定义格式。这是原子层通用组件，样式需实现三层分离（结构层/语义层/风格层），至少兼容 2 种风格预设。组件目录放在 src/components/DatePicker/ 下。",
       "expected_output": "产出完整的 React 日期选择器组件，包含目录结构（README.md/docs/index.tsx/hooks/types.ts/__tests__）、README、component-spec",
-      "expectations": [
+      "assertions": [
         "产出包含 src/components/DatePicker/README.md 文件",
         "产出包含 src/components/DatePicker/index.ts 导出入口",
         "产出包含 src/components/DatePicker/DatePicker.tsx 主组件",
@@ -43,7 +43,7 @@
       "id": 3,
       "prompt": "用 ui-component-creator skill 创建一个 Web Component 的 Modal 弹窗组件，支持 Shadow DOM 样式隔离、open/close 方法、自定义内容插槽。这是原子层通用组件，样式需实现三层分离。组件目录放在 src/components/modal-dialog/ 下。",
       "expected_output": "产出完整的 Web Component 弹窗组件，包含目录结构（README.md/docs/index.ts/ModalDialog.ts/styles/types.ts/__tests__）、README、component-spec",
-      "expectations": [
+      "assertions": [
         "产出包含 src/components/modal-dialog/README.md 文件",
         "产出包含 src/components/modal-dialog/index.ts 注册入口",
         "产出包含 src/components/modal-dialog/ModalDialog.ts Custom Element 类定义",
@@ -59,7 +59,7 @@
       "id": 4,
       "prompt": "已有一个 Vue 3 的 Table 组件（v1.2.0），现在要新增一个 `virtualScroll` prop 支持虚拟滚动，同时废弃旧的 `striped` prop（改用 rowClassName）。用 ui-component-creator skill 迭代更新这个组件，同步更新 README。组件在 src/components/DataTable/ 下。",
       "expected_output": "更新后的 Table 组件，新增 virtualScroll prop，striped prop 标记废弃，README 同步更新版本号、API 表格、变更记录",
-      "expectations": [
+      "assertions": [
         "README.md 的元信息节版本号更新为 v1.3.0",
         "README.md 的 Props 表格新增 virtualScroll 行，版本标注 v1.3.0",
         "README.md 的 Props 表格中 striped 行的说明列包含 deprecated since v1.3.0 标记",
@@ -72,7 +72,7 @@
       "id": 5,
       "prompt": "检查这个组件的四态是否完整：某个开发者写了一个 UserList 组件，只处理了 success 状态（数据正常显示），没有 loading、error、empty 的处理。用 ui-component-creator skill 的质量检查清单评估这个问题。",
       "expected_output": "识别出四态不完整的问题，指出缺少 loading/error/empty 三个状态的处理，并给出修复建议",
-      "expectations": [
+      "assertions": [
         "输出明确指出组件缺少 loading 状态处理",
         "输出明确指出组件缺少 error 状态处理",
         "输出明确指出组件缺少 empty 状态处理",
@@ -84,7 +84,7 @@
       "id": 6,
       "prompt": "封装一个组件，用来展示用户的任务列表，支持勾选完成、按状态筛选、批量操作。",
       "expected_output": "ui-component-creator skill 被触发，按五阶段流程创建组件",
-      "expectations": [
+      "assertions": [
         "skill 被触发（用户说「封装一个组件」应触发 ui-component-creator）",
         "进入 Phase 1 调研阶段（识别知识缺口）",
         "进入 Phase 2 API 设计阶段（设计 props/emits/slots）",
@@ -95,7 +95,7 @@
       "id": 7,
       "prompt": "用 ui-component-creator skill 创建一个 Vue 3 的 UserSelect 用户选择器组件，基于已有的 Input、Popover、List 原子组件组合封装，支持搜索用户、多选、显示用户头像。这是业务层组件，包含用户业务语义。组件目录放在 src/components/UserSelect/ 下。",
       "expected_output": "产出完整的 Vue 3 业务层用户选择器组件，组合原子层组件，包含业务语义化 API，样式继承原子层语义 token",
-      "expectations": [
+      "assertions": [
         "产出包含 src/components/UserSelect/README.md 文件",
         "产出包含 src/components/UserSelect/index.vue 入口文件",
         "产出包含 src/components/UserSelect/types.ts 类型定义",
@@ -113,7 +113,7 @@
       "id": 8,
       "prompt": "已有一个 Vue 3 的 Button 原子层组件（已实现三层样式分离），现在需要验证它能否在 Apple 和 Vercel 两种风格预设之间切换。用 ui-component-creator skill 的样式分离验证检查清单评估这个组件的风格切换能力。组件在 src/components/Button/ 下。",
       "expected_output": "验证组件的三层样式分离是否正确实现，风格切换是否零代码改动",
-      "expectations": [
+      "assertions": [
         "输出检查组件样式是否实现三层分离（结构层/语义层/风格层）",
         "输出检查组件代码是否只引用语义层 token（如 var(--color-primary)），不硬编码风格层值",
         "输出检查风格层是否由预设文件提供，组件代码不实现风格层 token 值",

@@ -1,5 +1,6 @@
 ---
 name: uluo-doc-standards
+version: 1.0.0
 description: >-
   AI 编程时的文档产出规范——定义 AI 在代码执行前（spec.md 需求规格、plan.md 执行计划、tasks.md 任务分解）和执行后（CHANGELOG 变更日志、验收报告、总结复盘）必须产出的文档模板和质量标准。面向开发者同行，文档写回代码仓库。Use this skill whenever the user asks AI to implement a feature, fix a bug, refactor code, design a system, or do any coding task that requires planning and tracking — even if the user doesn't explicitly mention documentation. Also use when the user mentions any of: spec, plan, tasks, changelog, 验收, 复盘, 文档规范, 产出规范, 技术方案, or any task that sounds like it needs structured before/after documentation.
 ---
@@ -12,29 +13,15 @@ AI 辅助编程的文档产出规范。本文件是**编排器**——定义七�
 
 ## 文档概念模型
 
-七种文档不是平级清单，而是五层结构——
+七种文档构成五层结构，每层职责明确：
 
-```
-调研层: 信息采集与综合 (Research & Synthesize)
-  research-report   调研报告——多渠道信息综合，多方案对比，记录探索过程和死胡同
-                        ↓ 提炼结论
-
-Layer 1: 定义层 (What & Why)
-  spec.md          需求规格说明——单一事实来源（从调研报告中提炼结论）
-  ├ 背景与动机 → 用户故事 → 目标/非目标 → 功能需求 → 非功能性需求 → 验收标准 → 调研依据
-
-Layer 2: 设计层 (How)
-  plans/           技术方案
-  ├ 架构概览 → 关键设计决策 → 代码库分析 → 模块设计 → 数据模型 → API 契约 → 测试策略 → 回滚方案
-
-Layer 3: 执行层 (Steps)
-  tasks/           任务分解——按 phase 拆分，每任务标注产出路径、参考代码、复用模块
-
-Layer 4: 记录层 (Record & Learn)
-  CHANGELOG.md     变更日志——面向下游开发者："这个版本改了什么"（Keep a Changelog 格式）
-  verification      验收报告——对照 spec 逐条验证，数据驱动（归入特性目录）
-  retrospective     总结复盘——What Went Well / Better / Lessons / Action Items，反馈闭环
-```
+| 层级 | 文档 | 职责 | 产出物 |
+|------|------|------|--------|
+| 调研层 | research-report | 信息采集与综合 | 多渠道信息综合、多方案对比、记录探索过程和死胡同 |
+| Layer 1: 定义层 | spec.md | What & Why | 背景与动机 → 用户故事 → 目标/非目标 → 功能需求 → 非功能性需求 → 验收标准 → 调研依据 |
+| Layer 2: 设计层 | plans/ | How | 架构概览 → 关键设计决策 → 代码库分析 → 模块设计 → 数据模型 → API 契约 → 测试策略 → 回滚方案 |
+| Layer 3: 执行层 | tasks/ | Steps | 按 phase 拆分，每任务标注产出路径、参考代码、复用模块 |
+| Layer 4: 记录层 | CHANGELOG / verification / retrospective | Record & Learn | CHANGELOG 面向下游开发者；验收报告对照 spec 逐条验证；复盘做 What Went Well / Better / Lessons / Action Items |
 
 **关键关系链：**
 - **research-report → spec** 是提炼链：调研报告记录探索过程（多方案、死胡同），spec 只保留结论
@@ -49,26 +36,27 @@ Layer 4: 记录层 (Record & Learn)
 
 AI 接到实现任务后，按五层递进执行。中功能及以上建议在 Phase 2 和 Phase 8 启用子代理（见 [子代理调度](#子代理调度)）：
 
-```
-Phase 0: 获取作者 → 运行 git config user.name，将输出作为所有文档的「作者」字段值。
-                   禁止使用占位符或字面量 "git config user.name"。
-Phase 1: 识别场景 → 判断任务类型，查场景表，确定文档清单和要加载的 reference
-Phase 2: 信息调研 → 🎯 启动 researcher 子代理                         ←─┐ 调研层
-          产出 research-report.md（加载 examples/research-report-template）│
-Phase 3: 产出 spec  → 加载 examples/spec-template.md                    │ Layer 1: 定义
-          从调研报告中提炼结论，填入 spec                                  │
-                                                                        │
-Phase 4: 源码分析 → 加载 references/analysis-protocol.md               │
-Phase 5: 产出 plans → 加载 examples/plan-template.md                   │ Layer 2: 设计
-Phase 6: 产出 tasks → 加载 examples/tasks-template.md                  │ Layer 3: 执行
-                                                                        │
-Phase 7: 执行编码 → 按 tasks 逐 phase 实现，测试通过 → 追加 CHANGELOG
-Phase 8: 验收     → 🎯 可选启动 reviewer 子代理                          │ Layer 4: 记录
-          加载 examples/verification-report-template.md                 │
-Phase 9: 复盘     → 加载 examples/retrospective-template.md ────────────┘
+```mermaid
+flowchart TD
+    P0[Phase 0: 获取作者<br/>运行 git config user.name] --> P1[Phase 1: 识别场景<br/>查场景表确定文档清单]
+    P1 --> P2[Phase 2: 信息调研<br/>🎯 启动 researcher 子代理<br/>产出 research-report.md]
+    P2 --> P3[Phase 3: 产出 spec<br/>从调研报告提炼结论]
+    P3 --> P4[Phase 4: 源码分析<br/>加载 analysis-protocol.md]
+    P4 --> P5[Phase 5: 产出 plans<br/>加载 plan-template.md]
+    P5 --> P6[Phase 6: 产出 tasks<br/>加载 tasks-template.md]
+    P6 --> P7[Phase 7: 执行编码<br/>按 tasks 逐 phase 实现<br/>测试通过 → 追加 CHANGELOG]
+    P7 --> P8[Phase 8: 验收<br/>🎯 可选启动 reviewer 子代理<br/>加载 verification-report-template.md]
+    P8 --> P9[Phase 9: 复盘<br/>加载 retrospective-template.md]
 
-🔧  文档产出后，运行 scripts/validate-docs.js 做硬约束校验
-    node scripts/validate-docs.js specs/<feature>/ --strict
+    P0 -.- R0["禁止使用占位符或字面量 'git config user.name'"]
+    P2 -.- L2["调研层"]
+    P3 -.- L3["Layer 1: 定义"]
+    P5 -.- L5["Layer 2: 设计"]
+    P6 -.- L6["Layer 3: 执行"]
+    P8 -.- L8["Layer 4: 记录"]
+    P9 -.- L9["Layer 4: 记录"]
+
+    V[🔧 文档产出后<br/>运行 validate-docs.js --strict] -.-> P7
 ```
 
 **各场景的阶段跳过规则：**

@@ -3,7 +3,7 @@
 **加载条件：** 当前任务涉及 React、React Hooks、JSX、Next.js、Vite React、状态管理（Zustand/Jotai/Redux）、组件拆分或前端状态管理时加载。若项目已有更具体的 React 规范，以项目规范为准；本文件作为质量底线补充。
 
 > 参考：[Airbnb React Style Guide](https://github.com/airbnb/javascript/tree/master/react)、[React Docs: Thinking in React](https://react.dev/learn/thinking-in-react)
-> 格式由 `validate-rules.js` 检查。React 专项 lint 由 `eslint-plugin-react` + `eslint-plugin-react-hooks` 处理（见 `config/eslint.config.mjs`）。
+> 格式由 `validate-rules.js` 检查。React 专项 lint 由 `eslint-plugin-react` + `eslint-plugin-react-hooks` 处理（见 `assets/eslint.config.mjs`）。
 > 项目组织、组件四态、可访问性、性能分别见 `references/architecture.md`、`references/ui-states.md`、`references/accessibility.md`、`references/performance.md`。
 
 ## 目录
@@ -445,7 +445,7 @@ export const useAuthStore = create<AuthState>(set => ({
 
 - SCSS Modules（`.module.scss`）或 SCSS + BEM
 - 设计 token 全部引用 CSS 变量，不硬编码色值
-- `stylelint` 管属性排序和 BEM 命名（见 `config/stylelint.config.mjs`）
+- `stylelint` 管属性排序和 BEM 命名（见 `assets/stylelint.config.mjs`）
 
 ```scss
 .user-list {

@@ -1,47 +1,59 @@
 ---
 name: html-blueprint
-description: "HTML-first Component Design Protocol. Generate browser-renderable HTML/CSS design drafts annotated with data-* attributes (data-component, data-prop, data-event, data-action, data-convert) encoding component semantics for reliable later conversion to Vue/React. Triggers on: 生成页面, 设计稿, HTML原型, 组件化HTML, UI设计稿转代码, HTML转Vue, HTML转React, 前端设计稿, 页面重构, 表单设计, component blueprint, HTML design draft, design-to-code, UI prototype."
+version: 0.1.0
+description: "HTML-first Component Design Protocol. Generate browser-renderable HTML/CSS design drafts annotated with data-* attributes (data-component, data-prop, data-event, data-action, data-convert) encoding component semantics for reliable later conversion to Vue/React. Use this skill when the user mentions any of: 生成页面, 设计稿, HTML原型, 组件化HTML, UI设计稿转代码, HTML转Vue, HTML转React, 前端设计稿, 页面重构, 表单设计, component blueprint, HTML design draft, design-to-code, UI prototype."
 ---
 
 # HTML Blueprint — 需求到设计稿的 AI 转换协议
 
-AI 从需求（uluo-doc-standards 的 spec.md 或自然语言）提取 Design Spec，再从 Design Spec 生成可组件化 HTML 设计稿。HTML/CSS 保证视觉保真（flex/grid/gradient/shadow/animation），`data-*` 属性标注组件语义（props/slots/events/convert-mode）。
+从需求提取 Design Spec，再从 Design Spec 生成可组件化 HTML 设计稿。HTML/CSS 保证视觉保真，`data-*` 属性标注组件语义。本 skill 是**编排器**——不发明 DSL，不替代 HTML，通过 `data-*` 注释让 HTML 从"只能看"变成"能转换"。
 
-本 skill 不发明 DSL，不替代 HTML，不用 JSON Schema 描述 UI。它保持 HTML 的全部表现力，通过 `data-*` 注释让 HTML 从"只能看"变成"能转换"。
-
-**Design Spec 是 AI 提取的中间契约，用户不手写。** AI 按提取规则从需求提取，用户确认后生成 HTML。
+**Design Spec**：AI 提取的中间契约，用户不手写。AI 按提取规则从需求提取，用户确认后生成 HTML。
 
 ## 两条工作路径
 
+**路径选择**：路径 A 对齐 uluo-doc-standards，路径 B 独立工作。
+
 ### 路径 A: AI 同时使用 uluo-doc-standards 和 html-blueprint（对齐口径）
 
-```
-用户描述需求
-  ↓
-AI 用 uluo-doc-standards 生成 spec.md（需求文档）
-  ↓
-AI 按 requirement-extraction-guide.md 从 spec.md 提取 Design Spec（对齐口径）
-  ↓
-AI 用 html-blueprint 生成 HTML 设计稿
-  ↓
-AI 运行校验门禁
+```mermaid
+flowchart TD
+    A[用户描述需求] --> B[AI 用 uluo-doc-standards 生成 spec.md]
+    B --> C[AI 按 requirement-extraction-guide.md 提取 Design Spec]
+    C --> D[AI 用 html-blueprint 生成 HTML 设计稿]
+    D --> E[AI 运行校验门禁]
 ```
 
 ### 路径 B: AI 只用 html-blueprint（独立工作）
 
-```
-用户描述需求
-  ↓
-AI 按 requirement-extraction-guide.md 从自然语言提取 Design Spec
-  ↓
-AI 用 html-blueprint 生成 HTML 设计稿
-  ↓
-AI 运行校验门禁
+```mermaid
+flowchart TD
+    A[用户描述需求] --> B[AI 按 requirement-extraction-guide.md 从自然语言提取 Design Spec]
+    B --> C[AI 用 html-blueprint 生成 HTML 设计稿]
+    C --> D[AI 运行校验门禁]
 ```
 
 两条路径下游流程一致：提取 Design Spec → 校验 → 生成 HTML → 校验。
 
+## 工作流程
+
+```mermaid
+flowchart TD
+    A[提取 Design Spec] --> B{validate-spec.js 通过?}
+    B -->|失败| A
+    B -->|通过| C[生成 HTML 设计稿]
+    C --> D{validate-all.js 通过?}
+    D -->|失败| C
+    D -->|通过| E{check-spec-fidelity.js 通过?}
+    E -->|失败| C
+    E -->|通过| F[交付]
+```
+
+**流程编排**：提取 Spec → Spec 校验 → 生成 HTML → HTML 校验 → 一致性校验 → 交付。三道 HARD 门禁，任一失败回退修复。
+
 ## Spec-First 工作流
+
+**七步流程**：提取 → 校验 → 生成 → 校验 → 一致性 → 代码 → 一致性。
 
 ### 1. 提取 Design Spec
 
@@ -116,7 +128,13 @@ node scripts/html-to-spec.js <input.html> --out <spec.json>
 
 ## 强制工作协议
 
-0. **检查项目主题**：生成新设计稿前，先检查项目根目录是否存在 `tokens.css`。如果存在，读取并继承其 token（颜色/间距/圆角/字号），HTML 通过 `<link>` 引入。如果不存在且项目将有多页设计稿，同步生成主题 CSS。详见 `references/theme-consistency.md`。
+**工作协议**：12 步强制流程，从主题检查到三角校验。
+
+0. **检查项目主题**：
+   - 生成新设计稿前，先检查项目根目录是否存在 `tokens.css`
+   - 存在则读取并继承其 token（颜色/间距/圆角/字号），HTML 通过 `<link>` 引入
+   - 不存在且项目将有多页设计稿时，同步生成主题 CSS
+   - 详见 `references/theme-consistency.md`
 1. **识别任务类型**：判断是生成新设计稿、review 已有设计稿、还是从需求提取 Design Spec。
 2. **生成前加载协议**：任何生成 HTML 设计稿的任务，必须先读取 `references/protocol-spec.md` 了解完整属性字典和组件分类规则。
 3. **写 CSS 时加载约定**：任何涉及 CSS 的任务，读取 `references/css-conventions.md`。如果项目已有 `tokens.css`，还需读取 `references/theme-consistency.md`。
@@ -132,7 +150,7 @@ node scripts/html-to-spec.js <input.html> --out <spec.json>
 
 ## 门禁保障
 
-以下三个校验为 HARD 约束，AI 不可跳过：
+**三道 HARD 门禁**：Spec 合法性、HTML 协议合规、Spec↔HTML 一致性，任一失败必须修复后重新校验（loop）。
 
 | 门禁 | 校验器 | 时机 | 失败处理 |
 |------|--------|------|---------|
@@ -140,21 +158,30 @@ node scripts/html-to-spec.js <input.html> --out <spec.json>
 | HTML 协议合规 | validate-all.js | HTML 生成后 | 修复后才能交付 |
 | Spec↔HTML 一致 | check-spec-fidelity.js | HTML 交付前 | 修复后才能交付 |
 
-AI 在本协议的约束下必须执行这些门禁。SKILL.md 是 AI 的行为协议，门禁是协议中的 HARD 约束。
+## 软硬约束分工
+
+| 约束 | 载体 | 适用 |
+|------|------|------|
+| 软约束 | SKILL.md + references/ | 提取规则、设计判断、代码生成指南、CSS 约定 |
+| 硬约束 | scripts/ | Spec 校验、HTML 协议合规、Spec↔HTML 一致性、class 命名、data-* 属性 |
 
 ## 模块加载表
 
-- `references/protocol-spec.md`：完整属性字典、组件分类决策树、转换报告格式、禁止模式。**生成或 review 时默认必读。**
-- `references/css-conventions.md`：BEM 命名、hybrid token 模式、禁止选择器、装饰元素样式、响应式声明。**写 CSS 时加载。**
-- `references/theme-consistency.md`：项目主题 CSS 协议、token 继承规则、跨蓝图一致性校验。**项目有多页设计稿或首次生成时加载。**
-- `references/constraint-tiers.md`：HARD/SHOULD/WARN 三级约束体系与执行协议。**需要理解规则严重程度时加载。**
-- `references/design-spec.md`：Design Spec 格式规范（组件结构、props/events/states/dataSource/visual 完整字段定义）。**Spec-First 工作流必读。**
-- `references/requirement-extraction-guide.md`：需求到 Design Spec 的提取规则（spec.md 对齐 + 自然语言模式）。**从需求提取 Design Spec 时必读。**
-- `references/code-generation-guide.md`：AI 代码生成指南（框架无关，含 Vue/React/Angular/Svelte 示例）。**AI 生成框架代码时必读。**
+**按需加载**：7 个 references 文件，按任务类型加载。
+
+| references 文件 | 内容 | 何时读取 |
+|----------------|------|---------|
+| protocol-spec.md | 完整属性字典、组件分类决策树、转换报告格式、禁止模式 | 生成或 review HTML 时必读 |
+| css-conventions.md | BEM 命名、hybrid token 模式、禁止选择器、装饰元素样式、响应式声明 | 写 CSS 时加载 |
+| theme-consistency.md | 项目主题 CSS 协议、token 继承规则、跨蓝图一致性校验 | 项目有多页设计稿或首次生成时 |
+| constraint-tiers.md | HARD/SHOULD/WARN 三级约束体系与执行协议 | 需要理解规则严重程度时 |
+| design-spec.md | Design Spec 格式规范（组件结构、props/events/states/dataSource/visual 完整字段定义） | Spec-First 工作流必读 |
+| requirement-extraction-guide.md | 需求到 Design Spec 的提取规则（spec.md 对齐 + 自然语言模式） | 从需求提取 Design Spec 时必读 |
+| code-generation-guide.md | AI 代码生成指南（框架无关，含 Vue/React/Angular/Svelte 示例） | AI 生成框架代码时必读 |
 
 ## 一票否决项
 
-以下问题视为硬失败，必须修正：
+**硬失败项**：以下问题视为硬失败，必须修正。
 
 - `data-component` 值不是 PascalCase（如 "card"、"组件A"）
 - `data-component` 使用泛名（card/button/table/box/item/list/component/form/input/modal/header/footer...）
@@ -179,6 +206,8 @@ AI 在本协议的约束下必须执行这些门禁。SKILL.md 是 AI 的行为�
 
 ## 默认方向
 
+**设计优先级**：先视觉保真后组件可维护性。
+
 - 先保证视觉像，再保证能转换。视觉保真优先于组件可维护性。
 - 不确定时标记 manual，不强行自动转换。
 - 图表默认 manual，除非用户提供了真实数据结构。
@@ -190,6 +219,8 @@ AI 在本协议的约束下必须执行这些门禁。SKILL.md 是 AI 的行为�
 - 代码生成是框架无关的——AI 参考 code-generation-guide.md 生成任意框架代码，check-spec-fidelity.js 用语义搜索校验。
 
 ## 项目目录约定
+
+**目录结构**：pages/ 放整页设计稿，components/ 放可复用模块。
 
 ```
 <项目根>/
@@ -209,7 +240,7 @@ AI 在本协议的约束下必须执行这些门禁。SKILL.md 是 AI 的行为�
 
 ## 最少提问规则
 
-需求模糊时只问一个问题，默认自主判断其余。
+**提问原则**：需求模糊时只问一个问题，默认自主判断其余。
 
 参考问题优先级：
 1. "目标组件库是什么？（Vue 3 / React / 不确定）" → 生成中立 HTML，不做库特定映射

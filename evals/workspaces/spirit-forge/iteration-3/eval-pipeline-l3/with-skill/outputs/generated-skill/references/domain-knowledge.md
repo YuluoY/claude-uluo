@@ -1,1 +1,0 @@
-# https-paulgrahamcom — Domain Knowledge

@@ -1,6 +1,0 @@
-{
-  "eval_id": 2,
-  "eval_name": "UI Review",
-  "prompt": "请 review 这个前端页面的设计问题：它大量使用 emoji 作为状态图标（✅❌🔥），卡片都是固定 320px 宽度，按钮和输入框全部手写 CSS 绕过组件库，#ff6600 硬编码到处散落，没有任何移动端适配、没有 loading/error/empty 状态处理、也没有暗色模式支持。请指出问题并按优先级给出修复方向。",
-  "assertions": []
-}

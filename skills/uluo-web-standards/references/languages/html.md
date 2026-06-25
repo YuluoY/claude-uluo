@@ -4,7 +4,7 @@
 
 > 参考：[Google HTML/CSS Style Guide](https://google.github.io/styleguide/htmlcssguide.html)、[WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
 > 可访问性声明式规则见 `references/accessibility.md`。性能优化见 `references/performance.md`。
-> Vue 模板额外约束见 `references/languages/vue.md` §二。格式由 `eslint-plugin-vue` 的 `vue/html-indent` 等覆盖（见 `config/eslint.config.mjs`）。
+> Vue 模板额外约束见 `references/languages/vue.md` §二。格式由 `eslint-plugin-vue` 的 `vue/html-indent` 等覆盖（见 `assets/eslint.config.mjs`）。
 
 ## 目录
 

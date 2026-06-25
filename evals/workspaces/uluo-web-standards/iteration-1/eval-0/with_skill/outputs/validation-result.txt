@@ -1,8 +1,0 @@
-Files to check: 1 (1 JS/TS/Vue, 0 SCSS/Vue)
-
-Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
-
-=== validation checked 1 file(s) ===
-[eslint] passed
-[tsc] passed
-passed with 0 warnings

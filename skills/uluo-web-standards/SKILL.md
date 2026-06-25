@@ -1,19 +1,68 @@
 ---
 name: uluo-web-standards
+version: 1.0.0
 description: >-
   Enforces web engineering standards via eslint/stylelint/tsc toolchain and
   soft-rules self-check. Covers DDD layered architecture, JS/TS/Vue/React/HTML/CSS
   code style, coding paradigms, API design, component patterns (four states, Error
   Boundary), and cross-cutting infrastructure (i18n, logging, tracking, monitoring).
-  Use for code review, refactoring, project setup, architecture design, component
-  implementation, API design, new module creation, or whenever web code quality
-  standards need systematic enforcement. Triggers on: 代码审查, 重构, 项目搭建,
-  架构设计, 目录结构, 组件实现, 接口设计, 新模块.
+  Use this skill when the user asks for code review, refactoring, project setup,
+  architecture design, component implementation, API design, new module creation,
+  or whenever web code quality standards need systematic enforcement. Triggers on:
+  代码审查, 重构, 项目搭建, 架构设计, 目录结构, 组件实现, 接口设计, 新模块.
 ---
 
 # uluo-web-standards
 
-Web 工程规范工具链，按任务规模分级加载规则，按需深入。
+Web 工程规范工具链。按任务规模分级加载规则，按需深入。
+
+---
+
+## 执行流程
+
+```mermaid
+flowchart TD
+    S[接收任务] --> W{判断任务权重}
+    W -->|单函数重构/修复 lint| L[LIGHT 路径]
+    W -->|新增模块/组件/API| M[MEDIUM 路径]
+    W -->|完整模块搭建/项目启动| H[HEAVY 路径]
+
+    L --> L1[加载 language 文件 + soft-rules#通用]
+    L1 --> L2[执行 LIGHT 克制原则]
+    L2 --> DONE[完成]
+
+    M --> M1[加载 language + soft-rules 对应章节]
+    M1 --> M2[按需加载 coding-paradigms/naming]
+    M2 --> M3[实现代码]
+    M3 --> V[运行 validate-rules.js]
+    V -->|MUST 失败| M3
+    V -->|通过| DONE
+
+    H --> H1[加载 architecture + language + soft-rules 全章节]
+    H1 --> H2[按需加载所有深度参考]
+    H2 --> H3[实现代码]
+    H3 --> V
+```
+
+---
+
+## 质量闸门
+
+MEDIUM/HEAVY 任务完成后，必须通过以下闸门：
+
+| 闸门 | 工具 | 失败处理 |
+|------|------|---------|
+| **stylelint --fix** | `assets/stylelint.config.mjs` | 自动修复后重跑 |
+| **stylelint** | 同上 | 手动修复 → 重跑 |
+| **eslint** | `assets/eslint.config.mjs` | 修复 → 重跑 |
+| **tsc --noEmit** | TypeScript 编译器 | 修复类型错误 → 重跑 |
+| **DDD 层边界检查** | `check-layer-boundary.js` | 修复跨层依赖 → 重跑 |
+
+**回退闭环**：任一闸门失败 → 修复 → 从该闸门重新执行。全部通过后才算完成。
+
+```bash
+node scripts/validate-rules.js <files>
+```
 
 ---
 
@@ -46,16 +95,6 @@ Web 工程规范工具链，按任务规模分级加载规则，按需深入。
 - ❌ 不改变用户已使用的命名约定
 - ❌ 不把一个函数拆成多个文件
 - ✅ 只做：消除嵌套、提取魔法值、修复歧义命名、Guard Clause 化
-
-### 验证（Phase 4）
-
-LIGHT 任务跳过验证脚本。MEDIUM/HEAVY 任务：
-
-```bash
-node scripts/validate-rules.js <files>
-```
-
-此脚本按序执行：stylelint --fix → stylelint → eslint → tsc --noEmit → DDD 层边界检查。MUST 步骤失败 → 修复 → 重跑。
 
 ---
 
@@ -128,8 +167,8 @@ node scripts/validate-rules.js <files>
 
 | 内容 | 路径 |
 |------|------|
-| eslint 规则配置 | `config/eslint.config.mjs` |
-| stylelint 规则配置 | `config/stylelint.config.mjs` |
+| eslint 规则配置 | `assets/eslint.config.mjs` |
+| stylelint 规则配置 | `assets/stylelint.config.mjs` |
 | 验证编排脚本 | `scripts/validate-rules.js` |
 | 软规则自检清单 | `references/soft-rules.md` |
 | 项目组织法（DDD 分层+垂直切片） | `references/architecture.md` |

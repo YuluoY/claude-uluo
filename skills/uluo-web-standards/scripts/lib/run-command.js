@@ -97,15 +97,15 @@ function hasCommand(cmd)
   }
 }
 
-/** 在项目根目录或 skill config/ 目录查找配置文件。 */
+/** 在项目根目录或 skill assets/ 目录查找配置文件。 */
 export function findConfig(filename)
 {
   // 先查项目根目录
   const projectConfig = resolve(process.cwd(), filename)
   if (existsSync(projectConfig)) return projectConfig
 
-  // 再查 skill config/ 目录
-  const skillConfig = resolve(SKILL_ROOT, 'config', filename)
+  // 再查 skill assets/ 目录
+  const skillConfig = resolve(SKILL_ROOT, 'assets', filename)
   if (existsSync(skillConfig)) return skillConfig
 
   return null

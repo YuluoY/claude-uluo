@@ -1,6 +1,0 @@
-{
-  "eval_id": 1,
-  "eval_name": "新建客户列表页",
-  "prompt": "在一个已有 Vue 3 + Element Plus 项目里新增客户管理列表页。项目已经有 Sass 变量、BEM 命名和 Element Plus Icons。请说明你会怎么实现 UI 并输出关键代码。要求覆盖筛选区、表格、批量操作、新建按钮、空状态和加载状态。",
-  "assertions": []
-}

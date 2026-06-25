@@ -3,7 +3,7 @@
 **加载条件：** 任务涉及 CSS、SCSS、样式、主题、布局时加载。
 
 > 参考：[Google HTML/CSS Style Guide](https://google.github.io/styleguide/htmlcssguide.html)、[web.dev/learn/css](https://web.dev/learn/css/)
-> 格式（属性排序 Concentric、BEM 命名、禁止 `!important`）由 `stylelint` 处理（见 `config/stylelint.config.mjs`）。
+> 格式（属性排序 Concentric、BEM 命名、禁止 `!important`）由 `stylelint` 处理（见 `assets/stylelint.config.mjs`）。
 > 设计 Token 体系见 `references/infrastructure-setup.md`。Vue 样式 scoped 见 `references/languages/vue.md` §七。React SCSS Modules 见 `references/languages/react.md` §十一。
 
 ## 目录
