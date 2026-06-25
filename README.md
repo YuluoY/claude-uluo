@@ -94,9 +94,13 @@ claude plugin uninstall diagram-compiler@claude-uluo
 |------|------|
 | diagram-compiler | 技术图表编译——Mermaid/Matplotlib/Canvas，支持流程图、架构图、论文插图 |
 | frontend-visual-qa | 前端视觉 QA——设计 Token、组件库、响应式、无障碍、i18n 质检 |
-| html-blueprint | HTML-first 组件设计协议——data-* 标注的可渲染设计稿 |
+| html-blueprint | HTML-first 组件设计协议——spec-driven 管线，data-* 标注的可渲染设计稿 |
+| spirit-forge | 拘灵遣将——研究目标人物，捕获专业模式与决策框架，蒸馏生成可复用的仿真 skill |
+| uluo-change-flow | 需求变更管理——三级递进变更文档（spec/plan/tasks）+ 独立 checklist review |
 | uluo-doc-standards | 文档规范——spec/plan/tasks/changelog/验收报告模板 |
+| uluo-skill-creator | 规范化 skill 创建器——软约束 md + 硬约束 scripts 分工，内置评测基准 |
 | uluo-web-standards | Web 工程规范——eslint/stylelint/tsc + DDD 架构 + 软规则 |
+| ui-component-creator | UI 组件创建器——支持原子层/业务层双层组件，Vue/React/Web Component 按需加载 |
 
 **收录**
 
