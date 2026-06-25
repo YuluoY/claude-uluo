@@ -9,3 +9,5 @@ __pycache__/
 *.html
 node_modules/
 private/
+.trae/
+dist/
