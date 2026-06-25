@@ -1,0 +1,63 @@
+{
+  "expectations": [
+    {
+      "text": "创建了 changes/CHG-001/ 目录结构",
+      "passed": true,
+      "evidence": "changes/CHG-001/ 下创建了四份文档"
+    },
+    {
+      "text": "spec.md 影响范围包含代码维度（不只是文档）",
+      "passed": true,
+      "evidence": "spec.md 含代码影响章节（auth 模块/依赖管理）"
+    },
+    {
+      "text": "spec.md 影响范围标注了风险等级",
+      "passed": true,
+      "evidence": "代码影响表格含风险等级列（高/中/低）"
+    },
+    {
+      "text": "plan.md 的 MODIFIED delta 包含原文摘要和改为",
+      "passed": true,
+      "evidence": "plan.md 每个 MODIFIED delta 含原文摘要和改为"
+    },
+    {
+      "text": "tasks.md 目标文件指向 src/auth/ 下的实际代码文件",
+      "passed": true,
+      "evidence": "tasks.md T6/T7/T8 目标文件为 src/auth/auth.controller.js"
+    },
+    {
+      "text": "tasks.md 包含需调研标注（如 WebSearch/MCP/Context7）",
+      "passed": true,
+      "evidence": "T1/T6/T7 标注需调研 MCP Context7"
+    },
+    {
+      "text": "checklist.md 检查点格式为 - [ ] / - [x] / - [-]",
+      "passed": true,
+      "evidence": "checklist.md 含 - [x] 和 - [ ] 格式"
+    },
+    {
+      "text": "checklist.md 包含 Review 结论且状态一致",
+      "passed": true,
+      "evidence": "checklist.md Review 结论为不通过，状态一致"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 38,
+    "grader_duration_seconds": 2,
+    "total_duration_seconds": 40
+  }
+}

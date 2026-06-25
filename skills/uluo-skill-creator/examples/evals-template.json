@@ -1,0 +1,21 @@
+// evals.json 模板（JSON5 格式，复制后请删除注释）
+//
+// 字段说明：
+//   skill_name              : 与 SKILL.md frontmatter name 一致
+//   evals[].id              : 唯一整数标识
+//   evals[].prompt          : 用户任务提示词（真实场景，2-3 个为佳）
+//   evals[].expected_output : 预期结果的人类可读描述
+//   evals[].files           : 输入文件路径列表（相对 skill 根目录，无可留空数组）
+//
+// Phase 6 编写 evals 时只填上述字段；Phase 8 远程审计时再补充 expectations 断言列表。
+{
+  "skill_name": "<skill-name>",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "用户任务提示词（示例：帮我创建一个 XXX 的 skill）",
+      "expected_output": "预期结果描述（示例：在 skills/xxx/ 下创建完整目录结构）",
+      "files": []
+    }
+  ]
+}

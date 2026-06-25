@@ -1,0 +1,73 @@
+{
+  "expectations": [
+    {
+      "text": "创建了 changes/CHG-001/ 目录结构",
+      "passed": true,
+      "evidence": "changes/CHG-001/ 下创建了 spec.md, plan.md, tasks.md, checklist.md 四份文件"
+    },
+    {
+      "text": "spec.md 包含变更背景和影响范围清单",
+      "passed": true,
+      "evidence": "spec.md 含 ## 变更背景 和 ## 影响范围 章节，影响范围清单含文档影响表格"
+    },
+    {
+      "text": "spec.md 包含决策结论字段（批准/拒绝/需更多信息）",
+      "passed": true,
+      "evidence": "spec.md 含 ## 决策结论 章节，决策为\"批准\""
+    },
+    {
+      "text": "spec.md 不含具体文件路径或代码片段",
+      "passed": true,
+      "evidence": "spec.md 正文无具体文件路径（如 src/...）和代码片段"
+    },
+    {
+      "text": "plan.md 使用 delta 格式（MODIFIED/ADDED/REMOVED）",
+      "passed": true,
+      "evidence": "plan.md 含 REMOVED, ADDED, MODIFIED 三种 delta 格式"
+    },
+    {
+      "text": "tasks.md 包含文件级任务定位（目标文件路径）",
+      "passed": true,
+      "evidence": "tasks.md T1 目标文件 specs/user-csv-export/spec.md，T2 目标文件 src/routes/export.js"
+    },
+    {
+      "text": "tasks.md 任务描述以动词开头（修改/新增/删除）",
+      "passed": true,
+      "evidence": "T1 描述\"修改 spec.md...\"，T2 描述\"修改导出路由...\"，均动词开头"
+    },
+    {
+      "text": "checklist.md 包含 Spec Review / Plan Review / Tasks Review 三个分组",
+      "passed": true,
+      "evidence": "checklist.md 含 ## Spec Review, ## Plan Review, ## Tasks Review 三个分组"
+    },
+    {
+      "text": "checklist.md 包含 Review 结论章节",
+      "passed": true,
+      "evidence": "checklist.md 含 ## Review 结论 章节，结论为\"通过\""
+    },
+    {
+      "text": "checklist.md 不重复 spec/plan/tasks 的正文内容",
+      "passed": true,
+      "evidence": "checklist.md 只含检查点条目，未复制 spec/plan/tasks 正文段落"
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 0,
+    "total": 10,
+    "pass_rate": 1
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 35,
+    "grader_duration_seconds": 2,
+    "total_duration_seconds": 37
+  }
+}

@@ -48,9 +48,24 @@
       "description": "AI 编程文档产出规范——spec/plan/tasks/changelog/验收报告模板与质量标准"
     },
     {
+      "name": "uluo-change-flow",
+      "source": "./skills/uluo-change-flow",
+      "description": "需求变更管理工作流——三级递进变更文档（spec/plan/tasks）+ 独立 checklist review 机制"
+    },
+    {
       "name": "uluo-web-standards",
       "source": "./skills/uluo-web-standards",
       "description": "Web 工程规范——eslint/stylelint/tsc 工具链 + DDD 分层架构 + 软规则自检"
+    },
+    {
+      "name": "ui-component-creator",
+      "source": "./skills/ui-component-creator",
+      "description": "UI 组件库组件创建工作流——支持原子层和业务层两层组件库，三层样式分离，按需加载 Vue/React/Web Component 领域知识和风格预设"
+    },
+    {
+      "name": "uluo-skill-creator",
+      "source": "./skills/uluo-skill-creator",
+      "description": "规范化+流程化的 skill 创建器——软约束 md + 硬约束 scripts 分工，引用远程 skill-creator 做校验审计"
     }
   ]
 }

@@ -1,0 +1,315 @@
+{
+  "skill_name": "html-blueprint",
+  "version": "1.0",
+  "description": "html-blueprint skill 的 benchmark 评测用例，覆盖需求提取、Spec 校验、HTML 生成、协议合规、一致性校验、逆向工程、框架无关代码校验七大场景。",
+  "evals": [
+    {
+      "id": 1,
+      "name": "requirement-extraction-from-spec-md",
+      "description": "AI 从 uluo-doc-standards 的 spec.md 提取 Design Spec（路径 A：对齐口径）",
+      "prompt": "我有一个 uluo-doc-standards 生成的 spec.md，内容如下：\n\n### FR-1: 统计卡片\n- **描述**: 在 Dashboard 首页展示核心业务指标\n- **优先级**: P0\n- **触发条件**: 页面加载时\n- **预期行为**:\n  - 显示销售额、订单数、转化率三项指标\n  - 点击卡片可查看对应指标的详细趋势\n- **边界条件**:\n  - 数据加载中显示骨架屏\n  - 加载失败时显示错误提示和重试按钮\n\n## 验收标准\n- [ ] 卡片显示销售额、订单数、转化率\n- [ ] 点击卡片跳转到详情页\n- [ ] 加载失败时显示重试按钮\n\n请用 html-blueprint 从这个 spec.md 提取 Design Spec，然后生成 HTML 设计稿。",
+      "scenario": "path-a-spec-md-extraction",
+      "assertions": [
+        {
+          "id": "spec-component-extracted",
+          "text": "Design Spec 中包含名为 StatCard 的组件（PascalCase）",
+          "check_method": "content_check"
+        },
+        {
+          "id": "spec-props-extracted",
+          "text": "Design Spec 的 StatCard 组件包含 salesAmount、orderCount、conversionRate 三个 props",
+          "check_method": "content_check"
+        },
+        {
+          "id": "spec-event-extracted",
+          "text": "Design Spec 的 StatCard 组件包含 viewDetail 事件",
+          "check_method": "content_check"
+        },
+        {
+          "id": "spec-states-extracted",
+          "text": "Design Spec 的 StatCard 组件包含 loading 和 error 状态",
+          "check_method": "content_check"
+        },
+        {
+          "id": "spec-coverage-verified",
+          "text": "每条验收标准都有对应的 prop 或 event（覆盖度验证）",
+          "check_method": "content_check"
+        },
+        {
+          "id": "validate-spec-pass",
+          "text": "validate-spec.js 校验通过（0 errors）",
+          "check_method": "script"
+        },
+        {
+          "id": "html-generated",
+          "text": "生成的 HTML 包含 data-component=\"StatCard\"",
+          "check_method": "content_check"
+        },
+        {
+          "id": "validate-all-pass",
+          "text": "validate-all.js 校验通过（0 findings）",
+          "check_method": "script"
+        },
+        {
+          "id": "fidelity-pass",
+          "text": "check-spec-fidelity.js 校验通过（totalErrors: 0）",
+          "check_method": "script"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "requirement-extraction-from-natural-language",
+      "description": "AI 从自然语言需求提取 Design Spec（路径 B：独立工作）",
+      "prompt": "帮我做一个 Dashboard 页面，顶部显示销售额、订单数和转化率三个统计卡片，点击卡片可以查看详细趋势。数据从 /api/dashboard 接口获取，需要每 30 秒刷新一次。加载中显示骨架屏，加载失败显示错误提示。",
+      "scenario": "path-b-natural-language-extraction",
+      "assertions": [
+        {
+          "id": "spec-component-extracted",
+          "text": "Design Spec 中包含名为 StatCard 的组件（PascalCase）",
+          "check_method": "content_check"
+        },
+        {
+          "id": "spec-props-extracted",
+          "text": "Design Spec 的 StatCard 组件包含销售额、订单数、转化率对应的 props",
+          "check_method": "content_check"
+        },
+        {
+          "id": "spec-event-extracted",
+          "text": "Design Spec 的 StatCard 组件包含查看详情的事件",
+          "check_method": "content_check"
+        },
+        {
+          "id": "spec-datasource-extracted",
+          "text": "Design Spec 的 StatCard 组件包含 dataSource，endpoint 为 /api/dashboard，polling 为 30000",
+          "check_method": "content_check"
+        },
+        {
+          "id": "spec-states-extracted",
+          "text": "Design Spec 的 StatCard 组件包含 loading 和 error 状态",
+          "check_method": "content_check"
+        },
+        {
+          "id": "validate-spec-pass",
+          "text": "validate-spec.js 校验通过（0 errors）",
+          "check_method": "script"
+        },
+        {
+          "id": "html-generated",
+          "text": "生成的 HTML 包含 data-component=\"StatCard\" 和 data-convert=\"component\"",
+          "check_method": "content_check"
+        },
+        {
+          "id": "validate-all-pass",
+          "text": "validate-all.js 校验通过（0 findings）",
+          "check_method": "script"
+        },
+        {
+          "id": "fidelity-pass",
+          "text": "check-spec-fidelity.js 校验通过（totalErrors: 0）",
+          "check_method": "script"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "html-protocol-compliance",
+      "description": "生成的 HTML 设计稿必须通过所有 HARD 协议约束",
+      "prompt": "用 html-blueprint 生成一个包含表单和图表的 Dashboard 页面。表单用于筛选时间范围，图表展示销售趋势。",
+      "scenario": "protocol-compliance",
+      "assertions": [
+        {
+          "id": "viewport-declared",
+          "text": "HTML 包含 <!-- @viewport --> 声明或 meta viewport",
+          "check_method": "content_check"
+        },
+        {
+          "id": "data-component-pascal-case",
+          "text": "所有 data-component 值为 PascalCase（如 DashboardPage、FilterForm、SalesChart）",
+          "check_method": "content_check"
+        },
+        {
+          "id": "data-convert-valid",
+          "text": "所有 data-convert 值在合法枚举中（component/layout/static/decorative/manual）",
+          "check_method": "content_check"
+        },
+        {
+          "id": "chart-manual",
+          "text": "图表元素标注 data-convert=\"manual\"",
+          "check_method": "content_check"
+        },
+        {
+          "id": "form-data-model",
+          "text": "<form> 元素包含 data-model 和 data-component 属性",
+          "check_method": "content_check"
+        },
+        {
+          "id": "form-field-data-field",
+          "text": "表单控件（input/select/textarea）包含 data-field 属性",
+          "check_method": "content_check"
+        },
+        {
+          "id": "no-important",
+          "text": "CSS 中不使用 !important",
+          "check_method": "content_check"
+        },
+        {
+          "id": "no-generic-class-names",
+          "text": "CSS 类名不使用泛名（card/button/box/item 等）或编号名（box1/text2）",
+          "check_method": "content_check"
+        },
+        {
+          "id": "validate-all-pass",
+          "text": "validate-all.js 校验通过（0 findings）",
+          "check_method": "script"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "spec-html-fidelity",
+      "description": "Spec ↔ HTML 一致性校验（三角校验）",
+      "prompt": "用 html-blueprint 生成一个包含用户列表和分页组件的页面。用户列表展示姓名、邮箱、角色，支持点击行查看详情。分页组件支持上一页/下一页/跳转。",
+      "scenario": "fidelity-check",
+      "assertions": [
+        {
+          "id": "spec-components-defined",
+          "text": "Design Spec 包含 UserList 和 Pagination 两个组件",
+          "check_method": "content_check"
+        },
+        {
+          "id": "html-components-match-spec",
+          "text": "HTML 中的 data-component 值与 Spec 中的 components[].name 完全一致",
+          "check_method": "script"
+        },
+        {
+          "id": "html-props-match-spec",
+          "text": "HTML 中的 data-prop 值与 Spec 中的 props[].name 完全一致",
+          "check_method": "script"
+        },
+        {
+          "id": "html-actions-match-spec",
+          "text": "HTML 中的 data-action 值与 Spec 中的 events[].name 完全一致",
+          "check_method": "script"
+        },
+        {
+          "id": "fidelity-pass",
+          "text": "check-spec-fidelity.js 校验通过（totalErrors: 0）",
+          "check_method": "script"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "html-to-spec-reverse",
+      "description": "从已有 HTML 设计稿逆向生成 Spec",
+      "prompt": "我有一个已有的 HTML 设计稿，请用 html-blueprint 逆向生成 Design Spec，然后补充缺失字段后重新生成 HTML。\n\n<!-- @viewport width:1440 height:900 -->\n<!-- @theme ./tokens.css -->\n<main data-page=\"ProductPage\">\n  <article data-component=\"ProductCard\" data-convert=\"component\" class=\"product-card\">\n    <h2 class=\"product-card__name\" data-prop=\"name\" data-type=\"string\">商品名称</h2>\n    <span class=\"product-card__price\" data-prop=\"price\" data-type=\"number\">99.00</span>\n    <button class=\"product-card__action-add-to-cart\" data-event=\"click\" data-action=\"addToCart\">加入购物车</button>\n  </article>\n</main>",
+      "scenario": "reverse-engineering",
+      "assertions": [
+        {
+          "id": "spec-extracted",
+          "text": "逆向生成的 Spec 包含 ProductCard 组件，含 name 和 price 两个 props，含 addToCart 事件",
+          "check_method": "content_check"
+        },
+        {
+          "id": "todo-fields-marked",
+          "text": "逆向生成的 Spec 中缺失的字段（如 states、dataSource）标记为 _todo",
+          "check_method": "content_check"
+        },
+        {
+          "id": "spec-filled-and-valid",
+          "text": "补充 _todo 字段后 Spec 通过 validate-spec.js 校验",
+          "check_method": "script"
+        },
+        {
+          "id": "regenerated-html-valid",
+          "text": "用补充后的 Spec 重新生成的 HTML 通过 validate-all.js 校验",
+          "check_method": "script"
+        },
+        {
+          "id": "fidelity-pass",
+          "text": "重新生成的 HTML 与 Spec 通过 check-spec-fidelity.js 校验",
+          "check_method": "script"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "framework-agnostic-code-validation",
+      "description": "AI 生成任意框架代码后，check-spec-fidelity.js 用语义搜索校验 Spec↔代码一致性",
+      "prompt": "我有一个 Design Spec，请用 html-blueprint 生成 HTML 设计稿，然后参考 code-generation-guide.md 分别生成 Vue 3 和 React 两个版本的代码，最后校验 Spec↔代码一致性。\n\nSpec 内容：组件名 LoginForm，props: username(string,required), password(string,required)，events: submit(click), cancel(click)。",
+      "scenario": "framework-agnostic",
+      "assertions": [
+        {
+          "id": "html-generated",
+          "text": "生成的 HTML 包含 data-component=\"LoginForm\"",
+          "check_method": "content_check"
+        },
+        {
+          "id": "vue-code-generated",
+          "text": "生成的 Vue 代码文件名为 LoginForm.vue，包含 defineProps 和 defineEmits",
+          "check_method": "content_check"
+        },
+        {
+          "id": "react-code-generated",
+          "text": "生成的 React 代码文件名为 LoginForm.tsx，包含 props 接口和 onSubmit/onCancel 回调",
+          "check_method": "content_check"
+        },
+        {
+          "id": "vue-fidelity-pass",
+          "text": "check-spec-fidelity.js 校验 Vue 代码通过（Spec↔代码 totalErrors: 0）",
+          "check_method": "script"
+        },
+        {
+          "id": "react-fidelity-pass",
+          "text": "check-spec-fidelity.js 校验 React 代码通过（Spec↔代码 totalErrors: 0）",
+          "check_method": "script"
+        },
+        {
+          "id": "missing-prop-detected",
+          "text": "如果 Vue 代码中删除 password prop，check-spec-fidelity.js 应检测到 code-missing-required-prop 错误",
+          "check_method": "script"
+        },
+        {
+          "id": "missing-event-detected",
+          "text": "如果 React 代码中删除 onSubmit 回调，check-spec-fidelity.js 应检测到 code-missing-event 错误",
+          "check_method": "script"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "gate-enforcement",
+      "description": "三个 HARD 门禁必须严格执行，失败时阻断流程",
+      "prompt": "用 html-blueprint 生成一个包含故意违规的 HTML 设计稿（如 data-component 用泛名 'card'、缺少 viewport 声明），验证门禁是否能检测到所有违规。",
+      "scenario": "gate-enforcement",
+      "assertions": [
+        {
+          "id": "validate-spec-blocks-invalid",
+          "text": "当 Spec 缺少 version 或 page.name 时，validate-spec.js 返回非零退出码",
+          "check_method": "script"
+        },
+        {
+          "id": "validate-all-blocks-generic-name",
+          "text": "当 HTML 中 data-component=\"card\"（泛名）时，validate-all.js 返回非零退出码并报告泛名错误",
+          "check_method": "script"
+        },
+        {
+          "id": "validate-all-blocks-missing-viewport",
+          "text": "当 HTML 缺少 viewport 声明时，validate-all.js 返回非零退出码并报告缺少 @viewport",
+          "check_method": "script"
+        },
+        {
+          "id": "fidelity-blocks-mismatch",
+          "text": "当 Spec 中有组件但 HTML 中缺失该组件时，check-spec-fidelity.js 返回非零退出码并报告 spec-component-missing-in-html",
+          "check_method": "script"
+        },
+        {
+          "id": "fidelity-blocks-extra-html-prop",
+          "text": "当 HTML 中有 data-prop 但 Spec 中未定义时，check-spec-fidelity.js 返回非零退出码并报告 html-prop-not-in-spec",
+          "check_method": "script"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "expectations": [
+    {
+      "text": "创建了 changes/CHG-001/ 目录结构",
+      "passed": true,
+      "evidence": "changes/CHG-001/ 下创建了 change.md 文件"
+    },
+    {
+      "text": "spec.md 包含变更背景和影响范围清单",
+      "passed": false,
+      "evidence": "未创建 spec.md 文件——仅有单一的 change.md"
+    },
+    {
+      "text": "spec.md 包含决策结论字段（批准/拒绝/需更多信息）",
+      "passed": false,
+      "evidence": "未创建 spec.md 文件——决策结论字段不存在"
+    },
+    {
+      "text": "spec.md 不含具体文件路径或代码片段",
+      "passed": false,
+      "evidence": "未创建 spec.md 文件"
+    },
+    {
+      "text": "plan.md 使用 delta 格式（MODIFIED/ADDED/REMOVED）",
+      "passed": false,
+      "evidence": "未创建 plan.md 文件——无 delta 格式"
+    },
+    {
+      "text": "tasks.md 包含文件级任务定位（目标文件路径）",
+      "passed": false,
+      "evidence": "未创建 tasks.md 文件——无文件级任务定位"
+    },
+    {
+      "text": "tasks.md 任务描述以动词开头（修改/新增/删除）",
+      "passed": false,
+      "evidence": "未创建 tasks.md 文件"
+    },
+    {
+      "text": "checklist.md 包含 Spec Review / Plan Review / Tasks Review 三个分组",
+      "passed": false,
+      "evidence": "未创建 checklist.md 文件——无 Review 分组"
+    },
+    {
+      "text": "checklist.md 包含 Review 结论章节",
+      "passed": false,
+      "evidence": "未创建 checklist.md 文件——无 Review 结论"
+    },
+    {
+      "text": "checklist.md 不重复 spec/plan/tasks 的正文内容",
+      "passed": false,
+      "evidence": "未创建 checklist.md 文件"
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 9,
+    "total": 10,
+    "pass_rate": 0.1
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 22,
+    "grader_duration_seconds": 2,
+    "total_duration_seconds": 24
+  }
+}

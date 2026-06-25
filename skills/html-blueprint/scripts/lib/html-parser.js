@@ -2,7 +2,8 @@
  * html-parser.js — 零依赖轻量 HTML 解析器。
  *
  * 提供 cheerio 子集：按属性选择元素、遍历、取属性值、祖先查找、子元素查找。
- * 不处理闭合修复、HTML 实体解码等——假设输入是合理的 html-blueprint 设计稿。
+ * 处理自闭合标签属性、属性值中的 > 字符、基本 HTML 实体解码、注释跳过。
+ * 不处理闭合修复——假设输入是合理的 html-blueprint 设计稿。
  *
  * 用法：
  *   import { parseHTML } from './lib/html-parser.js'
@@ -38,11 +39,14 @@ export function parseHTML(html) {
  * 构建 DOM 树。
  */
 function buildTree(html) {
+  // 去除注释：用等长空格替换，保留索引以便 innerHTML 切片仍正确
+  html = html.replace(/<!--[\s\S]*?-->/g, (m) => ' '.repeat(m.length))
+
   const root = { tag: '#root', attrs: {}, children: [], parent: null, innerHTML: '', start: 0, end: html.length }
   const stack = [root]
 
-  // 匹配开标签、自闭合标签、闭标签
-  const tagRe = /<\/?(\w+)([^>]*)>/g
+  // 匹配开标签、自闭合标签、闭标签。属性值用引号包裹时允许包含 >
+  const tagRe = /<\/?(\w+)((?:[^>"']|"[^"]*"|'[^']*')*)>/g
   let match
   let lastIndex = 0
 
@@ -58,7 +62,7 @@ function buildTree(html) {
       if (stack.length > 1 && stack[stack.length - 1].tag === tagName) {
         const closed = stack.pop()
         closed.end = match.index + fullMatch.length
-        closed.innerHTML = html.slice(closed.start, closed.end)
+        closed.innerHTML = html.slice(closed.openTagEnd, match.index)
       }
     } else {
       // 开标签
@@ -68,6 +72,7 @@ function buildTree(html) {
         children: [],
         parent: stack[stack.length - 1],
         start: match.index,
+        openTagEnd: match.index + fullMatch.length,
         end: 0,
         innerHTML: '',
       }
@@ -79,7 +84,7 @@ function buildTree(html) {
       } else {
         // 自闭合或 void 元素
         node.end = match.index + fullMatch.length
-        node.innerHTML = fullMatch
+        node.innerHTML = ''
       }
     }
     lastIndex = match.index
@@ -89,7 +94,7 @@ function buildTree(html) {
   while (stack.length > 1) {
     const node = stack.pop()
     node.end = html.length
-    node.innerHTML = html.slice(node.start, node.end)
+    node.innerHTML = html.slice(node.openTagEnd, node.end)
   }
 
   return root
@@ -112,14 +117,21 @@ function flatten(node) {
  */
 function parseAttrs(attrsStr) {
   const attrs = {}
-  const re = /(\S+?)\s*=\s*"([^"]*)"|(\S+)/g
+  // 去除自闭合标签尾部的 /（如 <input ... /> 中的 /）
+  const cleaned = attrsStr.replace(/\/\s*$/, '')
+  const re = /(\S+?)\s*=\s*(?:"([^"]*)"|'([^']*)')|(\S+)/g
   let m
-  while ((m = re.exec(attrsStr)) !== null) {
-    if (m[1] && m[2] !== undefined) {
-      attrs[m[1].toLowerCase().trim()] = m[2]
-    } else if (m[3]) {
-      const key = m[3].toLowerCase().trim()
-      if (key) attrs[key] = ''
+  while ((m = re.exec(cleaned)) !== null) {
+    if (m[1]) {
+      const key = m[1].toLowerCase().trim()
+      if (m[2] !== undefined) {
+        attrs[key] = m[2]
+      } else if (m[3] !== undefined) {
+        attrs[key] = m[3]
+      }
+    } else if (m[4]) {
+      const key = m[4].toLowerCase().trim()
+      if (key && key !== '/') attrs[key] = ''
     }
   }
   return attrs
@@ -431,7 +443,7 @@ class NodeWrapper {
    * 获取文本内容。
    */
   text() {
-    return stripTags(this._node.innerHTML || '')
+    return decodeEntities(stripTags(this._node.innerHTML || ''))
   }
 
   /**
@@ -455,6 +467,21 @@ class NodeWrapper {
  */
 function stripTags(html) {
   return html.replace(/<[^>]*>/g, '').trim()
+}
+
+/**
+ * 解码基本 HTML 实体：&amp; &lt; &gt; &quot; &#39; &nbsp;
+ */
+function decodeEntities(str) {
+  const entities = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&nbsp;': ' ',
+  }
+  return str.replace(/&(amp|lt|gt|quot|#39|nbsp);/g, (m) => entities[m] || m)
 }
 
 /**

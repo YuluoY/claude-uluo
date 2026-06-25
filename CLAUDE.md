@@ -79,6 +79,30 @@ curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/ins
 # 或 ln -sfn ~/claude-uluo/skills/<name> .claude/skills/<name>
 ```
 
+## Workspace 打包规范
+
+claude-uluo workspace 内的 skill 需创建 `.claude-plugin/plugin.json` 用于 plugin 分发。此规范是 workspace 级别，不影响 uluo-skill-creator 创建的 skill 本身。
+
+### plugin.json 必需字段
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `name` | string | plugin 名称，与 skill 目录名一致 |
+| `version` | string | 语义化版本号（如 `0.1.0`） |
+| `description` | string | plugin 描述，简明说明 skill 用途 |
+| `skills` | string | skill 入口路径，固定为 `"./"` |
+
+### 示例
+
+```json
+{
+  "name": "uluo-skill-creator",
+  "version": "0.3.0",
+  "description": "规范化+流程化的 skill 创建器",
+  "skills": "./"
+}
+```
+
 ## 已注册
 
 | 类型 | 名称 | 路径 |
@@ -91,3 +115,4 @@ curl -fsSL https://raw.githubusercontent.com/YuluoY/claude-uluo/main/scripts/ins
 | Plugin | skill-creator | `skills/skill-creator/` |
 | Plugin | uluo-doc-standards | `skills/uluo-doc-standards/` |
 | Plugin | uluo-web-standards | `skills/uluo-web-standards/` |
+| Plugin | ui-component-creator | `skills/ui-component-creator/` |

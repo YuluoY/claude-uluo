@@ -1,0 +1,393 @@
+{
+  "skill_name": "uluo-skill-creator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我博客仓库里 markdown 文件格式很乱，中英文之间没空格、代码块没标语言、标题层级跳级（比如 h1 直接跳 h3）。帮我创建一个 markdown 格式化的 skill，能检测这些问题并给出修复建议。简单点就行，单文件 SKILL.md 搞定，不用搞 scripts 那些复杂的。",
+      "expected_output": "按场景跳过规则识别为简单 skill，跳过 Phase 2（软硬约束设计）和 Phase 5（scripts/agents 编写）。产出：skills/markdown-formatter/SKILL.md（含 frontmatter name/description、Use when 触发条件、格式化规则说明、body <500 行）+ skills/markdown-formatter/evals/evals.json（2-3 个测试用例）。不创建 scripts/ 和 references/ 目录。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "产出 SKILL.md 文件存在于 skill 根目录",
+          "type": "file_exists"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 name 字段",
+          "type": "regex"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 description 字段",
+          "type": "regex"
+        },
+        {
+          "text": "SKILL.md description 包含 Use when 触发条件",
+          "type": "contains"
+        },
+        {
+          "text": "SKILL.md body 行数小于 500",
+          "type": "regex"
+        },
+        {
+          "text": "evals/evals.json 文件存在且为合法 JSON",
+          "type": "json_valid"
+        },
+        {
+          "text": "evals/evals.json 包含 2-3 个测试用例",
+          "type": "regex"
+        },
+        {
+          "text": "未创建 scripts/ 目录（简单 skill 跳过 Phase 5）",
+          "type": "file_exists"
+        },
+        {
+          "text": "未创建 references/ 目录（简单 skill 跳过 Phase 5）",
+          "type": "file_exists"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "我们后端项目用 FastAPI，路由文件都在 src/api/routes/ 下，每个接口有 docstring 但格式五花八门。我想做一个 skill，扫描这些路由文件，根据 docstring 和 Pydantic 模型生成统一的 API 文档（markdown 格式）。需要支持自定义模板，因为不同项目文档结构不一样。skill 放在 ~/projects/my-skills/api-doc-gen/ 下，要包含 references 说明模板规范和扫描规则。",
+      "expected_output": "走完整中等流程（默认方案）。产出完整目录结构：skills/api-doc-gen/SKILL.md（frontmatter + Use when 触发条件 + body <500 行，引用 references/ 做 progressive disclosure）+ skills/api-doc-gen/references/（模板规范 md、扫描规则 md）+ skills/api-doc-gen/evals/evals.json（2-3 个测试用例）。Phase 7 运行 node scripts/validate-skill.js 校验通过（目录结构、SKILL.md frontmatter name/description/行数、脚本可执行性）。无 scripts/ 目录。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "references/ 目录存在",
+          "type": "file_exists"
+        },
+        {
+          "text": "references/ 下包含模板规范 markdown 文件",
+          "type": "file_exists"
+        },
+        {
+          "text": "references/ 下包含扫描规则 markdown 文件",
+          "type": "file_exists"
+        },
+        {
+          "text": "SKILL.md 引用 references/ 路径实现 progressive disclosure",
+          "type": "contains"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 name 和 description 字段",
+          "type": "regex"
+        },
+        {
+          "text": "SKILL.md description 包含 Use when 触发条件",
+          "type": "contains"
+        },
+        {
+          "text": "SKILL.md body 行数小于 500",
+          "type": "regex"
+        },
+        {
+          "text": "Phase 7 本地硬约束校验通过（validate-skill.js 无 fail）",
+          "type": "contains"
+        },
+        {
+          "text": "未创建 scripts/ 目录（中等 skill 无需 scripts）",
+          "type": "file_exists"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "我们组 code review 经常漏掉常见问题：未处理的 Promise rejection、SQL 拼接注入风险、硬编码的 API key 和密钥。我想创建一个代码审查 skill，扫描指定目录的 JS/TS 文件，按可配置规则集（yaml 格式）报告问题，还要有个子代理生成修复建议。skill 要能集成到 CI 里，所以必须有校验脚本确保规则文件格式正确。放在 ~/projects/my-skills/code-reviewer/ 下，要完整走流程。",
+      "expected_output": "走完整九阶段流程（Phase 0-8）。产出完整目录结构：skills/code-reviewer/SKILL.md + skills/code-reviewer/references/（规则规范 md）+ skills/code-reviewer/scripts/（规则校验脚本，node --check 或 py_compile 通过）+ skills/code-reviewer/agents/（修复建议子代理 md）+ skills/code-reviewer/evals/evals.json（2-3 个测试用例）。Phase 7 本地硬约束校验通过（目录结构 + frontmatter + 脚本可执行性）。Phase 8 使用 skill-creator 的脚本运行 benchmark 测试，aggregate_benchmark.py 聚合结果，用户 review 通过后完成。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "scripts/ 目录存在",
+          "type": "file_exists"
+        },
+        {
+          "text": "scripts/ 下包含规则校验脚本文件",
+          "type": "file_exists"
+        },
+        {
+          "text": "规则校验脚本通过语法检查（node --check 或 py_compile）",
+          "type": "contains"
+        },
+        {
+          "text": "agents/ 目录存在",
+          "type": "file_exists"
+        },
+        {
+          "text": "agents/ 下包含修复建议子代理 markdown 文件",
+          "type": "file_exists"
+        },
+        {
+          "text": "references/ 目录存在且包含规则规范 markdown",
+          "type": "file_exists"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 name/description 且 description 含 Use when",
+          "type": "regex"
+        },
+        {
+          "text": "Phase 7 本地硬约束校验通过（目录结构 + frontmatter + 脚本可执行性）",
+          "type": "contains"
+        },
+        {
+          "text": "Phase 8 benchmark 流程执行（远程引用 skill-creator）",
+          "type": "contains"
+        },
+        {
+          "text": "Phase 8 引用 skill-creator 的 aggregate_benchmark.py 聚合结果",
+          "type": "file_exists"
+        },
+        {
+          "text": "SKILL.md body 行数不超过 800（硬约束上限）",
+          "type": "regex"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "我马上要给团队演示一个 idea，急需一个 skill 原型——能把用户输入的 JSON 转成 YAML 输出就行。不用搞复杂的，越快越好，给我个能跑的最小 SKILL.md 就行，其他花里胡哨的都不要。",
+      "expected_output": "识别为紧急场景，按场景跳过规则跳过 Phase 1（调研）和 Phase 8（测试/benchmark）。产出：skills/json-to-yaml/SKILL.md（含 frontmatter name/description、Use when 触发条件、转换逻辑说明、body <500 行）+ 基本目录结构。Phase 7 本地硬约束校验必须通过（质量底线不可跳过）。不执行 Phase 8 benchmark，不产出 benchmark.json。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "SKILL.md 文件存在",
+          "type": "file_exists"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 name 和 description 字段",
+          "type": "regex"
+        },
+        {
+          "text": "SKILL.md description 包含 Use when 触发条件",
+          "type": "contains"
+        },
+        {
+          "text": "Phase 7 本地硬约束校验通过（紧急场景仍守质量底线）",
+          "type": "contains"
+        },
+        {
+          "text": "未执行 Phase 8 benchmark（无 benchmark.json 产出）",
+          "type": "file_exists"
+        },
+        {
+          "text": "未执行 Phase 1 调研（无调研文档产出）",
+          "type": "file_exists"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "我之前手写了一个 skill 叫 lint-runner，在 ~/projects/my-skills/lint-runner/ 下，结构不太规范——SKILL.md 写得太长（800 多行），没有 frontmatter，也没有 evals。我想用 uluo-skill-creator 的规范把它改进一下，让它符合质量标准。",
+      "expected_output": "识别为已有 skill 改进场景。先读取现有 skill 评估现状，按 references/skill-quality-rubric.md 的 rubric 维度评分（如 frontmatter 完整性、body 行数、progressive disclosure、evals 覆盖度等），产出评分报告标识薄弱维度。针对薄弱维度改进：补全 frontmatter、拆分 SKILL.md 到 references/（progressive disclosure）、新增 evals/evals.json。改进后重新评分验证提升。不从头创建，基于现有结构增量改进。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "执行了 rubric 评分（引用 references/skill-quality-rubric.md）",
+          "type": "contains"
+        },
+        {
+          "text": "产出 rubric 评分报告（含各维度得分）",
+          "type": "contains"
+        },
+        {
+          "text": "评分报告标识出现有 skill 的薄弱维度",
+          "type": "contains"
+        },
+        {
+          "text": "针对薄弱维度产出改进建议",
+          "type": "contains"
+        },
+        {
+          "text": "改进后 SKILL.md 补全 frontmatter（name/description）",
+          "type": "regex"
+        },
+        {
+          "text": "改进后 SKILL.md description 包含 Use when 触发条件",
+          "type": "contains"
+        },
+        {
+          "text": "改进后 SKILL.md body 行数降至 800 以下（拆分到 references/）",
+          "type": "regex"
+        },
+        {
+          "text": "新增 evals/evals.json 文件且为合法 JSON",
+          "type": "json_valid"
+        },
+        {
+          "text": "改进后重新评分验证提升（前后对比）",
+          "type": "contains"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "我想创建一个 PDF 表单填充的 skill，但不确定现在有哪些 PDF 处理库和最佳实践。帮我调研一下现有的 PDF 处理方案，然后基于调研结果创建 skill。需要支持表单字段识别、自动填充、批量处理。",
+      "expected_output": "Phase 1 调研环节触发 researcher agent（agents/researcher.md），调研现有 PDF 处理方案（如 pypdf、pdfplumber、PyMuPDF 等）和最佳实践。产出调研报告 JSON（含 skill_domain、similar_skills、technical_solutions、best_practices、recommended_channels 字段）。基于调研报告进入 Phase 2-8 创建 skill。产出完整目录结构：skills/pdf-form-filler/SKILL.md + references/ + evals/evals.json。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Phase 1 触发 researcher agent（引用 agents/researcher.md）",
+          "type": "contains"
+        },
+        {
+          "text": "产出调研报告 JSON（含 skill_domain 字段）",
+          "type": "contains"
+        },
+        {
+          "text": "调研报告含 similar_skills 字段（现有类似 skill 列表）",
+          "type": "contains"
+        },
+        {
+          "text": "调研报告含 technical_solutions 字段（技术方案）",
+          "type": "contains"
+        },
+        {
+          "text": "调研报告含 best_practices 字段（最佳实践）",
+          "type": "contains"
+        },
+        {
+          "text": "调研报告含 recommended_channels 字段（推荐渠道）",
+          "type": "contains"
+        },
+        {
+          "text": "基于调研报告创建 skill（SKILL.md 存在）",
+          "type": "file_exists"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 name/description/version 字段",
+          "type": "regex"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "我刚用 uluo-skill-creator 创建了一个 skill 叫 data-validator，在 ~/projects/my-skills/data-validator/ 下。现在想评估一下它的规范质量，看看哪些维度需要改进。",
+      "expected_output": "Phase 8 评分环节触发 grader agent（agents/grader.md），依据 5 维度评分标准（references/skill-quality-rubric.md）评估 skill 规范质量。产出评分报告 JSON（含 skill_name、total_score、grade、dimensions、suggestions 字段）。5 维度各 20 分：结构合规、流程编排、约束分工、文档质量、测试覆盖。grade 映射：A(90+)/B(70-89)/C(50-69)/D(<50)。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "Phase 8 触发 grader agent（引用 agents/grader.md）",
+          "type": "contains"
+        },
+        {
+          "text": "产出评分报告 JSON（含 skill_name 字段）",
+          "type": "contains"
+        },
+        {
+          "text": "评分报告含 total_score 字段（0-100）",
+          "type": "contains"
+        },
+        {
+          "text": "评分报告含 grade 字段（A/B/C/D）",
+          "type": "contains"
+        },
+        {
+          "text": "评分报告含 dimensions 字段（5 维度明细）",
+          "type": "contains"
+        },
+        {
+          "text": "评分报告含 suggestions 字段（改进建议）",
+          "type": "contains"
+        },
+        {
+          "text": "5 维度覆盖（结构合规/流程编排/约束分工/文档质量/测试覆盖）",
+          "type": "contains"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "帮我创建一个 YAML 配置校验的 skill，能检查 YAML 文件的 schema、字段类型、必填项。放在 ~/projects/my-skills/yaml-validator/ 下。",
+      "expected_output": "走中等流程。产出 skills/yaml-validator/SKILL.md，frontmatter 必须包含 name、version、description 三个字段。version 字段符合 semver 格式（如 0.1.0）。description 含 Use when 触发条件。Phase 7 校验 version 字段存在且符合 semver 格式。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "SKILL.md frontmatter 包含 name 字段",
+          "type": "regex"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 version 字段",
+          "type": "regex"
+        },
+        {
+          "text": "version 字段符合 semver 格式（如 0.1.0）",
+          "type": "regex"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 description 字段",
+          "type": "regex"
+        },
+        {
+          "text": "SKILL.md description 包含 Use when 触发条件",
+          "type": "contains"
+        },
+        {
+          "text": "Phase 7 校验 version 字段通过",
+          "type": "contains"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "帮我创建一个 Git 提交规范检查的 skill，检查 commit message 格式、分支命名、PR 标题。放在 ~/projects/my-skills/git-convention-checker/ 下。skill 内容要简洁直接，告诉 AI 怎么做，不要长篇解释。",
+      "expected_output": "走中等流程。产出 skills/git-convention-checker/SKILL.md，内容以指令为主（怎么做/怎么做得更好/禁止做什么）。边界约束条件依据保留（如禁止事项后的约束条件）。重点先行配合加粗规则（**关键词**：展开描述）。无纯设计理由解释。Phase 7 校验写作规范。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "SKILL.md 内容以指令为主（怎么做/怎么做得更好/禁止做什么）",
+          "type": "contains"
+        },
+        {
+          "text": "SKILL.md 包含禁止事项清单",
+          "type": "contains"
+        },
+        {
+          "text": "禁止事项后保留边界约束条件依据",
+          "type": "contains"
+        },
+        {
+          "text": "SKILL.md 使用重点先行 + 加粗规则（**关键词**：展开描述）",
+          "type": "contains"
+        },
+        {
+          "text": "SKILL.md 无纯设计理由解释",
+          "type": "contains"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 name/version/description",
+          "type": "regex"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "帮我创建一个日志分析的 skill，能解析应用日志、提取错误模式、生成摘要报告。放在 ~/projects/my-skills/log-analyzer/ 下。我不确定需不需要 plugin.json 之类的配置文件。",
+      "expected_output": "走中等流程。产出 skills/log-analyzer/SKILL.md + references/ + evals/evals.json。不创建 .claude-plugin/plugin.json（plugin.json 是 workspace 绑定，非 skill 必需）。Phase 7 校验不检查 plugin.json。必需文件仅为 SKILL.md。",
+      "files": [],
+      "assertions": [
+        {
+          "text": "SKILL.md 文件存在",
+          "type": "file_exists"
+        },
+        {
+          "text": "未创建 .claude-plugin/plugin.json 文件",
+          "type": "file_exists"
+        },
+        {
+          "text": "SKILL.md frontmatter 包含 name/version/description",
+          "type": "regex"
+        },
+        {
+          "text": "SKILL.md description 包含 Use when 触发条件",
+          "type": "contains"
+        },
+        {
+          "text": "Phase 7 校验通过（不检查 plugin.json）",
+          "type": "contains"
+        },
+        {
+          "text": "必需文件仅为 SKILL.md（无 plugin.json 要求）",
+          "type": "contains"
+        }
+      ]
+    }
+  ]
+}

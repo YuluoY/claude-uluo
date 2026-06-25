@@ -50,12 +50,12 @@ function check(filePath) {
   }
 
   // ── 2. 调研深度：L3 项是否有 ≥3 个来源 ────────────────────
-  const l3Items = content.match(/\| KG-\d+ \|.*\| L3 \|/g) || [];
+  const l3Items = content.match(/\| KG-\d+ \|.*?\| L3 \|.*\|/g) || [];
   for (const item of l3Items) {
     const cols = item.split('|');
     const source = (cols[4] || '').trim();
     const sources = source.split(/[,/、]/).filter(Boolean);
-    if (sources.length < 2) {
+    if (sources.length < 3) {
       findings.push({ type: 'warn', msg: `${fname}: L3 深度的知识缺口仅含 ${sources.length} 个来源——要求三源交叉验证` });
     }
   }

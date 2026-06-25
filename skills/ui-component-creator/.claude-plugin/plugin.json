@@ -1,0 +1,9 @@
+{
+  "name": "ui-component-creator",
+  "version": "0.2.0",
+  "description": "UI 组件库组件创建工作流——支持原子层和业务层两层组件库，三层样式分离（结构层/语义层/风格层），按需加载 Vue/React/Web Component 领域知识和风格预设（Apple/Vercel/GitHub/Material）。",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["ui-component", "component-library", "vue", "react", "web-component", "style-architecture", "theme", "frontend"],
+  "license": "MIT",
+  "skills": "./"
+}

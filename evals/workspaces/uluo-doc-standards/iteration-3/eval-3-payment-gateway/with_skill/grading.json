@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "research-report.md 含实际调研结果（有具体来源引用），知识缺口闭合，业界方案对比含 Stripe vs Alipay",
+      "passed": true,
+      "evidence": "research-report.md 含 9 个知识缺口（KG-1 至 KG-9）全部闭合并标注可信度（高/中/低）；业界方案对比含 5 个对比维度，每个维度均含 Stripe vs Alipay 对比与「本项目适用性」列：API 设计与认证（Stripe RESTful+Bearer Token vs Alipay RSA2 签名）、支付流程（PaymentIntent+3DS2 vs trade.pay 跳转）、Webhook 可靠性（HMAC-SHA256 vs RSA2 验签）、费率与结算（Stripe 2.9%+$0.30/T+2 vs Alipay 0.6%/T+1）、退款与争议。参考资料按 5 个信息源分组并含具体 URL：Stripe Docs（https://docs.stripe.com/api）、GitHub stripe-java（https://github.com/stripe/stripe-java）、Alipay OpenAPI（https://opendocs.alipay.com/）、PCI SSC（https://www.pcisecuritystandards.org/）、Stack Overflow webhook 事件处理。validate-docs.js 输出「research-report.md: 9 个知识缺口全部闭合」「方案对比含本项目适用性列」「参考资料按 5 个信息源分组」"
+    },
+    {
+      "text": "spec.md 含功能需求、非功能性需求（性能/安全/可维护性）、验收标准",
+      "passed": true,
+      "evidence": "spec.md 含 6 个功能需求（FR-1 创建支付意图、FR-2 支付回调处理、FR-3 退款、FR-4 支付状态查询、FR-5 支付失败处理与重试、FR-6 对账报表），每个 FR 含完整四字段（优先级/触发条件/预期行为/边界条件）；非功能性需求分性能（创建 PaymentIntent P99<500ms、QPS 200）、安全（KMS 密钥托管、webhook 签名校验、PCI SAQ-A、审计日志保留 1 年、RBAC 退款权限）、可维护性（独立模块、配置热更新、监控告警、降级开关、traceId 链路）三节；验收标准 10 条均为可验证 checklist（如「订单状态在 10 秒内变为已支付」「P99 延迟<500ms 压测 200 QPS」「卡号不出现在日志与数据库」）。validate-docs.js 输出「6/6 个 FR 字段完整」「10 条验收标准均可验证」"
+    },
+    {
+      "text": "plans/README.md 含架构概览、关键设计决策（四段完整）、API契约含错误码",
+      "passed": true,
+      "evidence": "plans/README.md 含架构概览章节（文字描述+Mermaid flowchart 展示前端/payment-service/Stripe/order-service/管理后台数据流）；关键设计决策 4 个（决策1 PaymentIntent 三步流程、决策2 状态机驱动+幂等表、决策3 KMS 密钥注入、决策4 Stripe Refunds API 退款），每个决策均含完整四段（选择/原因/替代方案/影响）；API 契约含 4 个接口（创建支付意图、Webhook 回调、发起退款、查询支付详情），每个含请求/响应 JSON 示例与错误码表，共 14 个错误码定义（如 400 PAYMENT_ORDER_NOT_FOUND、409 PAYMENT_ORDER_ALREADY_PAID、422 PAYMENT_REFUND_AMOUNT_EXCEEDED、503 PAYMENT_STRIPE_UNAVAILABLE）。validate-docs.js 输出「4 个设计决策均含完整四段」「API 契约含 14 个错误码定义」「API 契约含请求/响应定义」"
+    },
+    {
+      "text": "validate-docs.js 通过（技术评审场景）",
+      "passed": true,
+      "evidence": "validate-docs.js 退出码 0，输出「✓ 全部校验通过」。校验结果：通过 37 失败 0 警告 4 合计 41。识别为技术评审方案（plans/ 目录无 tasks/）；4 个警告均为可接受项：verification-report.md/retrospective.md 未找到（技术评审场景不需要）、CHANGELOG.md 未找到（技术评审场景不执行编码）、spec.md 参考资料未按信息源类型分组（参考资料已列出 Context7/GitHub/WebSearch/Stack Overflow 四类但用列表而非 ### 子标题分组，属警告非失败）"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

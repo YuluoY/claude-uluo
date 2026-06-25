@@ -70,7 +70,6 @@ Phase 9: 复盘     → 加载 examples/retrospective-template.md ────�
 🔧  文档产出后，运行 scripts/validate-docs.js 做硬约束校验
     node scripts/validate-docs.js specs/<feature>/ --strict
 ```
-```
 
 **各场景的阶段跳过规则：**
 - **Bug 修复**：跳过 Phase 4/5/6（不写 plan），tasks 简化为 2 phase；调研从简（不产 research-report）

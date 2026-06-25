@@ -1,0 +1,9 @@
+{
+  "name": "uluo-skill-creator",
+  "version": "0.1.0",
+  "description": "规范化+流程化的 skill 创建器——软约束 md + 硬约束 scripts 分工，引用远程 skill-creator 做校验审计",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["skill", "creator", "workflow", "hard-constraint", "soft-constraint", "benchmark"],
+  "license": "MIT",
+  "skills": "./"
+}

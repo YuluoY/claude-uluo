@@ -1,0 +1,68 @@
+{
+  "expectations": [
+    {
+      "text": "创建了 changes/CHG-001/ 目录结构",
+      "passed": true,
+      "evidence": "changes/CHG-001/ 下创建了四份文档"
+    },
+    {
+      "text": "spec.md 影响范围覆盖三个维度（文档+代码+设计稿）",
+      "passed": true,
+      "evidence": "spec.md 含文档影响(5项)+代码影响(5项)+设计稿影响(3项)三维度"
+    },
+    {
+      "text": "spec.md 包含决策结论",
+      "passed": true,
+      "evidence": "spec.md 含决策结论（批准）"
+    },
+    {
+      "text": "plan.md 包含 ADDED 类型 delta（因为是新增功能）",
+      "passed": true,
+      "evidence": "plan.md 含 3 个 ADDED delta"
+    },
+    {
+      "text": "plan.md 包含技术方案选择章节",
+      "passed": true,
+      "evidence": "plan.md 含技术方案选择章节（RBAC vs ABAC vs ACL）"
+    },
+    {
+      "text": "tasks.md 包含任务依赖关系",
+      "passed": true,
+      "evidence": "tasks.md 含任务依赖图"
+    },
+    {
+      "text": "tasks.md 不含验收检查点（那是 checklist 的事）",
+      "passed": true,
+      "evidence": "tasks.md 只含任务描述，无验收检查点"
+    },
+    {
+      "text": "checklist.md 覆盖 spec/plan/tasks 三分组检查点",
+      "passed": true,
+      "evidence": "checklist.md 含 Spec/Plan/Tasks 三分组"
+    },
+    {
+      "text": "checklist.md 每条检查点可勾选",
+      "passed": true,
+      "evidence": "checklist.md 所有检查点为 - [x] 格式"
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "failed": 0,
+    "total": 9,
+    "pass_rate": 1
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 0,
+    "transcript_chars": 0
+  },
+  "timing": {
+    "executor_duration_seconds": 45,
+    "grader_duration_seconds": 2,
+    "total_duration_seconds": 47
+  }
+}

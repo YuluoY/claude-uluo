@@ -1,34 +1,146 @@
 ---
 name: html-blueprint
-description: >-
-  HTML-first Component Design Protocol. Generate browser-renderable HTML/CSS design
-  drafts annotated with data-* attributes (data-component, data-prop, data-slot,
-  data-event, data-convert) that encode component semantics for reliable later
-  conversion to Vue/React. Not a new DSL — HTML handles visual fidelity, data-*
-  handles component semantics. Triggers on: 生成页面, 设计稿, HTML原型, 组件化HTML,
-  UI设计稿转代码, HTML转Vue, HTML转React, 前端设计稿, 页面重构, 表单设计,
-  component blueprint, HTML design draft, design-to-code, UI prototype.
+description: "HTML-first Component Design Protocol. Generate browser-renderable HTML/CSS design drafts annotated with data-* attributes (data-component, data-prop, data-event, data-action, data-convert) encoding component semantics for reliable later conversion to Vue/React. Triggers on: 生成页面, 设计稿, HTML原型, 组件化HTML, UI设计稿转代码, HTML转Vue, HTML转React, 前端设计稿, 页面重构, 表单设计, component blueprint, HTML design draft, design-to-code, UI prototype."
 ---
 
-# HTML Blueprint — 组件化设计协议
+# HTML Blueprint — 需求到设计稿的 AI 转换协议
 
-AI 生成「可组件化 HTML 设计稿」的协议与护栏。HTML/CSS 保证视觉保真（flex/grid/gradient/shadow/animation），`data-*` 属性标注组件语义（props/slots/events/convert-mode）。后续可稳定转为 Vue/React 组件。
+AI 从需求（uluo-doc-standards 的 spec.md 或自然语言）提取 Design Spec，再从 Design Spec 生成可组件化 HTML 设计稿。HTML/CSS 保证视觉保真（flex/grid/gradient/shadow/animation），`data-*` 属性标注组件语义（props/slots/events/convert-mode）。
 
 本 skill 不发明 DSL，不替代 HTML，不用 JSON Schema 描述 UI。它保持 HTML 的全部表现力，通过 `data-*` 注释让 HTML 从"只能看"变成"能转换"。
+
+**Design Spec 是 AI 提取的中间契约，用户不手写。** AI 按提取规则从需求提取，用户确认后生成 HTML。
+
+## 两条工作路径
+
+### 路径 A: AI 同时使用 uluo-doc-standards 和 html-blueprint（对齐口径）
+
+```
+用户描述需求
+  ↓
+AI 用 uluo-doc-standards 生成 spec.md（需求文档）
+  ↓
+AI 按 requirement-extraction-guide.md 从 spec.md 提取 Design Spec（对齐口径）
+  ↓
+AI 用 html-blueprint 生成 HTML 设计稿
+  ↓
+AI 运行校验门禁
+```
+
+### 路径 B: AI 只用 html-blueprint（独立工作）
+
+```
+用户描述需求
+  ↓
+AI 按 requirement-extraction-guide.md 从自然语言提取 Design Spec
+  ↓
+AI 用 html-blueprint 生成 HTML 设计稿
+  ↓
+AI 运行校验门禁
+```
+
+两条路径下游流程一致：提取 Design Spec → 校验 → 生成 HTML → 校验。
+
+## Spec-First 工作流
+
+### 1. 提取 Design Spec
+
+AI 从需求提取 Design Spec，规则见 `references/requirement-extraction-guide.md`。
+
+**当 spec.md 存在时（uluo-doc-standards 产出）**:
+1. 读取 spec.md 的功能需求章节
+2. 每个 FR 提取为一个 component（FR 标题的名词 → PascalCase）
+3. FR 的预期行为提取为 props（展示数据）和 events（交互行为）
+4. 边界条件提取为 states
+5. 非功能性需求提取为 dataSource
+6. 用验收标准验证提取的覆盖度
+
+**当只有自然语言需求时**:
+1. 识别需求中的展示数据 → props
+2. 识别需求中的交互行为 → events
+3. 识别需求中的状态 → states
+4. 识别需求中的数据源 → dataSource
+5. 识别图表/复杂交互 → convertMode: manual
+
+### 2. 校验 Design Spec（HARD 门禁）
+
+```bash
+node scripts/validate-spec.js <spec.json>
+```
+
+Spec 必须通过校验才能生成 HTML。失败时修复后才能继续。
+
+### 3. 生成 HTML 设计稿
+
+```bash
+node scripts/generate-html.js <spec.json> --out <output.html>
+```
+
+AI 基于 Spec.visual 和设计常识补充视觉细节。
+
+### 4. 校验 HTML 协议合规（HARD 门禁）
+
+```bash
+node scripts/validate-all.js <output.html>
+```
+
+HARD 违规必须修复后才能交付。
+
+### 5. 校验 Spec↔HTML 一致性（HARD 门禁）
+
+```bash
+node scripts/check-spec-fidelity.js <spec.json> <output.html>
+```
+
+校验 Spec 中的组件/props/events 与 HTML 中的 data-* 属性一致。HARD 违规必须修复后才能交付。
+
+### 6. 生成代码（可选）
+
+AI 参考 `references/code-generation-guide.md` 根据 Design Spec 生成任意框架代码（Vue/React/Angular/Svelte）。
+
+### 7. 校验 Spec↔代码一致性（HARD 门禁，可选）
+
+```bash
+node scripts/check-spec-fidelity.js <spec.json> <output.html> <code-dir>
+```
+
+校验代码中是否存在 Spec 定义的 prop/event 名称（框架无关语义搜索）。HARD 违规必须修复后才能交付。
+
+### 从 HTML 逆向生成 Spec
+
+已有 HTML 设计稿可逆向生成 Spec：
+```bash
+node scripts/html-to-spec.js <input.html> --out <spec.json>
+```
+逆向生成的 Spec 会标记缺失字段为 `_todo`，需人工补充后进入 Spec-First 工作流。
 
 ## 强制工作协议
 
 0. **检查项目主题**：生成新设计稿前，先检查项目根目录是否存在 `tokens.css`。如果存在，读取并继承其 token（颜色/间距/圆角/字号），HTML 通过 `<link>` 引入。如果不存在且项目将有多页设计稿，同步生成主题 CSS。详见 `references/theme-consistency.md`。
-1. **识别任务类型**：判断是生成新设计稿、review 已有设计稿、还是转换 HTML→Vue/React。
+1. **识别任务类型**：判断是生成新设计稿、review 已有设计稿、还是从需求提取 Design Spec。
 2. **生成前加载协议**：任何生成 HTML 设计稿的任务，必须先读取 `references/protocol-spec.md` 了解完整属性字典和组件分类规则。
 3. **写 CSS 时加载约定**：任何涉及 CSS 的任务，读取 `references/css-conventions.md`。如果项目已有 `tokens.css`，还需读取 `references/theme-consistency.md`。
 4. **理解约束分级**：读取 `references/constraint-tiers.md` 区分 HARD（阻断）/ SHOULD（建议）/ WARN（提示）。
-5. **转换时加载指南**：将 HTML 设计稿转为 Vue/React 前，读取 `references/conversion-guide.md`。
-6. **HTML 负责视觉保真**：允许 flex、grid、gradient、box-shadow、backdrop-filter、animation。不要为了"好转换"而牺牲视觉效果。
-7. **data-* 负责语义标注**：每个组件用 data-component（PascalCase）、动态数据用 data-prop、交互用 data-event、可替换区域用 data-slot、转换策略用 data-convert。
-8. **生成后自检**：HTML 输出后立即运行 `node scripts/validate-all.js <output.html>`，HARD 违规必须修复后才呈现给用户。
-9. **跨蓝图一致性校验**：如果项目中有多个 HTML 设计稿，validate-all 会自动运行主题一致性检查（token 继承、var() 引用、主题 CSS 唯一性）。
-10. **输出转换报告**：每次生成设计稿必须附带转换置信度报告（JSON 格式，每个组件一个）。
+5. **提取 Design Spec 时加载指南**：从需求提取 Design Spec 时，读取 `references/requirement-extraction-guide.md`。
+6. **生成代码时加载指南**：AI 生成框架代码时，读取 `references/code-generation-guide.md`。
+7. **HTML 负责视觉保真**：允许 flex、grid、gradient、box-shadow、backdrop-filter、animation。不要为了"好转换"而牺牲视觉效果。
+8. **data-* 负责语义标注**：每个组件用 data-component（PascalCase）、动态数据用 data-prop、交互触发用 data-event（click/submit/change）、业务动作名用 data-action（camelCase，配合 data-event）、可替换区域用 data-slot、转换策略用 data-convert。
+9. **生成后自检（HARD）**：HTML 输出后立即运行 `node scripts/validate-all.js <output.html>`，HARD 违规必须修复后才呈现给用户。
+10. **跨蓝图一致性校验**：如果项目中有多个 HTML 设计稿，validate-all 会自动运行主题一致性检查（token 继承、var() 引用、主题 CSS 唯一性）。
+11. **Spec 校验（HARD）**：Spec-First 工作流中，Spec 必须先通过 `validate-spec.js` 校验才能生成 HTML。
+12. **三角校验（HARD）**：Spec-First 工作流完成后，必须运行 `check-spec-fidelity.js` 校验 Spec ↔ HTML（↔ 代码）一致性，HARD 违规必须修复后才能提交。
+
+## 门禁保障
+
+以下三个校验为 HARD 约束，AI 不可跳过：
+
+| 门禁 | 校验器 | 时机 | 失败处理 |
+|------|--------|------|---------|
+| Spec 合法性 | validate-spec.js | Design Spec 提取后 | 修复后才能生成 HTML |
+| HTML 协议合规 | validate-all.js | HTML 生成后 | 修复后才能交付 |
+| Spec↔HTML 一致 | check-spec-fidelity.js | HTML 交付前 | 修复后才能交付 |
+
+AI 在本协议的约束下必须执行这些门禁。SKILL.md 是 AI 的行为协议，门禁是协议中的 HARD 约束。
 
 ## 模块加载表
 
@@ -36,7 +148,9 @@ AI 生成「可组件化 HTML 设计稿」的协议与护栏。HTML/CSS 保证�
 - `references/css-conventions.md`：BEM 命名、hybrid token 模式、禁止选择器、装饰元素样式、响应式声明。**写 CSS 时加载。**
 - `references/theme-consistency.md`：项目主题 CSS 协议、token 继承规则、跨蓝图一致性校验。**项目有多页设计稿或首次生成时加载。**
 - `references/constraint-tiers.md`：HARD/SHOULD/WARN 三级约束体系与执行协议。**需要理解规则严重程度时加载。**
-- `references/conversion-guide.md`：HTML→Vue/React 转换流程（component→文件、prop→props、event→emits、slot→slot、list→v-for/map、convert→转换深度）。**转换任务时加载。**
+- `references/design-spec.md`：Design Spec 格式规范（组件结构、props/events/states/dataSource/visual 完整字段定义）。**Spec-First 工作流必读。**
+- `references/requirement-extraction-guide.md`：需求到 Design Spec 的提取规则（spec.md 对齐 + 自然语言模式）。**从需求提取 Design Spec 时必读。**
+- `references/code-generation-guide.md`：AI 代码生成指南（框架无关，含 Vue/React/Angular/Svelte 示例）。**AI 生成框架代码时必读。**
 
 ## 一票否决项
 
@@ -56,6 +170,13 @@ AI 生成「可组件化 HTML 设计稿」的协议与护栏。HTML/CSS 保证�
 - CSS 使用 `!important`
 - class 使用盒模型位置名（.left/.right/.top/.bottom）或编号名（.box1/.text2）
 
+### Spec-First 一票否决项
+
+- Spec 未通过 `validate-spec.js` 校验就生成 HTML
+- 生成的 HTML 与 Spec 的组件/props/events 不一致
+- Spec-First 工作流完成后未运行 `check-spec-fidelity.js` 校验
+- 生成的代码与 Spec 的 props/events 不一致（当提供 code-dir 时）
+
 ## 默认方向
 
 - 先保证视觉像，再保证能转换。视觉保真优先于组件可维护性。
@@ -64,6 +185,9 @@ AI 生成「可组件化 HTML 设计稿」的协议与护栏。HTML/CSS 保证�
 - 不是所有元素都是组件——用 data-convert 显式区分 component/layout/static/decorative/manual。
 - 装饰元素走 absolute + blur + aria-hidden，业务内容走正常文档流。
 - 当视觉保真和组件可维护性冲突：保留视觉稿、标记 data-risk、不强行转换、输出人工处理建议。
+- Design Spec 是 AI 提取的中间契约，用户不手写。AI 提取后展示给用户确认。
+- Spec 是真相源，HTML 和代码都是生成物。Spec 变更时两者同步更新。
+- 代码生成是框架无关的——AI 参考 code-generation-guide.md 生成任意框架代码，check-spec-fidelity.js 用语义搜索校验。
 
 ## 项目目录约定
 

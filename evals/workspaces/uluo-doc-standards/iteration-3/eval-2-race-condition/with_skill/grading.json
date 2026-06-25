@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "产出 spec.md，含背景分析（根因说明）、FR清晰（修复方案）、验收标准可验证",
+      "passed": true,
+      "evidence": "spec.md 含「背景与动机」章节并附「根因分析」子节，明确定位三处根因：(1) 幂等性检查缺失——回调入口仅校验签名和订单存在性，未基于 payment_id + callback_id 做去重；(2) 状态检查与状态变更非原子——if (order.status == PAID) return; order.setStatus(SETTLED); 两步操作之间存在 TOCTOU 窗口；(3) 结算流程无分布式锁——SettlementService.settle(orderId) 未对 orderId 加分布式锁。功能需求定义 3 个 FR（FR-1 回调幂等性校验、FR-2 分布式锁互斥、FR-3 回调处理记录表），每个 FR 含优先级/触发条件/预期行为/边界条件四字段。验收标准 6 条均可验证，如 AC-1「使用 JMeter 模拟 100 并发对同一 payment_id 发起回调，仅 1 次进入结算流程」、AC-5「回调接口 P99 延迟 ≤ 500ms（压测 800 QPS 持续 5 分钟）」。validator 输出：spec.md 3/3 个 FR 字段完整、6 条验收标准均可验证。"
+    },
+    {
+      "text": "产出 tasks.md，≥2 个 Phase 分节，每个任务含产出物和参考",
+      "passed": true,
+      "evidence": "tasks.md 含 2 个 Phase 分节：Phase 1: 核心修复（幂等 + 锁 + 记录表）含 4 个任务（T1.1-T1.4），Phase 2: 测试与可观测性含 3 个任务（T2.1-T2.3），共 7 个任务。每个任务均含「产出物」字段（带完整路径，如 payment/domain/PaymentCallbackRecord.java、payment/callback/IdempotencyChecker.java）和「参考」字段（指向已有模块，如 order/domain/OrderRecord.java、order/service/OrderIdempotencyService.java）。validator 输出：tasks.md 7 个任务均含产出物路径 + 参考代码、7 个产出物标注了完整路径、所有任务工时在 0.5h-4h 范围内。"
+    },
+    {
+      "text": "追加 CHANGELOG 条目，使用 Fixed 分类描述修复内容",
+      "passed": true,
+      "evidence": "CHANGELOG.md 在 [1.1.1] - 2026-06-25 版本下追加 Fixed 分类，含 2 条修复条目：(1)「修复支付回调接口在高并发下重复处理同一笔订单导致商户重复结算的问题（根因：回调处理链路缺乏幂等性校验和分布式锁互斥，TOCTOU 竞态导致两个线程同时通过"未结算"状态检查）」；(2)「修复 SettlementService.settle() 方法未对已结算订单做幂等断言导致可被重复调用打款的问题」。同时含 Changed 和 Security 分类。validator 输出：CHANGELOG.md 使用标准分类（Added, Changed, Fixed, Security）、9 条变更条目无笼统描述、使用语义化版本 v1.1.1。"
+    },
+    {
+      "text": "validate-docs.js 简化方案模式通过",
+      "passed": true,
+      "evidence": "validate-docs.js 识别为「Bug修复（spec.md + tasks.md，无 plan）」简化方案模式，校验结果：通过 31、失败 0、警告 3（仅 research-report.md/verification-report.md/retrospective.md 未找到，均为 bug-fix 场景的可选文件），exit code 0。5 步管线全部通过：Step 1 目录结构识别 bug-fix 方案、Step 2 spec/tasks 专项校验全通过、Step 3 Markdown 格式全通过、Step 4 交叉引用全通过、Step 5 CHANGELOG 专项全通过。"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

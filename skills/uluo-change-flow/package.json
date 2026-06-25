@@ -1,0 +1,11 @@
+{
+  "name": "uluo-change-flow-scripts",
+  "version": "0.1.0",
+  "description": "uluo-change-flow skill 校验工具和测试",
+  "private": true,
+  "scripts": {
+    "test": "node scripts/__tests__/change-spec.test.js && node scripts/__tests__/change-plan.test.js && node scripts/__tests__/change-tasks.test.js && node scripts/__tests__/change-checklist.test.js && node scripts/__tests__/change-record.test.js && node scripts/__tests__/integration.test.js",
+    "validate": "node scripts/validate-change.js"
+  },
+  "license": "MIT"
+}

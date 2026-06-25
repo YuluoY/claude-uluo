@@ -1,0 +1,326 @@
+{
+  "metadata": {
+    "skill_name": "uluo-skill-creator",
+    "iteration": 1,
+    "timestamp": "2026-06-25T10:30:00Z",
+    "evals_run": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "runs_per_configuration": 1
+  },
+  "configurations": ["with_skill", "without_skill"],
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "simple-markdown-formatter",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.89,
+        "passed": 8,
+        "failed": 1,
+        "total": 9,
+        "time_seconds": 42.5,
+        "tokens": 3800
+      }
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "simple-markdown-formatter",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.33,
+        "passed": 3,
+        "failed": 6,
+        "total": 9,
+        "time_seconds": 35.2,
+        "tokens": 2100
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "api-doc-generator",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.78,
+        "passed": 7,
+        "failed": 2,
+        "total": 9,
+        "time_seconds": 68.3,
+        "tokens": 6200
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "api-doc-generator",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.44,
+        "passed": 4,
+        "failed": 5,
+        "total": 9,
+        "time_seconds": 52.8,
+        "tokens": 3400
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "code-reviewer-complex",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.82,
+        "passed": 9,
+        "failed": 2,
+        "total": 11,
+        "time_seconds": 95.7,
+        "tokens": 8900
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "code-reviewer-complex",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.27,
+        "passed": 3,
+        "failed": 8,
+        "total": 11,
+        "time_seconds": 78.4,
+        "tokens": 5800
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "json-to-yaml-prototype",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.83,
+        "passed": 5,
+        "failed": 1,
+        "total": 6,
+        "time_seconds": 28.4,
+        "tokens": 2400
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "json-to-yaml-prototype",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.50,
+        "passed": 3,
+        "failed": 3,
+        "total": 6,
+        "time_seconds": 24.1,
+        "tokens": 1600
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "lint-runner-improvement",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.89,
+        "passed": 8,
+        "failed": 1,
+        "total": 9,
+        "time_seconds": 55.2,
+        "tokens": 5100
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "lint-runner-improvement",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.22,
+        "passed": 2,
+        "failed": 7,
+        "total": 9,
+        "time_seconds": 41.6,
+        "tokens": 2800
+      }
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "agent-orchestration-skill",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.86,
+        "passed": 6,
+        "failed": 1,
+        "total": 7,
+        "time_seconds": 72.1,
+        "tokens": 6800
+      }
+    },
+    {
+      "eval_id": 6,
+      "eval_name": "agent-orchestration-skill",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.29,
+        "passed": 2,
+        "failed": 5,
+        "total": 7,
+        "time_seconds": 58.3,
+        "tokens": 3100
+      }
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "multi-agent-research-skill",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.88,
+        "passed": 7,
+        "failed": 1,
+        "total": 8,
+        "time_seconds": 81.6,
+        "tokens": 7500
+      }
+    },
+    {
+      "eval_id": 7,
+      "eval_name": "multi-agent-research-skill",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.25,
+        "passed": 2,
+        "failed": 6,
+        "total": 8,
+        "time_seconds": 62.9,
+        "tokens": 3400
+      }
+    },
+    {
+      "eval_id": 8,
+      "eval_name": "rubric-grading-feature",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.90,
+        "passed": 9,
+        "failed": 1,
+        "total": 10,
+        "time_seconds": 47.3,
+        "tokens": 4200
+      }
+    },
+    {
+      "eval_id": 8,
+      "eval_name": "rubric-grading-feature",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.00,
+        "passed": 0,
+        "failed": 10,
+        "total": 10,
+        "time_seconds": 31.5,
+        "tokens": 1900
+      }
+    },
+    {
+      "eval_id": 9,
+      "eval_name": "benchmark-aggregation-feature",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.92,
+        "passed": 11,
+        "failed": 1,
+        "total": 12,
+        "time_seconds": 63.8,
+        "tokens": 5600
+      }
+    },
+    {
+      "eval_id": 9,
+      "eval_name": "benchmark-aggregation-feature",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.00,
+        "passed": 0,
+        "failed": 12,
+        "total": 12,
+        "time_seconds": 44.2,
+        "tokens": 2400
+      }
+    },
+    {
+      "eval_id": 10,
+      "eval_name": "eval-viewer-integration-feature",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.88,
+        "passed": 7,
+        "failed": 1,
+        "total": 8,
+        "time_seconds": 39.7,
+        "tokens": 3600
+      }
+    },
+    {
+      "eval_id": 10,
+      "eval_name": "eval-viewer-integration-feature",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.00,
+        "passed": 0,
+        "failed": 8,
+        "total": 8,
+        "time_seconds": 29.8,
+        "tokens": 1800
+      }
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.86, "stddev": 0.04},
+      "time_seconds": {"mean": 59.5, "stddev": 20.7},
+      "tokens": {"mean": 5410, "stddev": 1995}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.23, "stddev": 0.18},
+      "time_seconds": {"mean": 45.9, "stddev": 17.1},
+      "tokens": {"mean": 2830, "stddev": 1234}
+    },
+    "delta": {
+      "pass_rate": "+0.63",
+      "time_seconds": "+13.6",
+      "tokens": "+2580"
+    }
+  },
+  "rubric_score": {
+    "structure": 19,
+    "workflow": 18,
+    "constraint": 20,
+    "documentation": 19,
+    "testing": 18,
+    "total": 94,
+    "grade": "A"
+  },
+  "notes": [
+    "Assertion 'SKILL.md 文件存在' 在 eval 1/4 两个配置都 100% 通过——非区分性，考虑替换为更严格的断言（如 frontmatter 字段校验）",
+    "Eval 3（code-reviewer-complex 复杂 skill）with_skill 耗时 95.7s 显著高于均值——11 个 assertion 且涉及 scripts/agents 编写，建议固化输入文件降低 flaky 风险",
+    "with_skill 在 eval 6-7（agent 编排测试）上 delta 显著（平均 +0.60），说明 skill 的 agents-decision.md 与 agent-creation-guide.md 设计有效",
+    "without_skill 在 eval 8-10（新功能测试：rubric-grading / benchmark-aggregation / eval-viewer-integration）上 pass_rate 为 0——这些功能为 uluo-skill-creator 独有，baseline 无对应能力",
+    "Eval 4（json-to-yaml-prototype 紧急原型）delta 最小（+0.33）——简单任务 baseline 已能部分完成，skill 的增量价值有限，可考虑在 SKILL.md 中强化紧急场景的差异化指令",
+    "with_skill 整体 tokens 均值（5410）高于 without_skill（2830），因 skill 加载 references/ 与 agents/ 增加上下文，但 pass_rate 提升 +0.63 证明 token 投入有回报"
+  ]
+}

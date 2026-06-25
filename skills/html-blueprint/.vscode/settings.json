@@ -1,0 +1,9 @@
+{
+  "json.schemas": [
+    {
+      "name": "html-blueprint Design Spec",
+      "fileMatch": ["**/design-spec.json", "**/*.spec.json"],
+      "url": "./schemas/design-spec.schema.json"
+    }
+  ]
+}

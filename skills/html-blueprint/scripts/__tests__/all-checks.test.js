@@ -253,3 +253,81 @@ describe('check-responsive-viewport', () => {
     expect(r.stdout).toContain('缺少 @viewport')
   })
 })
+
+describe('check-theme-consistency', () => {
+  function runThemeScript(files) {
+    const tmpDir = join('/tmp', `html-blueprint-theme-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`)
+    mkdirSync(tmpDir, { recursive: true })
+    const paths = []
+    for (const [name, content] of Object.entries(files)) {
+      const p = join(tmpDir, name)
+      writeFileSync(p, content, 'utf-8')
+      paths.push(p)
+    }
+    const result = spawnSync('node', [resolve(SCRIPTS_DIR, 'check-theme-consistency.js'), ...paths], {
+      encoding: 'utf-8',
+      timeout: 10000,
+    })
+    rmSync(tmpDir, { recursive: true, force: true })
+    return { status: result.status, stdout: result.stdout || '', stderr: result.stderr || '' }
+  }
+
+  it('passes HTML with @theme declaration and matching tokens.css', () => {
+    const r = runThemeScript({
+      'tokens.css': `:root { --color-primary: #3b82f6; --color-text-primary: #1f2937; --color-text-secondary: #6b7280; --color-bg-page: #f9fafb; --color-bg-surface: #ffffff; --space-2: 8px; --space-4: 16px; --space-6: 24px; --radius-md: 6px; --radius-lg: 8px; --font-size-sm: 13px; --font-size-base: 14px; --font-size-lg: 16px; }`,
+      'page.html': `<!-- @theme ./tokens.css --><style>.card { color: var(--color-text-primary); padding: var(--space-4); }</style><div class="card">test</div>`,
+    })
+    expect(r.status).toBe(0)
+  })
+
+  it('flags HTML missing @theme declaration', () => {
+    const r = runThemeScript({
+      'tokens.css': `:root { --color-primary: #3b82f6; }`,
+      'page.html': `<style>.card { color: red; }</style><div class="card">test</div>`,
+    })
+    expect(r.status).toBe(1)
+    expect(r.stdout).toContain('缺少 <!-- @theme -->')
+  })
+
+  it('flags HTML redefining theme tokens in <style>', () => {
+    const r = runThemeScript({
+      'tokens.css': `:root { --color-primary: #3b82f6; }`,
+      'page.html': `<!-- @theme ./tokens.css --><style>:root { --color-primary: #ef4444; }</style><div>test</div>`,
+    })
+    expect(r.status).toBe(1)
+    expect(r.stdout).toContain('重新定义')
+  })
+
+  it('flags var() referencing non-existent token', () => {
+    const r = runThemeScript({
+      'tokens.css': `:root { --color-primary: #3b82f6; }`,
+      'page.html': `<!-- @theme ./tokens.css --><style>.card { color: var(--color-nonexistent); }</style><div class="card">test</div>`,
+    })
+    expect(r.status).toBe(1)
+    expect(r.stdout).toContain('不存在的 token')
+  })
+
+  it('flags multiple tokens.css files', () => {
+    const tmpDir = join('/tmp', `html-blueprint-theme-multi-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`)
+    mkdirSync(join(tmpDir, 'sub'), { recursive: true })
+    writeFileSync(join(tmpDir, 'tokens.css'), `:root { --color-primary: #3b82f6; }`, 'utf-8')
+    writeFileSync(join(tmpDir, 'sub', 'tokens.css'), `:root { --color-primary: #ef4444; }`, 'utf-8')
+    writeFileSync(join(tmpDir, 'page.html'), `<!-- @theme ./tokens.css --><div>test</div>`, 'utf-8')
+    const result = spawnSync('node', [resolve(SCRIPTS_DIR, 'check-theme-consistency.js'), tmpDir], {
+      encoding: 'utf-8',
+      timeout: 10000,
+    })
+    rmSync(tmpDir, { recursive: true, force: true })
+    expect(result.status).toBe(1)
+    expect(result.stdout).toContain('2 个 tokens.css')
+  })
+
+  it('flags theme CSS missing key tokens', () => {
+    const r = runThemeScript({
+      'tokens.css': `:root { --color-primary: #3b82f6; }`,
+      'page.html': `<!-- @theme ./tokens.css --><div>test</div>`,
+    })
+    expect(r.status).toBe(1)
+    expect(r.stdout).toContain('缺少关键 token')
+  })
+})

@@ -5,7 +5,7 @@
     {
       "component": "StatCard",
       "confidence": 0.93,
-      "convertMode": "auto",
+      "convertMode": "component",
       "issues": [
         "按钮文案被识别为静态文案，不作为 props",
         "装饰光效保留为 aria-hidden 元素",
@@ -18,7 +18,7 @@
     {
       "component": "StatGrid",
       "confidence": 0.85,
-      "convertMode": "auto",
+      "convertMode": "component",
       "issues": [
         "响应式断点需确认目标设备的实际列数配置"
       ],
@@ -29,7 +29,7 @@
     {
       "component": "ProjectTable",
       "confidence": 0.88,
-      "convertMode": "auto",
+      "convertMode": "component",
       "issues": [
         "表头列名标记为 static，确认是否所有列固定",
         "状态 class 映射（active/pending）需在组件内定义枚举"
@@ -42,7 +42,7 @@
     {
       "component": "ProjectItem",
       "confidence": 0.91,
-      "convertMode": "auto",
+      "convertMode": "component",
       "issues": [
         "status 字段的值到视觉样式的映射需在转换时确认"
       ],

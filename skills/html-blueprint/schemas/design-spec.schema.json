@@ -1,0 +1,273 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Design Spec",
+  "description": "html-blueprint Design Spec - single source of truth for HTML and code generation",
+  "type": "object",
+  "required": ["version", "page", "components"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Spec 版本，当前固定为 1.0"
+    },
+    "page": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z0-9]*$",
+          "description": "PascalCase 页面名（首字母大写）"
+        },
+        "viewport": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "width": { "type": "integer", "default": 1440, "description": "视口宽度（px）" },
+            "height": { "type": "integer", "default": 900, "description": "视口高度（px）" }
+          }
+        },
+        "theme": { "type": "string", "description": "主题 token 文件路径" },
+        "lang": { "type": "string", "default": "zh-CN", "description": "页面语言，默认 zh-CN" }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/component" }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["grid", "flex", "flow"], "description": "布局类型" },
+        "columns": { "type": "integer", "description": "列数（grid 布局）" },
+        "gap": { "type": "string", "description": "间距，如 var(--space-4)" }
+      }
+    }
+  },
+  "definitions": {
+    "component": {
+      "type": "object",
+      "required": ["name", "convertMode"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z0-9]*$",
+          "description": "PascalCase 组件名（首字母大写）"
+        },
+        "convertMode": {
+          "enum": ["component", "layout", "static", "decorative", "manual"],
+          "description": "转换模式：component=可复用业务组件，layout=布局容器，static=静态内容，decorative=纯装饰，manual=需人工处理"
+        },
+        "description": { "type": "string", "description": "组件描述" },
+        "props": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/prop" }
+        },
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/event" }
+        },
+        "states": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/state" }
+        },
+        "dataSource": { "$ref": "#/definitions/dataSource" },
+        "visual": { "$ref": "#/definitions/visual" },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/child" }
+        },
+        "responsive": { "$ref": "#/definitions/responsive" },
+        "chart": { "$ref": "#/definitions/chart" }
+      }
+    },
+    "prop": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][A-Za-z0-9]*$",
+          "description": "camelCase 属性名（首字母小写）"
+        },
+        "type": {
+          "type": "string",
+          "description": "属性类型：基本类型（string/number/boolean/date/email/url/array/object）或自定义类型名（需配合 typeRef）"
+        },
+        "required": { "type": "boolean", "default": false, "description": "是否必填" },
+        "default": { "description": "默认值（任意类型）" },
+        "example": { "description": "示例值（用于生成 HTML 设计稿）" },
+        "description": { "type": "string", "description": "属性描述" },
+        "format": {
+          "type": "object",
+          "description": "格式化规则，如 { unit: '元', precision: 0 }",
+          "additionalProperties": true
+        },
+        "validation": {
+          "type": "object",
+          "description": "校验规则，如 { min: 0, max: 9999999 }",
+          "additionalProperties": true
+        },
+        "typeRef": { "type": "string", "description": "类型定义文件引用（自定义类型必填）" },
+        "items": {
+          "type": "object",
+          "description": "数组项定义（type=array 时使用）",
+          "additionalProperties": true
+        },
+        "properties": {
+          "type": "object",
+          "description": "对象属性定义（type=object 时使用）",
+          "additionalProperties": true
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": ["name", "trigger"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][A-Za-z0-9]*$",
+          "description": "camelCase 事件名（首字母小写）"
+        },
+        "trigger": {
+          "type": "string",
+          "description": "触发方式：click|submit|change|hover|..."
+        },
+        "payload": { "description": "payload 结构（任意类型）" },
+        "description": { "type": "string", "description": "事件描述" },
+        "confirm": { "type": "boolean", "description": "是否需要二次确认" }
+      }
+    },
+    "state": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "状态名：default|loading|error|empty|submitting|validationError|..." },
+        "skeleton": { "type": "boolean", "description": "显示骨架屏" },
+        "fallback": { "type": "string", "description": "错误边界组件名" },
+        "retry": { "type": "boolean", "description": "支持重试" },
+        "emptyText": { "type": "string", "description": "空数据态文案" },
+        "disableInputs": { "type": "boolean", "description": "禁用输入框" },
+        "showErrors": { "type": "boolean", "description": "显示错误信息" }
+      }
+    },
+    "dataSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["api", "static", "store", "computed"], "description": "数据源类型" },
+        "endpoint": { "type": "string", "description": "API 契约，如 GET /api/stats/sales" },
+        "polling": { "type": "integer", "description": "轮询间隔（ms）" },
+        "errorHandling": { "type": "string", "description": "错误处理策略" },
+        "transform": {
+          "type": "object",
+          "description": "数据转换函数",
+          "additionalProperties": true
+        },
+        "params": {
+          "type": "object",
+          "description": "请求参数",
+          "additionalProperties": true
+        }
+      }
+    },
+    "visual": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "layout": {
+          "type": "string",
+          "description": "布局方式：flex-row|flex-column|grid|absolute"
+        },
+        "padding": { "type": "string", "description": "内边距，如 var(--space-6)" },
+        "gap": { "type": "string", "description": "间距，如 var(--space-4)" },
+        "background": { "type": "string", "description": "背景，可为颜色或渐变" },
+        "border": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "radius": { "type": "string", "description": "圆角" },
+            "width": { "type": "string", "description": "边框宽度" },
+            "color": { "type": "string", "description": "边框颜色" }
+          }
+        },
+        "shadow": { "type": "string", "description": "阴影" },
+        "decorative": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/decorative" }
+        }
+      }
+    },
+    "decorative": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "装饰元素名" },
+        "position": { "type": "string", "description": "定位方式，如 absolute" },
+        "top": { "type": "string" },
+        "right": { "type": "string" },
+        "bottom": { "type": "string" },
+        "left": { "type": "string" },
+        "width": { "type": "string" },
+        "height": { "type": "string" },
+        "blur": { "type": "string", "description": "模糊度" },
+        "color": { "type": "string", "description": "颜色" },
+        "ariaHidden": { "type": "boolean", "description": "无障碍属性（decorative 组件必须为 true）" }
+      }
+    },
+    "child": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "子组件名" },
+        "required": { "type": "boolean", "description": "是否必填" },
+        "slot": { "type": "string", "description": "插槽名（对应 data-slot）" }
+      }
+    },
+    "responsive": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "strategy": { "type": "string", "description": "响应式策略，如 mobile-first" },
+        "breakpoints": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "sm": { "type": "integer", "description": "小屏断点（px）" },
+            "md": { "type": "integer", "description": "中屏断点（px）" },
+            "lg": { "type": "integer", "description": "大屏断点（px）" },
+            "xl": { "type": "integer", "description": "超大屏断点（px）" }
+          }
+        }
+      }
+    },
+    "chart": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string", "description": "图表类型，如 bar|line|pie" },
+        "lib": { "type": "string", "description": "图表库，如 echarts|chart.js" },
+        "dataContract": {
+          "type": "object",
+          "description": "数据契约",
+          "additionalProperties": true
+        },
+        "interactions": {
+          "type": "array",
+          "description": "交互列表",
+          "items": { "type": "object", "additionalProperties": true }
+        }
+      }
+    }
+  }
+}

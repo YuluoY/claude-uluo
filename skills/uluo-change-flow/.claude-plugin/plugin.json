@@ -1,0 +1,9 @@
+{
+  "name": "uluo-change-flow",
+  "version": "0.1.0",
+  "description": "需求变更管理工作流——三级递进变更文档（spec/plan/tasks）+ 独立 checklist review 机制，解决需求变更后文档/设计稿/代码同步更新和变更留痕。",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["change", "change-flow", "spec", "plan", "tasks", "checklist", "review", "delta"],
+  "license": "MIT",
+  "skills": "./"
+}

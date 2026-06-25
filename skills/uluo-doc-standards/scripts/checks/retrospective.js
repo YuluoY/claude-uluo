@@ -21,7 +21,7 @@ function check(filePath) {
     const hasDeviation = /偏差/.test(dataSec[1]);
     if (hasDeviation) {
       // Check if any deviation is >50%
-      const devCols = dataSec[1].match(/\|[+-]\d+[hmd%]/g) || [];
+      const devCols = dataSec[1].match(/\|\s*[+-]\d+[hmd%]/g) || [];
       const largeDev = devCols.filter(d => {
         const val = parseInt(d.replace(/[^0-9]/g, ''));
         return val > 50;
@@ -67,7 +67,7 @@ function check(filePath) {
   }
 
   // ── 3. Action Items 必须有 owner + deadline ────────────────
-  const aiSec = content.match(/## Action Items([\s\S]*?)(?=^##\s|$)/m);
+  const aiSec = content.match(/## Action Items([\s\S]*?)(?=\n##\s|$)/);
   if (aiSec) {
     const aiRows = aiSec[1].match(/\| AI-\d+ \|/g) || [];
 
@@ -103,7 +103,7 @@ function check(filePath) {
   }
 
   // ── 4. AI 执行反思必须填写 ────────────────────────────────
-  const aiReflect = content.match(/## AI 执行反思([\s\S]*?)$/m);
+  const aiReflect = content.match(/## AI 执行反思([\s\S]*?)(?=\n##\s|$)/);
   if (aiReflect) {
     const hasGood = /AI 做得好的/.test(aiReflect[1]);
     const hasMistake = /AI 犯的错/.test(aiReflect[1]);

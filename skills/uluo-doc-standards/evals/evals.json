@@ -4,7 +4,7 @@
     {
       "id": 1,
       "name": "coupon-module",
-      "prompt": "帮我实现一个优惠券模块...",
+      "prompt": "帮我实现一个优惠券模块，需要支持满减券、折扣券、新人券三种类型，包含创建、发放、核销、过期处理功能，先出 spec 和 plan 文档",
       "scenario": "medium-feature",
       "assertions": [
         {
@@ -47,7 +47,7 @@
     {
       "id": 2,
       "name": "race-condition",
-      "prompt": "订单支付回调接口在高并发下出现重复处理...",
+      "prompt": "订单支付回调接口在高并发下出现重复处理，导致商户重复结算。请定位根因并产出 bug 修复文档（spec.md + tasks.md）",
       "scenario": "bug-fix",
       "assertions": [
         {
@@ -75,7 +75,7 @@
     {
       "id": 3,
       "name": "payment-gateway",
-      "prompt": "对接 Stripe 支付网关，先出技术方案评审文档...",
+      "prompt": "对接 Stripe 支付网关，先出技术方案评审文档，需要对比 Stripe vs Alipay 的方案差异，含 API 契约和回滚方案",
       "scenario": "tech-review",
       "assertions": [
         {

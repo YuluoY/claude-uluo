@@ -1,0 +1,62 @@
+{
+  "eval_id": 1,
+  "eval_name": "spec-first-dashboard",
+  "prompt": "帮我用 Spec-First 工作流生成一个后台 Dashboard 页面。先编写 Design Spec JSON（包含 4 个统计卡片：销售额、用户数、转化率、项目数；一个项目列表表格；一个销售趋势图），然后用 generate-html.js 生成 HTML 设计稿，用 generate-code.js 生成 Vue 组件代码，最后用 check-spec-fidelity.js 校验一致性。",
+  "workflow": "spec-first",
+  "assertions": [
+    {
+      "id": "has-valid-spec",
+      "text": "Design Spec 通过 validate-spec.js 校验（0 errors）",
+      "check_method": "cli_exit_code",
+      "command": "node scripts/validate-spec.js spec.json"
+    },
+    {
+      "id": "has-generated-html",
+      "text": "生成的 HTML 通过 validate-all.js 校验",
+      "check_method": "cli_exit_code",
+      "command": "node scripts/validate-all.js output.html"
+    },
+    {
+      "id": "has-generated-code",
+      "text": "生成的 Vue 代码文件存在且非空",
+      "check_method": "file_exists",
+      "files": ["StatCard.vue", "ProjectTable.vue", "SalesChart.vue"]
+    },
+    {
+      "id": "spec-html-consistency",
+      "text": "Spec ↔ HTML 一致性校验通过（0 HARD errors）",
+      "check_method": "cli_exit_code",
+      "command": "node scripts/check-spec-fidelity.js spec.json output.html ./generated"
+    },
+    {
+      "id": "pascal-case-components",
+      "text": "所有 data-component 值为 PascalCase 且非泛名",
+      "check_method": "content_check"
+    },
+    {
+      "id": "chart-is-manual",
+      "text": "图表元素标记 data-convert=\"manual\"",
+      "check_method": "content_check"
+    },
+    {
+      "id": "no-generic-classes",
+      "text": "CSS class 不使用 box1/left/text2 等泛名",
+      "check_method": "content_check"
+    },
+    {
+      "id": "no-important",
+      "text": "CSS 不使用 !important",
+      "check_method": "content_check"
+    },
+    {
+      "id": "props-have-types",
+      "text": "生成的代码 Props 接口包含类型定义",
+      "check_method": "content_check"
+    },
+    {
+      "id": "events-have-emits",
+      "text": "生成的代码包含 defineEmits 或 Events 接口",
+      "check_method": "content_check"
+    }
+  ]
+}

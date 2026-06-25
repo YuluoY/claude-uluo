@@ -152,7 +152,7 @@ suite('plan — 测试策略 + 架构概览', () => {
 // ────────────────────────────────────────────────────────
 suite('plan — 完整合规', () => {
   test('pass: 零失败', () => {
-    writeFixture(PLAN, `# Plan\n## 架构概览\n前端调用后端流式导出接口，后端游标分页查询逐批写入响应流。\n## 关键设计决策\n### 决策 1: 流式\n- **选择**: 流式\n- **原因**: 省内存\n- **替代方案**: 全量——OOM\n- **影响**: 返回 StreamingResponse\n## 代码库分析\n参考 \`user/service/UserService.java\` 实现。\n### 可复用清单\n| 模块 | 路径 | 方式 |\n|------|------|------|\n| UserRepo | repo/ | 注入 |\n## 模块设计\n### Controller\n- **职责**: 导出\n- **对外接口**: GET /api/export\n- **依赖**: Service\n- **数据流**: Request → Export\n## API 契约\n**请求**: JSON\n**响应**: JSON\n**错误码**:\n| 状态码 | 错误码 | 说明 |\n|--------|--------|------|\n| 403 | FORBIDDEN | 无权限 |\n## 测试策略\n| 测试层级 | 覆盖 | 工具 |\n|---------|------|------|\n| 单元测试 | 逻辑 | JUnit |\n| 集成测试 | 链路 | SpringBoot |\n## 回滚方案\n可直接回滚。`);
+    writeFixture(PLAN, `# Plan\n> 日期: 2026-06-25 | 作者: 张三 | 关联 spec: spec.md\n## 架构概览\n前端调用后端流式导出接口，后端游标分页查询逐批写入响应流。\n## 关键设计决策\n### 决策 1: 流式\n- **选择**: 流式\n- **原因**: 省内存\n- **替代方案**: 全量——OOM\n- **影响**: 返回 StreamingResponse\n## 代码库分析\n参考 \`user/service/UserService.java\` 实现。\n### 可复用清单\n| 模块 | 路径 | 方式 |\n|------|------|------|\n| UserRepo | repo/ | 注入 |\n## 模块设计\n### Controller\n- **职责**: 导出\n- **对外接口**: GET /api/export\n- **依赖**: Service\n- **数据流**: Request → Export\n## API 契约\n**请求**: JSON\n**响应**: JSON\n**错误码**:\n| 状态码 | 错误码 | 说明 |\n|--------|--------|------|\n| 403 | FORBIDDEN | 无权限 |\n## 测试策略\n| 测试层级 | 覆盖 | 工具 |\n|---------|------|------|\n| 单元测试 | 逻辑 | JUnit |\n| 集成测试 | 链路 | SpringBoot |\n## 回滚方案\n可直接回滚。`);
     const f = check(PLAN);
     noFail(f);
   });
