@@ -101,7 +101,6 @@ const AUTHOR_PLACEHOLDERS = [
   /\[作者\]/,
   /TODO/i,
   /FIXME/i,
-  /$^/,                       // 空字符串视为未填写
 ]
 
 /**

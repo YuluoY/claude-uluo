@@ -9,7 +9,7 @@ L1 变更 Spec 聚焦范围确定和决策——回答"为什么变更"和"影�
 ```markdown
 # [变更标题] 变更 Spec
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 变更编号: CHG-XXX | 关联特性: specs/<feature-name>/
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 变更编号: CHG-XXX | 关联特性: specs/<feature-name>/
 
 ## 变更背景
 

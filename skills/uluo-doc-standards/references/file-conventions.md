@@ -50,7 +50,7 @@ specs/<feature-name>/
 ├── plan.md                  ← 执行前：执行计划（单文件，不建 plans/ 目录）
 ├── tasks.md                 ← 执行前：任务分解（单文件，2-3 phase 合并）
 │
-└── verification-report.md   ← 执行后可选
+├── verification-report.md   ← 执行后可选
 └── retrospective.md         ← 执行后可选
 ```
 

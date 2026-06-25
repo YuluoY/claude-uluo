@@ -9,7 +9,7 @@
 ```markdown
 # [变更标题] Review Checklist
 
-> 日期: YYYY-MM-DD | 审查人: `git config user.name` | 关联变更: ./spec.md ./plan.md ./tasks.md
+> 日期: YYYY-MM-DD | 审查人: [运行 git config user.name 获取] | 关联变更: ./spec.md ./plan.md ./tasks.md
 
 ## Review 状态约定
 - `[ ]` 待 review

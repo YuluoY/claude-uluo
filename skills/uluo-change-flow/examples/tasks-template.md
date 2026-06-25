@@ -9,7 +9,7 @@ L3 变更 Tasks 聚焦执行任务——回答"具体改哪些文件"。定位�
 ```markdown
 # [变更标题] 变更 Tasks
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 关联变更 plan: ./plan.md
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 关联变更 plan: ./plan.md
 
 ## 执行任务清单
 

@@ -9,7 +9,7 @@ L2 变更 Plan 聚焦方案设计——回答"怎么改"。使用 delta 格式�
 ```markdown
 # [变更标题] 变更 Plan
 
-> 日期: YYYY-MM-DD | 作者: `git config user.name` | 关联变更 spec: ./spec.md
+> 日期: YYYY-MM-DD | 作者: [运行 git config user.name 获取] | 关联变更 spec: ./spec.md
 
 ## 技术方案选择
 

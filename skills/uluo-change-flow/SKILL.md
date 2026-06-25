@@ -7,20 +7,7 @@ description: >-
 
 # uluo-change-flow
 
-需求变更管理工作流。本文件是**编排器**——定义三级递进变更文档（spec/plan/tasks）+ 独立 checklist review 机制的概念模型、执行流程、子代理调度和加载策略。模板见 `examples/`，子代理指令见 `agents/`，硬约束校验见 `scripts/`。
-
----
-
-## 概述
-
-**核心问题**：已有文档发生需求变化时如何同步更新并留痕。
-
-直接改代码不留痕、改了代码忘了改 spec——这些是变更管理最常见的痛点。本 skill 用「三级递进 + 独立验收」模型强制变更过程结构化：
-
-- **三级递进**：spec（范围）→ plan（方案）→ tasks（执行），粒度由粗到细
-- **独立验收**：checklist 贯穿三层，逐条 review，失败则回退到对应层级
-
-变更不是"再写一遍"，而是"在已有文档上做增量"。原始 spec/plan/tasks 被修改，变更过程归档到 `changes/CHG-<NNN>/`。
+**编排器**：三级递进变更文档（spec/plan/tasks）+ 独立 checklist review。细节见 `references/`，模板见 `examples/`，硬约束校验见 `scripts/`。
 
 ---
 
@@ -63,25 +50,6 @@ flowchart TD
 
 ---
 
-## 与 uluo-doc-standards 的关系
-
-**分工边界**：首次创建走 doc-standards，后续变更走 change-flow。
-
-| 维度 | uluo-doc-standards | uluo-change-flow |
-|------|--------------------|------------------|
-| 模式 | 全量创建 | 增量变更 |
-| 触发时机 | 首次创建特性 | 已有特性发生需求变化 |
-| 共享资源 | `specs/<feature>/` 目录 | 同一目录 |
-| 命名体系 | spec/plan/tasks | spec/plan/tasks + checklist |
-| 产出位置 | `specs/<feature>/` 顶层 | `specs/<feature>/changes/CHG-<NNN>/` |
-
-**核心规则：**
-- 首次创建走 uluo-doc-standards，后续变更走 uluo-change-flow
-- 两者共享 `specs/` 目录，命名体系完全一致
-- 变更过程中，原始 spec/plan/tasks 会被修改（不是只读），变更过程归档到 `changes/`
-
----
-
 ## 软硬约束分工
 
 **约束分工**：md 写 AI 判断，scripts 写确定性校验。
@@ -111,7 +79,7 @@ flowchart TD
 ```
 
 - Phase 0：禁止使用占位符或字面量 "git config user.name"
-- Phase 1：目标特性不存在 → 提示走 uluo-doc-standards 创建
+- Phase 1：目标特性不存在 → 提示用户目标特性目录不存在，需先创建
 - Phase 2：扫描已有 spec/plan/tasks + 相关代码，产出影响清单（受影响章节 + 模块 + 风险）
 - Phase 3-5：每层只回答本层问题，不越界；允许标注"需调研"任务（WebSearch/MCP/Context7/官网资料）
 
@@ -177,40 +145,50 @@ flowchart TD
 
 ## checklist review 状态约定
 
-**三态标记**：[ ]待review/[x]通过/[-]不通过（标注回退）。
+**三态标记**：`[ ]`待review / `[x]`通过 / `[-]`不通过（标注回退）。
 
-checklist.md 中每条检查点使用以下状态标记：
+回退标注格式：
 
-- `[ ]` 待 review
-- `[x]` review 通过
-- `[-]` review 不通过（需标注回退层级和原因）
-
-**回退标注格式：**
-- `[-] 检查点描述`
-  - 回退层级：L2 plan
-  - 原因：delta 规格遗漏了 REMOVED 项
-  - 处理：修复 plan.md → 同步更新 tasks.md → 重新 review
+| 字段 | 示例 |
+|------|------|
+| 检查点 | `[-] 检查点描述` |
+| 回退层级 | L2 plan |
+| 原因 | delta 规格遗漏了 REMOVED 项 |
+| 处理 | 修复 plan.md → 同步 tasks.md → 重新 review |
 
 ---
 
 ## 文档产出后校验
 
-**硬约束校验**：validate-change.js 七步管线全覆盖。
+**硬约束校验**：validate-change.js 七步管线。
 
-```
+```bash
 node scripts/validate-change.js specs/<feature>/changes/CHG-<NNN>/ --strict
 ```
 
-校验覆盖（7 步管线）：目录结构、L1 spec（变更背景/影响范围/决策结论）、L2 plan（delta 格式/字段完整性）、L3 tasks（任务字段/动词开头/调研标注）、checklist（三分组/检查点格式/结论一致性）、同步一致性（spec→plan→tasks→checklist 对齐 + 代码对齐）、change-record（归档文档完整性，如存在）。
+| 步骤 | 校验内容 |
+|------|---------|
+| 1 目录结构 | changes/CHG-<NNN>/ 目录结构合规 |
+| 2 L1 spec | 变更背景 / 影响范围 / 决策结论 |
+| 3 L2 plan | delta 格式 / 字段完整性 |
+| 4 L3 tasks | 任务字段 / 动词开头 / 调研标注 |
+| 5 checklist | 三分组 / 检查点格式 / 结论一致性 |
+| 6 同步一致性 | spec→plan→tasks→checklist 对齐 + 代码对齐 |
+| 7 change-record | 归档文档完整性（如存在） |
 
 ---
 
 ## references 引用时机
 
-| references 文件 | 何时读取 |
-|----------------|---------|
+| 文件 | 何时读取 |
+|------|---------|
 | [impact-analysis-protocol.md](references/impact-analysis-protocol.md) | Phase 2 影响调研时 |
 | [sync-protocol.md](references/sync-protocol.md) | Phase 7 执行变更同步文档时 |
+| [spec-template.md](examples/spec-template.md) | Phase 3 产出 L1 spec 时 |
+| [plan-template.md](examples/plan-template.md) | Phase 4 产出 L2 plan 时 |
+| [tasks-template.md](examples/tasks-template.md) | Phase 5 产出 L3 tasks 时 |
+| [checklist-template.md](examples/checklist-template.md) | Phase 6 产出 checklist 时 |
+| [change-record-template.md](examples/change-record-template.md) | Phase 9 留痕归档时 |
 
 ---
 
@@ -230,54 +208,16 @@ node scripts/validate-change.js specs/<feature>/changes/CHG-<NNN>/ --strict
 
 ## 质量闸门
 
-**自检清单**：四文档齐全+编号连续+职责边界+同步更新+留痕归档。
+**自检清单**：文档产出后逐条核对，失败项回退对应层级修复。
 
-任何变更文档产出后必须自检：
-
-- [ ] 四文档齐全（spec/plan/tasks/checklist）？紧急修复除外
-- [ ] 变更编号连续（CHG-001 → CHG-002，不跳号）？
-- [ ] 三层职责边界清晰（spec 不写怎么改、plan 不写文件路径、tasks 不写验收点）？
-- [ ] checklist 独立于三层，只抽 review 检查点，不重复内容？
-- [ ] 原始 spec/plan/tasks 已同步修改（不是只归档不更新）？
-- [ ] change-record.md 记录了 review 结论和回退历史（如有）？
-
-### spec 专项
-- [ ] 变更背景说明了 why（业务驱动 / 技术驱动 / 缺陷修复）？
-- [ ] 影响范围清单覆盖了所有受影响模块和章节？
-- [ ] 决策结论明确（做 / 不做 / 部分做）？
-
-### plan 专项
-- [ ] delta 规格区分了 MODIFIED / ADDED / REMOVED？
-- [ ] 技术选型有方案对比（如有多个候选）？
-
-### tasks 专项
-- [ ] 每个任务有明确的文件路径 + 动词描述？
-- [ ] "需调研"任务标注了调研方式（WebSearch/MCP/Context7/官网资料）？
-- [ ] 依赖关系明确（任务间的前置后置）？
-
-### checklist 专项
-- [ ] 检查点从三层抽出，覆盖 spec/plan/tasks 各层关键点？
-- [ ] 每条检查点可独立 review（不依赖其他检查点的结论）？
-- [ ] 回退标注完整（层级 + 原因 + 处理）？
-
-### change-record 专项（归档时）
-- [ ] 元数据完整（变更编号/日期/发起人/状态）？
-- [ ] 执行结果数字一致（任务数 = 完成数 + 失败数）？
-- [ ] Review 结论与 checklist 一致？
-- [ ] 回退历史已记录（如有回退）？
-- [ ] Diff 引用完整（spec/plan/tasks/代码 四项）？
-
-```mermaid
-flowchart TD
-    DOC[文档产出] --> V{validate-change.js 通过?}
-    V -->|失败| FIX[回退到出问题的层级修复]
-    FIX --> DOC
-    V -->|通过| REVIEW[Phase 8 Review]
-    REVIEW --> R{全部通过?}
-    R -->|失败| BACK[回退到对应层级]
-    BACK --> DOC
-    R -->|通过| ARCHIVE[Phase 9 留痕归档]
-```
+| 分组 | 检查点 |
+|------|--------|
+| 通用 | 四文档齐全（紧急修复除外）/ 编号连续 / 职责边界清晰 / 原始文档已同步修改 / change-record 记录 review 结论 |
+| spec | 变更背景说明 why / 影响范围全覆盖 / 决策结论明确 |
+| plan | delta 区分 MODIFIED/ADDED/REMOVED / 技术选型有对比 |
+| tasks | 任务有文件路径+动词 / 调研任务标注方式 / 依赖关系明确 |
+| checklist | 检查点覆盖三层 / 可独立 review / 回退标注完整 |
+| change-record | 元数据完整 / 数字一致 / Review 结论一致 / Diff 引用完整 |
 
 ---
 

@@ -1,13 +1,13 @@
 ---
 name: uluo-doc-standards
-version: 1.0.0
+version: 0.1.0
 description: >-
   AI 编程时的文档产出规范——定义 AI 在代码执行前（spec.md 需求规格、plan.md 执行计划、tasks.md 任务分解）和执行后（CHANGELOG 变更日志、验收报告、总结复盘）必须产出的文档模板和质量标准。面向开发者同行，文档写回代码仓库。Use this skill whenever the user asks AI to implement a feature, fix a bug, refactor code, design a system, or do any coding task that requires planning and tracking — even if the user doesn't explicitly mention documentation. Also use when the user mentions any of: spec, plan, tasks, changelog, 验收, 复盘, 文档规范, 产出规范, 技术方案, or any task that sounds like it needs structured before/after documentation.
 ---
 
 # uluo-doc-standards
 
-AI 辅助编程的文档产出规范。本文件是**编排器**——定义七种文档的概念模型、产出时机、执行流程、子代理调度和加载策略。方法论见 `references/`，模板见 `examples/`，子代理指令见 `agents/`，硬约束校验见 `scripts/`。
+**编排器**：七种文档五层结构（调研→spec→plan→tasks→记录）。方法论见 `references/`，模板见 `examples/`，硬约束校验见 `scripts/`。
 
 ---
 
@@ -34,7 +34,7 @@ AI 辅助编程的文档产出规范。本文件是**编排器**——定义七�
 
 ## 执行协议
 
-AI 接到实现任务后，按五层递进执行。中功能及以上建议在 Phase 2 和 Phase 8 启用子代理（见 [子代理调度](#子代理调度)）：
+**十阶段流程**：Phase 0-9 递进，中功能及以上在 Phase 2/8 启用子代理。
 
 ```mermaid
 flowchart TD
@@ -148,17 +148,15 @@ flowchart TD
 
 ## 子代理调度
 
-中功能及以上场景，建议在关键阶段启动子代理执行专项任务。子代理独立运行，有自己的上下文窗口和工具权限：
-
 | 子代理 | 指令文件 | 触发阶段 | 用途 |
 |--------|---------|---------|------|
-| **researcher** | [agents/researcher.md](agents/researcher.md) | Phase 2 | 多源信息调研——接收知识缺口清单，跨 Context7/GitHub/WebSearch/SO 并行搜索，综合为调研报告 |
-| **reviewer** | [agents/reviewer.md](agents/reviewer.md) | Phase 8（及任意文档产出后） | 文档质量审查——对抗性审查 spec/plan/tasks/report，检查信息源支撑、逻辑自洽、结构完整 |
+| **researcher** | [agents/researcher.md](agents/researcher.md) | Phase 2 | 多源信息调研——跨 Context7/GitHub/WebSearch/SO 并行搜索，综合为调研报告 |
+| **reviewer** | [agents/reviewer.md](agents/reviewer.md) | Phase 8 | 文档质量审查——对抗性审查 spec/plan/tasks/report |
 
 **调度规则：**
-- **researcher**：中功能及以上必启，大功能建议拆分知识缺口分派多个 researcher 并行
-- **reviewer**：文档产出后可选启动做对抗性审查。中功能验收阶段至少启动一次审查 verification-report
-- 简化场景（Bug 修复、小功能）可跳过子代理，直接在主循环中完成
+- **researcher**：中功能及以上必启，大功能建议拆分知识缺口分派多个并行
+- **reviewer**：中功能验收阶段至少启动一次审查 verification-report
+- 简化场景（Bug 修复、小功能）可跳过子代理
 
 ---
 
