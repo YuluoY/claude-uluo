@@ -1,6 +1,6 @@
 # 软规则 — 模型自检清单
 
-此文件定义**无法由 eslint/stylelint/tsc 自动检查、必须由模型在代码生成/修改时逐条自述**的规则。eslint 覆盖代码质量 + 格式 + 命名，stylelint 覆盖 SCSS 质量 + 属性排序，tsc 覆盖类型安全。仅 DDD 层边界由 validate-rules.js 硬检查。
+此文件定义**无法由 eslint/stylelint/tsc 自动检查、必须由模型在代码生成/修改时逐条自述**的规则。eslint 覆盖代码质量 + 格式 + 命名，stylelint 覆盖 SCSS 质量 + 属性排序，tsc 覆盖类型安全。仅 DDD 层边界由 validate.js（checks/layer-boundary.js）硬检查。
 
 每个模型触发本 skill 后，必须在 Phase 3 对照适用区块逐条自检，在 Phase 4 逐条自述通过情况。
 

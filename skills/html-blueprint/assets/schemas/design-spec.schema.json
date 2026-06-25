@@ -11,6 +11,10 @@
       "const": "1.0",
       "description": "Spec 版本，当前固定为 1.0"
     },
+    "pageType": {
+      "enum": ["landing", "dashboard", "form", "detail", "list", "other"],
+      "description": "页面类型"
+    },
     "page": {
       "type": "object",
       "required": ["name"],
@@ -29,8 +33,66 @@
             "height": { "type": "integer", "default": 900, "description": "视口高度（px）" }
           }
         },
+        "canvas": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "width": { "type": "integer", "default": 1440, "description": "画布宽度" },
+            "height": { "type": "integer", "default": 900, "description": "画布高度" },
+            "device": { "enum": ["desktop", "tablet", "mobile"], "default": "desktop", "description": "目标设备类型" }
+          }
+        },
+        "grid": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "columns": { "type": "integer", "default": 12, "description": "栅格列数" },
+            "gutter": { "type": "string", "default": "24px", "description": "栅格间距" },
+            "margin": { "type": "string", "default": "80px", "description": "页面左右边距" }
+          }
+        },
+        "container": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "maxWidth": { "type": "string", "default": "1320px", "description": "容器最大宽度" },
+            "paddingX": { "type": "string", "default": "24px", "description": "容器水平内边距" }
+          }
+        },
+        "sections": {
+          "type": "array",
+          "description": "页面语义区域划分",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "description": "区域名称" },
+              "role": { "enum": ["header", "nav", "hero", "main", "aside", "footer", "section"], "description": "区域语义角色" },
+              "columns": { "type": "integer", "description": "占用栅格列数" },
+              "components": { "type": "array", "items": { "type": "string" }, "description": "区域内组件列表" }
+            }
+          }
+        },
+        "layoutRef": {
+          "type": "string",
+          "description": "引用的 layout 文件名，如 main-layout"
+        },
         "theme": { "type": "string", "description": "主题 token 文件路径" },
         "lang": { "type": "string", "default": "zh-CN", "description": "页面语言，默认 zh-CN" }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "description": "多页面清单",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "description": "页面名称" },
+          "file": { "type": "string", "description": "页面文件名" },
+          "layout": { "type": "string", "description": "使用的布局文件名" },
+          "blocks": { "type": "array", "items": { "type": "string" }, "description": "页面包含的区块/组件列表" }
+        }
       }
     },
     "components": {
@@ -187,6 +249,15 @@
           "type": "string",
           "description": "布局方式：flex-row|flex-column|grid|absolute"
         },
+        "sizing": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "height": { "type": "string", "description": "高度，如 var(--size-md)" },
+            "padding": { "type": "string", "description": "内边距" },
+            "minWidth": { "type": "string", "description": "最小宽度" }
+          }
+        },
         "padding": { "type": "string", "description": "内边距，如 var(--space-6)" },
         "gap": { "type": "string", "description": "间距，如 var(--space-4)" },
         "background": { "type": "string", "description": "背景，可为颜色或渐变" },
@@ -243,10 +314,12 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "xs": { "type": "integer", "description": "极小屏断点（px）" },
             "sm": { "type": "integer", "description": "小屏断点（px）" },
             "md": { "type": "integer", "description": "中屏断点（px）" },
             "lg": { "type": "integer", "description": "大屏断点（px）" },
-            "xl": { "type": "integer", "description": "超大屏断点（px）" }
+            "xl": { "type": "integer", "description": "超大屏断点（px）" },
+            "xxl": { "type": "integer", "description": "超大屏断点（px）" }
           }
         }
       }

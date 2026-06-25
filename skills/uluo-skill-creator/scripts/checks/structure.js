@@ -1,9 +1,8 @@
-// 目录结构校验——校验必需文件、可选目录命名规范
-// 规范来源: references/skill-anatomy.md
+'use strict';
 
 const path = require('path');
 const fs = require('fs');
-const { fileExists, listDir, formatResult } = require('../lib/utils');
+const { fileExists, listDir, formatResult } = require('../_shared/utils');
 
 // 规范目录名（skill-anatomy.md 定义）
 const CANONICAL_DIRS = ['references', 'scripts', 'agents', 'evals', 'examples', 'assets'];

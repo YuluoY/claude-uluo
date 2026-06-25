@@ -3,7 +3,7 @@
 **加载条件：** 当前项目使用 JavaScript 时加载。**TypeScript 项目必须先加载本文件再加载 `typescript.md`。**
 
 > 参考：[Google JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html)、[Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
-> 格式由 `validate-rules.js` 检查。语法质量由 `eslint` 统一处理。项目组织遵循 `references/architecture.md`。
+> 格式由 `validate.js` 检查（包含 eslint/stylelint/tsc + DDD 层边界检查）。语法质量由 `eslint` 统一处理。项目组织遵循 `references/architecture.md`。
 
 ## 目录
 

@@ -48,7 +48,7 @@
     {
       "id": 2,
       "prompt": "我们后端项目用 FastAPI，路由文件都在 src/api/routes/ 下，每个接口有 docstring 但格式五花八门。我想做一个 skill，扫描这些路由文件，根据 docstring 和 Pydantic 模型生成统一的 API 文档（markdown 格式）。需要支持自定义模板，因为不同项目文档结构不一样。skill 放在 ~/projects/my-skills/api-doc-gen/ 下，要包含 references 说明模板规范和扫描规则。",
-      "expected_output": "走完整中等流程（默认方案）。产出完整目录结构：skills/api-doc-gen/SKILL.md（frontmatter + Use when 触发条件 + body <500 行，引用 references/ 做 progressive disclosure）+ skills/api-doc-gen/references/（模板规范 md、扫描规则 md）+ skills/api-doc-gen/evals/evals.json（2-3 个测试用例）。Phase 7 运行 node scripts/validate-skill.js 校验通过（目录结构、SKILL.md frontmatter name/description/行数、脚本可执行性）。无 scripts/ 目录。",
+      "expected_output": "走完整中等流程（默认方案）。产出完整目录结构：skills/api-doc-gen/SKILL.md（frontmatter + Use when 触发条件 + body <500 行，引用 references/ 做 progressive disclosure）+ skills/api-doc-gen/references/（模板规范 md、扫描规则 md）+ skills/api-doc-gen/evals/evals.json（2-3 个测试用例）。Phase 7 运行 node scripts/validate.js 校验通过（目录结构、SKILL.md frontmatter name/description/行数、脚本可执行性）。无 scripts/ 目录。",
       "files": [],
       "assertions": [
         {
@@ -80,7 +80,7 @@
           "type": "regex"
         },
         {
-          "text": "Phase 7 本地硬约束校验通过（validate-skill.js 无 fail）",
+          "text": "Phase 7 本地硬约束校验通过（validate.js 无 fail）",
           "type": "contains"
         },
         {

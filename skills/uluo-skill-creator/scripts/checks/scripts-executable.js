@@ -1,10 +1,9 @@
-// 脚本可执行性校验——校验 scripts/ 下 .js/.py 语法、非法 AI 上下文依赖
-// 规范来源: references/hard-soft-constraint.md（脚本独立执行要求）
+'use strict';
 
 const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
-const { readFile, listDir, formatResult } = require('../lib/utils');
+const { readFile, listDir, formatResult } = require('../_shared/utils');
 
 // 非法依赖模式——AI 上下文依赖不应出现在脚本中（脚本必须独立执行）
 const ILLEGAL_DEP_PATTERNS = [

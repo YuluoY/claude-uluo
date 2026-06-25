@@ -241,7 +241,7 @@ export function toApiError(error: unknown): ApiErrorResult
 ```
 
 - 错误在分层边界转换，不向上泄漏第三方原始异常
-- 禁止 `catch (e) {}`（validate-rules.js 检查阻断）
+- 禁止 `catch (e) {}`（validate.js checks/eslint.js 检查阻断）
 - 异步操作用 `to()` 元组（`[error, data]`），不 try-catch 嵌套
 
 ### 9. 日志

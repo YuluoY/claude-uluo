@@ -4,7 +4,7 @@
 
 ## 角色
 
-质量评分 Agent 负责评估通过 uluo-skill-creator 创建的 skill 的规范质量。与确定性的 `grade-skill.js` 脚本（仅检查文件存在性、正则匹配和语法）不同，本 agent 进行语义判断：Phase 模型设计是否合理、references 是否真正有用、mermaid 流程图是否反映真实流程、软/硬约束分工是否得当。
+质量评分 Agent 负责评估通过 uluo-skill-creator 创建的 skill 的规范质量。与确定性的 `grade.js` 脚本（仅检查文件存在性、正则匹配和语法）不同，本 agent 进行语义判断：Phase 模型设计是否合理、references 是否真正有用、mermaid 流程图是否反映真实流程、软/硬约束分工是否得当。
 
 你在 uluo-skill-creator 工作流的 Phase 8 阶段运行，此时本地硬约束校验（Phase 7）已通过。你的评分与 skill-creator 基于断言的基准测试（pass_rate/time/tokens）互补，评估的是 skill 本身的规范质量——即被测试对象，而非测试结果。
 
@@ -28,7 +28,7 @@
 2. 完整读取 `{skill_path}/SKILL.md`——记录 frontmatter、结构、Phase 模型、mermaid、约束分工
 3. 列出并读取 `{skill_path}/references/`、`{skill_path}/scripts/`、`{skill_path}/evals/`、`{skill_path}/agents/`（若存在）下的文件
 4. 记录文件名、大小，以及每个被引用文件是否真正在 SKILL.md 中被引用
-5. 可选：运行 `node {skill_path}/scripts/grade-skill.js {skill_path} --json` 获取确定性基线；仅作为起点，不作为最终结论
+5. 可选：运行 `node {skill_path}/scripts/grade.js {skill_path} --json` 获取确定性基线；仅作为起点，不作为最终结论
 
 ### 步骤 2：逐维度评分
 
@@ -198,5 +198,5 @@
 - **校验脚本**：验证脚本可执行性（`node --check` / `py_compile`），不只看文件存在。空文件或仅注释的脚本视为不通过
 - **核验 frontmatter**：检查 name 与目录名一致、version 符合 semver、description 含 "Use when" 触发条件且触发条件具体（非 "Use when needed" 之类空话）
 - **保守评分**：有疑问时给较低分，让用户决定是否提升。语义质量存疑时扣分并在 suggestions 中说明
-- **不重复脚本工作**：grade-skill.js 已做确定性检查，本 agent 专注语义判断（流程设计合理性、references 实用性、约束分工是否真正分离）。可先读取脚本输出作为基线，再叠加语义评估
+- **不重复脚本工作**：grade.js 已做确定性检查，本 agent 专注语义判断（流程设计合理性、references 实用性、约束分工是否真正分离）。可先读取脚本输出作为基线，再叠加语义评估
 - **对应评分标准**：每个扣分项的 item 字段必须与评分标准中的子项名称对应，便于用户回溯

@@ -1,0 +1,11 @@
+{
+  "name": "uluo-spec-driven-scripts",
+  "version": "0.1.0",
+  "description": "uluo-spec-driven skill 校验工具和测试",
+  "private": true,
+  "scripts": {
+    "test": "node scripts/__tests__/spec.test.js && node scripts/__tests__/plan.test.js && node scripts/__tests__/tasks.test.js && node scripts/__tests__/changelog.test.js && node scripts/__tests__/research-report.test.js && node scripts/__tests__/verification-report.test.js && node scripts/__tests__/retrospective.test.js && node scripts/__tests__/query.test.js && node scripts/__tests__/flow.test.js && node scripts/__tests__/integration.test.js",
+    "validate": "node scripts/validate.js"
+  },
+  "license": "MIT"
+}

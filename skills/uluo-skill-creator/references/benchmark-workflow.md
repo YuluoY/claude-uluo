@@ -63,10 +63,10 @@ python -m scripts.aggregate_benchmark <workspace>/iteration-N --skill-name <name
 
 #### 3.3 Rubric 评分（uluo-skill-creator 扩展）
 
-**质量评分**：使用 `scripts/grade-skill.js` 评估 skill 本身的规范质量，作为 benchmark.json 扩展字段。
+**质量评分**：使用 `scripts/grade.js` 评估 skill 本身的规范质量，作为 benchmark.json 扩展字段。
 
 ```bash
-node scripts/grade-skill.js <skill-path>
+node scripts/grade.js <skill-path>
 ```
 
 产出 `rubric-report.json`，覆盖 5 个维度（每项 0-20 分，总分 100）：

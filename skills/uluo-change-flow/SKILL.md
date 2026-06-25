@@ -61,6 +61,29 @@ flowchart TD
 
 ---
 
+## 查询与流程控制脚本
+
+- **query.js**：无状态一次性查询脚本，AI/agent 可通过命令行快速获取 meta/workflow/scenario/references/agents/scripts/constraints 等结构化数据
+- **flow.js**：有状态流程控制脚本，AI/agent 通过 CLI 命令（init/next/complete/rollback/gates/skip）逐步推进流程，门控自动校验阶段前置条件
+
+```bash
+# 查询元信息
+node scripts/query.js <chg-dir> --type meta
+
+# 查询工作流
+node scripts/query.js <chg-dir> --type workflow
+
+# 查询场景配置
+node scripts/query.js <chg-dir> --type scenario --scenario small
+
+# 人类可读格式（加 --pretty）
+node scripts/query.js <chg-dir> --type workflow --pretty
+```
+
+**执行变更流程时**：在 CHG-<NNN>/ 目录下使用 flow.js 进行渐进式流程推进。
+
+---
+
 ## 执行协议
 
 **十阶段流程**：Phase 0-9 递进执行，Phase 8 review 失败回退。
@@ -91,7 +114,7 @@ flowchart TD
     P7["Phase 7 执行变更<br/>按 L3 tasks 逐项执行"]
     P8["Phase 8 Review<br/>逐条检查 checklist"]
     P9["Phase 9 留痕归档<br/>产出 change-record.md"]
-    V["运行 validate-change.js<br/>--strict 硬约束校验"]
+    V["运行 validate.js<br/>--strict 硬约束校验"]
     P6 --> P7 --> P8
     P8 -->|全部通过| V
     P8 -->|有不通过| BACK["回退到出问题层级<br/>修复→同步下游→重新 review"]
@@ -105,6 +128,51 @@ flowchart TD
 - Phase 7：修改 spec.md / plan.md / tasks.md / 代码 / 设计稿
 - Phase 8：回退时修复该层级文档 + 同步更新下游 + 重新执行相关任务
 - Phase 9：记录 review 通过结论 + 回退历史（如有），归档到 `changes/CHG-<NNN>/`
+
+### 流程执行协议（flow.js）
+
+**有状态流程控制**：执行变更流程时，在 `CHG-<NNN>/` 目录下使用 `flow.js` 进行渐进式流程推进。flow.js 通过状态文件（`.skill-state.json`）追踪进度，门控自动校验前置条件，确保流程稳固。
+
+#### 命令协议
+
+```bash
+node scripts/flow.js <chg-dir> <command> [options]
+```
+
+| 命令 | 用途 | 关键选项 |
+|------|------|---------|
+| `init` | 初始化流程状态 | `--scenario <small/medium/large/urgent>` |
+| `next` | 获取当前阶段指引（含门控项、参考文档、必需动作、预期产出） | — |
+| `complete <phaseId>` | 完成当前阶段（自动执行门控校验） | `--note <备注>` |
+| `status` | 查看流程概览（进度、已完成/已跳过阶段） | `--pretty` |
+| `rollback <phaseId>` | 回退到指定阶段（继续从该阶段推进） | — |
+| `gates` | 列出当前阶段的门控项 | — |
+| `skip <phaseId>` | 手动跳过阶段（需说明理由） | `--reason <理由>` |
+
+#### 执行流程
+
+1. **初始化**：`node scripts/flow.js <chg-dir> init --scenario <级别>`，选择变更规模场景
+2. **循环推进**：
+   - `next` → 获取当前阶段指引
+   - 执行阶段必需动作（阅读 references、创建文件、编写内容等）
+   - `complete <phaseId>` → 门控自动校验，失败则修复后重试，通过则进入下一阶段
+3. **错误恢复**：review 不通过需要回退时用 `rollback <phaseId>`；需要跳过阶段用 `skip <phaseId> --reason`
+4. **状态查询**：随时用 `status` 查看进度
+
+#### 门控类型
+
+| 类型 | 校验内容 | 示例 |
+|------|---------|------|
+| `file-exists` | 文件必须存在 | spec.md、plan.md、tasks.md、checklist.md、change-record.md |
+| `script-exit-code` | 脚本执行退出码为 0 | validate.js --strict 必须通过 |
+
+**门控失败时**：complete 命令返回 `success: false` 和 `gateFailures` 详情，修复后重新 complete 即可，无需回退（除非需要回到之前层级重新产出文档）。
+
+#### 与 query.js 的关系
+
+- **query.js**：无状态、一次性查询，返回完整结构化数据，适合快速了解变更流程概况
+- **flow.js**：有状态、逐步控制，每次只返回当前阶段信息，适合实际执行变更流程时使用
+- 两者共用相同的 WORKFLOW/SCENARIOS 配置，flow.js 在 query 的静态数据基础上增加了状态管理和门控执行
 
 ---
 
@@ -160,10 +228,10 @@ flowchart TD
 
 ## 文档产出后校验
 
-**硬约束校验**：validate-change.js 七步管线。
+**硬约束校验**：validate.js 七步管线。
 
 ```bash
-node scripts/validate-change.js specs/<feature>/changes/CHG-<NNN>/ --strict
+node scripts/validate.js specs/<feature>/changes/CHG-<NNN>/ --strict
 ```
 
 | 步骤 | 校验内容 |
@@ -180,15 +248,20 @@ node scripts/validate-change.js specs/<feature>/changes/CHG-<NNN>/ --strict
 
 ## references 引用时机
 
-| 文件 | 何时读取 |
-|------|---------|
-| [impact-analysis-protocol.md](references/impact-analysis-protocol.md) | Phase 2 影响调研时 |
-| [sync-protocol.md](references/sync-protocol.md) | Phase 7 执行变更同步文档时 |
-| [spec-template.md](examples/spec-template.md) | Phase 3 产出 L1 spec 时 |
-| [plan-template.md](examples/plan-template.md) | Phase 4 产出 L2 plan 时 |
-| [tasks-template.md](examples/tasks-template.md) | Phase 5 产出 L3 tasks 时 |
-| [checklist-template.md](examples/checklist-template.md) | Phase 6 产出 checklist 时 |
-| [change-record-template.md](examples/change-record-template.md) | Phase 9 留痕归档时 |
+**按需加载 + flow.js 命令驱动**：
+
+| Phase | 读取 / 执行 |
+|-------|------------|
+| Phase 0 | `flow.js init --scenario <级别>`（初始化流程状态）；`query.js --type scenario`（查询场景配置） |
+| Phase 1 | `flow.js next`（获取阶段指引）；完成后 `flow.js complete 1` |
+| Phase 2 | `flow.js next`；impact-analysis-protocol.md；agents/impact-analyzer.md（中变更以上）；完成后 `flow.js complete 2` |
+| Phase 3 | `flow.js next`；spec-template.md；完成后 `flow.js complete 3`（校验 spec.md 门控） |
+| Phase 4 | `flow.js next`；plan-template.md；完成后 `flow.js complete 4`（校验 plan.md 门控） |
+| Phase 5 | `flow.js next`；tasks-template.md；完成后 `flow.js complete 5`（校验 tasks.md 门控） |
+| Phase 6 | `flow.js next`；checklist-template.md；完成后 `flow.js complete 6`（校验 checklist.md 门控） |
+| Phase 7 | `flow.js next`；sync-protocol.md；完成后 `flow.js complete 7` |
+| Phase 8 | `flow.js complete 8`（自动执行 validate.js --strict 门控） |
+| Phase 9 | `flow.js next`；change-record-template.md；完成后 `flow.js complete 9`（校验 change-record.md 门控） |
 
 ---
 

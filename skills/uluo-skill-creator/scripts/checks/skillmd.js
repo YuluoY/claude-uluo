@@ -1,8 +1,7 @@
-// SKILL.md 内容校验——校验 frontmatter 字段、description 触发条件、body 行数
-// 规范来源: references/skillmd-spec.md
+'use strict';
 
 const path = require('path');
-const { readFile, parseFrontmatter, countLines, formatResult } = require('../lib/utils');
+const { readFile, parseFrontmatter, countLines, formatResult } = require('../_shared/utils');
 
 // 行数阈值（skillmd-spec.md 定义）
 const LINE_SOFT_WARN_THRESHOLD = 300; // 软警告：建议拆分

@@ -3,7 +3,7 @@
 **加载条件：** 当前项目使用 TypeScript 时加载。**必须先加载 `javascript.md`，本文件只列出 TS 独有规则。**
 
 > 参考：[Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html)、[Basarat TypeScript Style Guide](https://basarat.gitbook.io/typescript/styleguide)
-> 格式由 `validate-rules.js` 检查。类型安全由 `eslint` 的 `typescript-eslint` 插件处理。
+> 格式由 `validate.js` 检查（包含 eslint/stylelint/tsc + DDD 层边界检查）。类型安全由 `eslint` 的 `typescript-eslint` 插件处理。
 
 ## 目录
 

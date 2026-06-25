@@ -126,7 +126,7 @@
 
 ```bash
 # 正确：脚本接受路径参数，独立运行
-node scripts/validate-skill.js <skill-path>
+node scripts/validate.js <skill-path>
 python scripts/validate_skill.py <skill-path>
 
 # 错误：依赖 AI 上下文传递参数
@@ -191,7 +191,7 @@ python scripts/validate_skill.py <skill-path>
 
 **✅ 正确（硬约束脚本）**：
 ```javascript
-// scripts/validate-skill.js
+// scripts/validate.js
 const glob = require('glob');
 const required = ['SKILL.md'];
 const missing = required.filter(f => !fs.existsSync(path.join(skillPath, f)));
@@ -235,8 +235,8 @@ description 应适当"pushy"——鼓励触发，对抗 Claude 的 undertrigger 
 
 | 需求 | 约束类型 | 载体 | 实现方式 |
 |------|---------|------|---------|
-| 目录结构合规 | 硬约束 | scripts/validate-skill.js | glob 匹配必需文件 |
-| frontmatter 字段合规 | 硬约束 | scripts/validate-skill.js | gray-matter 解析 + 断言 |
+| 目录结构合规 | 硬约束 | scripts/validate.js | glob 匹配必需文件 |
+| frontmatter 字段合规 | 硬约束 | scripts/validate.js | gray-matter 解析 + 断言 |
 | description 写法 | 软约束 | references/skillmd-spec.md | 好坏示例 + 检查清单 |
 | 十阶段流程编排 | 软约束 | SKILL.md body | Phase 流程图 + 回退规则 |
 ```

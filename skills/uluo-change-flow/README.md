@@ -37,8 +37,9 @@ uluo-change-flow/
 ├── examples/                    ← 模板（5 个）
 ├── agents/impact-analyzer.md    ← 影响分析子代理
 ├── scripts/                     ← 硬约束校验工具
-│   ├── validate-change.js       ← 主校验入口（7 步管线）
+│   ├── validate.js              ← 主校验入口（7 步管线）
 │   ├── checks/                  ← 6 个校验模块
+│   ├── _shared/                 ← 共享 engine（query/flow）
 │   ├── lib/utils.js             ← 共享工具函数
 │   └── __tests__/               ← 测试（89 个用例）
 └── evals/evals.json             ← 评测用例
@@ -48,13 +49,13 @@ uluo-change-flow/
 
 ```bash
 # 校验单个变更目录
-node scripts/validate-change.js specs/<feature>/changes/CHG-NNN
+node scripts/validate.js specs/<feature>/changes/CHG-NNN
 
 # 严格模式（警告视为失败）
-node scripts/validate-change.js specs/<feature>/changes/CHG-NNN --strict
+node scripts/validate.js specs/<feature>/changes/CHG-NNN --strict
 
 # 代码对齐校验（需指定项目根目录）
-PROJECT_ROOT=/path/to/project node scripts/validate-change.js specs/<feature>/changes/CHG-NNN
+PROJECT_ROOT=/path/to/project node scripts/validate.js specs/<feature>/changes/CHG-NNN
 ```
 
 ### 环境变量

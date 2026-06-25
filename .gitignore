@@ -12,3 +12,4 @@ private/
 .trae/
 dist/
 evals/
+__tests__/

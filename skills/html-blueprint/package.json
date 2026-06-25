@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "validate": "node scripts/validate-all.js"
+    "validate": "node scripts/validate.js"
   },
   "dependencies": {},
   "optionalDependencies": {

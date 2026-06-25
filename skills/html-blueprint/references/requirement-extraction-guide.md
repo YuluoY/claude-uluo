@@ -4,6 +4,30 @@ AI 从需求（uluo-spec-driven 的 spec.md 或自然语言）提取 Design Spec
 
 ---
 
+## 步骤 0：页面类型识别与尺寸预设
+
+1. **页面类型识别**：从需求中识别页面类型，不同类型决定默认尺寸预设：
+   - **landing**（营销落地页）：容器 max-width 1200px、导航高度 80px、Hero 区高度 560-640px
+   - **dashboard**（数据仪表盘）：容器 max-width 1320px、导航高度 64px、侧边栏宽度 240px、卡片间距 24px
+   - **form**（表单页）：单列表单宽度 640px、双列 800px
+   - **detail**（详情页）：主内容区 800px + 侧边栏 320px
+   - **list**（列表页）：工具栏高度 56px、表格 100% 宽度、分页高度 48px
+   - **other**（其他）：使用默认值 1320px 容器、64px 导航
+
+2. **页面清单提取**：从需求中识别所有需要生成的页面，列出页面名和类型。
+
+3. **区块划分提取**：每个页面由哪些区块组成（如 Dashboard = StatsGroup + ChartSection + RecentTable），区块对应 design/blocks/。
+
+4. **尺寸/栅格提取规则**：
+   - 如需求明确指定尺寸，使用用户指定值
+   - 如需求未指定，根据页面类型使用 design-dimensions.md 中的默认值
+   - 默认画布：1440×900 桌面端
+   - 默认栅格：12列，gutter 24px，margin 80px
+
+**注意**：提取 Design Spec 时必须设置 `pageType` 字段；`page.canvas`、`page.grid`、`page.container` 字段如需求未指定，应使用 design-dimensions.md 中对应页面类型的默认值。
+
+---
+
 ## 两条工作路径
 
 ### 路径 A: AI 同时使用 uluo-spec-driven 和 html-blueprint
@@ -230,7 +254,7 @@ AI 提取 Design Spec 后，应向用户展示提取结果并确认：
    - 组件边界模糊时列出可选方案
 
 3. **用户确认后继续**
-   - 用户确认或调整后，AI 运行 `validate-spec.js` 校验
+   - 用户确认或调整后，AI 运行 `checks/spec.js` 校验
    - 校验通过后生成 HTML 设计稿
 
 ---
@@ -238,5 +262,6 @@ AI 提取 Design Spec 后，应向用户展示提取结果并确认：
 ## 相关文件
 
 - [design-spec.md](./design-spec.md) — Design Spec 格式规范
+- [design-dimensions.md](./design-dimensions.md) — 尺寸规范与预设值
 - [protocol-spec.md](./protocol-spec.md) — data-* 属性协议
 - [../SKILL.md](../SKILL.md) — Skill 主文档（含门禁定义）

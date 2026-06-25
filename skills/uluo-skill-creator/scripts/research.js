@@ -19,7 +19,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 
-const { readFile, listDir, parseFrontmatter } = require('./lib/utils');
+const { readFile, listDir, parseFrontmatter } = require('./_shared/utils');
 
 // ── 颜色输出 ──────────────────────────────────────────────
 const RED = '\x1b[0;31m';

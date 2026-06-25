@@ -67,10 +67,13 @@ uluo-spec-driven/
 │   ├── researcher.md
 │   └── reviewer.md
 ├── scripts/                     ← 硬约束校验工具
-│   ├── validate-docs.js         ← 主校验入口
+│   ├── validate.js              ← 主校验入口
+│   ├── query.js                 ← 无状态流程数据查询
+│   ├── flow.js                  ← 有状态流程控制
+│   ├── _shared/                 ← 共享引擎模块
 │   ├── checks/                  ← 7 个文档类型校验模块
 │   ├── lib/utils.js             ← 共享工具函数
-│   └── __tests__/               ← 测试（70 个用例）
+│   └── __tests__/               ← 测试
 └── evals/evals.json             ← 评测用例
 ```
 
@@ -80,14 +83,14 @@ specs/ 下支持三种文档结构：特性文档（含 spec.md，三层递进�
 
 ```bash
 # 校验单个特性目录
-node scripts/validate-docs.js specs/<feature-dir>
-# 或领域分层布局：node scripts/validate-docs.js specs/<domain>/<feature-dir>
+node scripts/validate.js specs/<feature-dir>
+# 或领域分层布局：node scripts/validate.js specs/<domain>/<feature-dir>
 
 # 严格模式（警告视为失败）
-node scripts/validate-docs.js specs/<feature-dir> --strict
+node scripts/validate.js specs/<feature-dir> --strict
 
 # CI 模式（递归扫描 specs/ 下的所有特性目录，自动跳过设计文档）
-node scripts/validate-docs.js --ci <project-root>
+node scripts/validate.js --ci <project-root>
 ```
 
 ## 测试

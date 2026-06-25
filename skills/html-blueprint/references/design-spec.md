@@ -49,13 +49,40 @@ AI 参考 [code-generation-guide.md](./code-generation-guide.md) 根据 Design S
 
 ```yaml
 version: "1.0"           # 必填，Spec 版本
+pageType: landing        # 可选，页面类型（landing|dashboard|form|detail|list|other）
 page:                    # 必填，页面元信息
-  name: DashboardPage    # PascalCase 页面名
+  name: LandingPage      # PascalCase 页面名
   viewport:              # 可选，视口尺寸
     width: 1440
     height: 900
+  canvas:                # 可选，设计画布尺寸
+    width: 1440
+    height: 900
+    device: desktop      # desktop|tablet|mobile
+  grid:                  # 可选，12列栅格参数
+    columns: 12
+    gutter: "24px"
+    margin: "80px"
+  container:             # 可选，内容容器宽度
+    maxWidth: "1200px"
+    paddingX: "24px"
+  sections:              # 可选，页面语义区域划分
+    - name: Header
+      role: header
+      columns: 12
+      components: [TopNav]
+    - name: Hero
+      role: hero
+      columns: 12
+      components: [HeroBanner]
+  layoutRef: main-layout # 可选，引用的骨架布局文件名
   theme: ../tokens.css   # 可选，主题 token 文件路径
   lang: zh-CN            # 可选，默认 zh-CN
+pages:                   # 可选，多页面清单
+  - name: Dashboard
+    file: dashboard.html
+    layout: main-layout
+    blocks: [StatsGroup, ChartSection]
 components:              # 必填，组件列表（数组）
   - name: StatCard       # 组件定义（见下文）
     ...
@@ -64,6 +91,57 @@ layout:                  # 可选，页面布局结构
   columns: 12
   gap: var(--space-4)
 ```
+
+### 新增字段说明
+
+#### `pageType` - 页面类型识别
+
+`pageType` 决定页面的默认尺寸预设和布局模板：
+
+| 页面类型 | 默认容器宽度 | 导航高度 | 侧边栏 | 说明 |
+|---------|------------|---------|--------|------|
+| `landing` | 1200px | 80px | 无 | 营销落地页，居中大容器 |
+| `dashboard` | 1320px | 64px | 240px | 管理后台，侧边栏+主内容 |
+| `form` | 640px | 64px | 可选 | 表单页，居中窄容器 |
+| `detail` | 主800+侧320 | 64px | 320px | 详情页，双栏布局 |
+| `list` | 100% | 56px | 可选 | 列表页，工具栏+表格 |
+| `other` | 1320px | 64px | 无 | 其他通用页面 |
+
+#### `canvas` - 设计画布尺寸
+
+设计稿的画布尺寸，默认 1440×900（桌面端）。AI 生成 HTML 时以此作为基准尺寸。
+
+#### `grid` - 栅格系统
+
+12列栅格参数，用于页面布局对齐：
+- `columns`: 栅格列数（默认 12）
+- `gutter`: 列间距（默认 24px）
+- `margin`: 页面左右边距（默认 80px）
+
+#### `container` - 内容容器
+
+页面内容区域的宽度约束：
+- `maxWidth`: 容器最大宽度（landing 默认 1200px，其他默认 1320px）
+- `paddingX`: 容器水平内边距（默认 24px）
+
+#### `sections` - 页面语义区域
+
+将页面划分为有语义角色的区域，每个区域包含若干组件：
+- `role`: 语义角色（header|nav|hero|main|aside|footer|section）
+- `columns`: 占用栅格列数（1-12）
+- `components`: 区域内包含的组件名列表
+
+#### `layoutRef` - 布局引用
+
+引用预定义的骨架布局文件，如 `main-layout`，用于复用通用布局结构。
+
+#### `pages` - 多页面清单
+
+多页面应用的页面清单，用于多页项目：
+- `name`: 页面名称
+- `file`: 页面 HTML 文件名
+- `layout`: 使用的布局文件名
+- `blocks`: 页面包含的区块/组件列表
 
 ---
 
@@ -135,6 +213,10 @@ layout:                  # 可选，页面布局结构
   # 视觉规格（从 CSS 提取的结构化定义）
   visual:
     layout: flex-column             # flex-row|flex-column|grid|absolute
+    sizing:                         # 可选，组件尺寸规格
+      height: var(--size-md)
+      padding: var(--space-6)
+      minWidth: var(--size-sm)
     padding: var(--space-6)
     background: linear-gradient(135deg, #fff 0%, #f7faff 100%)
     border:
@@ -164,11 +246,20 @@ layout:                  # 可选，页面布局结构
   responsive:
     strategy: mobile-first
     breakpoints:
-      sm: 640
-      md: 768
-      lg: 1024
-      xl: 1280
+      xs: 480                       # 极小屏断点
+      sm: 640                       # 小屏断点
+      md: 768                       # 中屏断点
+      lg: 1024                      # 大屏断点
+      xl: 1280                      # 超大屏断点
+      xxl: 1536                     # 超大屏断点
 ```
+
+### `visual.sizing` - 组件尺寸规格
+
+组件的尺寸约束属性：
+- `height`: 组件固定高度，如 `var(--size-md)` 或 `48px`
+- `padding`: 组件内边距（与根级 `padding` 语义一致，用于更细粒度控制）
+- `minWidth`: 组件最小宽度
 
 ---
 
@@ -229,15 +320,37 @@ props:
 
 ## 完整示例
 
-### 示例 1：统计卡片
+### 示例 1：统计卡片（Dashboard 页面）
 
 ```yaml
 version: "1.0"
+pageType: dashboard
 page:
   name: DashboardPage
   viewport:
     width: 1440
     height: 900
+  canvas:
+    width: 1440
+    height: 900
+    device: desktop
+  grid:
+    columns: 12
+    gutter: "24px"
+    margin: "48px"
+  container:
+    maxWidth: "1320px"
+    paddingX: "24px"
+  sections:
+    - name: Sidebar
+      role: aside
+      columns: 3
+      components: [SideNav]
+    - name: Main
+      role: main
+      columns: 9
+      components: [StatsGroup, ChartSection]
+  layoutRef: dashboard-layout
   theme: ../tokens.css
 
 components:
@@ -276,6 +389,9 @@ components:
       polling: 30000
     visual:
       layout: flex-column
+      sizing:
+        height: var(--size-xl)
+        padding: var(--space-6)
       padding: var(--space-6)
       background: linear-gradient(135deg, #fff 0%, #f7faff 100%)
       border:
@@ -286,14 +402,27 @@ components:
           blur: 24px
           color: rgba(59, 130, 246, 0.16)
           ariaHidden: true
+    responsive:
+      strategy: mobile-first
+      breakpoints:
+        xs: 480
+        sm: 640
+        md: 768
+        lg: 1024
+        xl: 1280
+        xxl: 1536
 ```
 
 ### 示例 2：用户表单
 
 ```yaml
 version: "1.0"
+pageType: form
 page:
   name: UserFormPage
+  container:
+    maxWidth: "640px"
+    paddingX: "24px"
   theme: ../tokens.css
 
 components:
@@ -326,6 +455,8 @@ components:
       endpoint: POST /api/users
     visual:
       layout: flex-column
+      sizing:
+        minWidth: 320px
       gap: var(--space-4)
       padding: var(--space-8)
 ```
@@ -334,6 +465,7 @@ components:
 
 ```yaml
 version: "1.0"
+pageType: dashboard
 page:
   name: SalesChartPage
   theme: ../tokens.css
@@ -408,6 +540,7 @@ components:
 2. `dataSource` 存在时应定义 `states.loading`
 3. `props` 应提供 `example` 值（用于生成 HTML 设计稿）
 4. `visual` 应定义 `layout`
+5. 建议设置 `pageType` 以启用页面类型预设
 
 ### WARN 级别（提醒）
 

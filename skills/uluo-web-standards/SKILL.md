@@ -34,7 +34,7 @@ flowchart TD
     M --> M1[加载 language + soft-rules 对应章节]
     M1 --> M2[按需加载 coding-paradigms/naming]
     M2 --> M3[实现代码]
-    M3 --> V[运行 validate-rules.js]
+    M3 --> V[运行 validate.js]
     V -->|MUST 失败| M3
     V -->|通过| DONE
 
@@ -56,12 +56,12 @@ MEDIUM/HEAVY 任务完成后，必须通过以下闸门：
 | **stylelint** | 同上 | 手动修复 → 重跑 |
 | **eslint** | `assets/eslint.config.mjs` | 修复 → 重跑 |
 | **tsc --noEmit** | TypeScript 编译器 | 修复类型错误 → 重跑 |
-| **DDD 层边界检查** | `check-layer-boundary.js` | 修复跨层依赖 → 重跑 |
+| **DDD 层边界检查** | `scripts/checks/layer-boundary.js` | 修复跨层依赖 → 重跑 |
 
 **回退闭环**：任一闸门失败 → 修复 → 从该闸门重新执行。全部通过后才算完成。
 
 ```bash
-node scripts/validate-rules.js <files>
+node scripts/validate.js <files>
 ```
 
 ---
@@ -169,7 +169,7 @@ node scripts/validate-rules.js <files>
 |------|------|
 | eslint 规则配置 | `assets/eslint.config.mjs` |
 | stylelint 规则配置 | `assets/stylelint.config.mjs` |
-| 验证编排脚本 | `scripts/validate-rules.js` |
+| 验证编排脚本 | `scripts/validate.js` |
 | 软规则自检清单 | `references/soft-rules.md` |
 | 项目组织法（DDD 分层+垂直切片） | `references/architecture.md` |
 | 基础设施清单（P0/P1/P2） | `references/infrastructure-setup.md` |

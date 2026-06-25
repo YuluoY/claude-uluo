@@ -55,6 +55,29 @@ spec / plan / tasks **不是独立的执行层级**，而是对设计稿（L0/L1
 
 ---
 
+## 查询与流程控制脚本
+
+- **query.js**：无状态一次性查询脚本，AI/agent 可通过命令行快速获取 meta/workflow/scenario/references/agents/scripts/constraints 等结构化数据
+- **flow.js**：有状态流程控制脚本，AI/agent 通过 CLI 命令（init/next/complete/rollback/gates/skip）逐步推进流程，门控自动校验阶段前置条件
+
+```bash
+# 查询元信息
+node scripts/query.js <spec-dir> --type meta
+
+# 查询工作流
+node scripts/query.js <spec-dir> --type workflow
+
+# 查询场景配置
+node scripts/query.js <spec-dir> --type scenario --scenario medium
+
+# 人类可读格式（加 --pretty）
+node scripts/query.js <spec-dir> --type workflow --pretty
+```
+
+**执行细化流程时**：在 `specs/<feature>/` 目录下使用 flow.js 进行渐进式流程推进。
+
+---
+
 ## 项目启动主流程
 
 项目启动主流程编排设计稿流程 + 细化流程 + 记录：
@@ -104,7 +127,7 @@ flowchart TD
     P8 -.- L8["Layer 4: 记录"]
     P9 -.- L9["Layer 4: 记录"]
 
-    V[🔧 文档产出后<br/>运行 validate-docs.js --strict] -.-> P7
+    V[🔧 文档产出后<br/>运行 validate.js --strict] -.-> P7
 ```
 
 **Phase 1 子步骤（识别场景 + 决定 specs/ 内部布局）：**
@@ -124,6 +147,52 @@ flowchart TD
 - **技术方案评审**：跳过 Phase 6/7/8/9（不执行编码）；产 research-report + spec + plans/(README)
 - **事后复盘**：仅执行 Phase 8/9（已有代码和 CHANGELOG）
 - **设计探索**：仅执行 Phase 0/1（可选 Phase 2 调研），跳过 Phase 3-9；产出单文件或设计目录
+
+### 流程执行协议（flow.js）
+
+**有状态流程控制**：执行细化流程时，在 `specs/<feature>/` 目录下使用 `flow.js` 进行渐进式流程推进。flow.js 通过状态文件（`.skill-state.json`）追踪进度，门控自动校验前置条件，确保流程稳固。
+
+#### 命令协议
+
+```bash
+node scripts/flow.js <spec-dir> <command> [options]
+```
+
+| 命令 | 用途 | 关键选项 |
+|------|------|---------|
+| `init` | 初始化流程状态 | `--scenario <bugfix/small/medium/large/design-explore>` |
+| `next` | 获取当前阶段指引（含门控项、参考文档、必需动作、预期产出） | — |
+| `complete <phaseId>` | 完成当前阶段（自动执行门控校验） | `--note <备注>` |
+| `status` | 查看流程概览（进度、已完成/已跳过阶段） | `--pretty` |
+| `rollback <phaseId>` | 回退到指定阶段（继续从该阶段推进） | — |
+| `gates` | 列出当前阶段的门控项 | — |
+| `skip <phaseId>` | 手动跳过阶段（需说明理由） | `--reason <理由>` |
+
+#### 执行流程
+
+1. **初始化**：`node scripts/flow.js <spec-dir> init --scenario <级别>`，选择场景
+2. **循环推进**：
+   - `next` → 获取当前阶段指引
+   - 执行阶段必需动作（阅读 references、创建文件、编写内容等）
+   - `complete <phaseId>` → 门控自动校验，失败则修复后重试，通过则进入下一阶段
+3. **错误恢复**：门控不通过需要回退时用 `rollback <phaseId>`；需要跳过阶段用 `skip <phaseId> --reason`
+4. **状态查询**：随时用 `status` 查看进度
+
+#### 门控类型
+
+| 类型 | 校验内容 | 使用阶段 |
+|------|---------|---------|
+| `file-exists` | 文件必须存在 | Phase 3(spec.md)、Phase 5(plans/README.md)、Phase 6(tasks/phase1.md)、Phase 8(verification-report.md)、Phase 9(retrospective.md) |
+| `dir-exists` | 目录必须存在 | Phase 6(tasks/) |
+| `script-exit-code` | 脚本执行退出码为 0 | Phase 7(validate.js --strict) |
+
+**门控失败时**：complete 命令返回 `success: false` 和 `gateFailures` 详情，修复后重新 complete 即可，无需回退（除非需要回到之前层级重新产出文档）。
+
+#### 与 query.js 的关系
+
+- **query.js**：无状态、一次性查询，返回完整结构化数据，适合快速了解流程概况
+- **flow.js**：有状态、逐步控制，每次只返回当前阶段信息，适合实际执行细化流程时使用
+- 两者共用相同的 WORKFLOW/SCENARIOS 配置，flow.js 在 query 的静态数据基础上增加了状态管理和门控执行
 
 ---
 
@@ -216,12 +285,14 @@ flowchart TD
 | [atomic-component.md](examples/atomic-component.md) | 原子组件需求清单模板 + 填写指南 | L2 组件层产出原子组件清单时加载 |
 | [business-component.md](examples/business-component.md) | 业务组件需求清单模板 + 填写指南 | L2 组件层产出业务组件清单时加载 |
 
-### scripts/ — 硬约束校验
+### scripts/ — 硬约束校验 + 流程控制
 
 | 文件 | 内容 | 何时运行 |
 |------|------|---------|
-| [validate-docs.js](scripts/validate-docs.js) | 文档规范校验（5 步管线：结构→章节→格式→链接→CHANGELOG） | 文档产出后运行 |
-| [lib/utils.js](scripts/lib/utils.js) | 校验工具函数 | validate-docs.js 依赖 |
+| [validate.js](scripts/validate.js) | 文档规范校验（5 步管线：结构→章节→格式→链接→CHANGELOG） | 文档产出后运行 |
+| [query.js](scripts/query.js) | 无状态流程数据查询（meta/workflow/scenario/references/agents/scripts/constraints） | 了解流程概况时 |
+| [flow.js](scripts/flow.js) | 有状态流程控制（init/next/complete/rollback/gates/skip），门控自动校验 | 执行细化流程时 |
+| [lib/utils.js](scripts/lib/utils.js) | 校验工具函数 | validate.js 依赖 |
 
 ---
 
@@ -236,6 +307,27 @@ flowchart TD
 - **researcher**：中功能及以上必启，大功能建议拆分知识缺口分派多个并行
 - **reviewer**：中功能验收阶段至少启动一次审查 verification-report
 - 简化场景（Bug 修复、小功能）可跳过子代理
+
+---
+
+## references 引用时机
+
+**按需加载 + flow.js 命令驱动**：
+
+| Phase | 读取 / 执行 |
+|-------|------------|
+| Phase 0 | `flow.js init --scenario <级别>`（初始化流程状态）；`query.js --type scenario`（查询场景配置）；执行 `git config user.name` 获取作者 |
+| Phase 1 | `flow.js next`（获取阶段指引）；references/file-conventions.md；完成后 `flow.js complete 1` |
+| Phase 2 | `flow.js next`；references/research-protocol.md；agents/researcher.md（medium+）；完成后 `flow.js complete 2` |
+| Phase 3 | `flow.js next`；examples/spec-template.md；完成后 `flow.js complete 3`（校验 spec.md 门控） |
+| Phase 4 | `flow.js next`；references/analysis-protocol.md；完成后 `flow.js complete 4` |
+| Phase 5 | `flow.js next`；examples/plan-template.md；完成后 `flow.js complete 5`（校验 plans/README.md 门控） |
+| Phase 6 | `flow.js next`；examples/tasks-template.md；完成后 `flow.js complete 6`（校验 tasks/ 目录 + phase1.md 门控） |
+| Phase 7 | `flow.js next`；examples/changelog-template.md；完成后 `flow.js complete 7`（自动执行 validate.js --strict 门控） |
+| Phase 8 | `flow.js next`；examples/verification-report-template.md；agents/reviewer.md（medium+）；完成后 `flow.js complete 8`（校验 verification-report.md 门控） |
+| Phase 9 | `flow.js next`；examples/retrospective-template.md；完成后 `flow.js complete 9`（校验 retrospective.md 门控） |
+
+产出设计文档（L0/L1/L2）时加载 references/design-doc-protocol.md。
 
 ---
 

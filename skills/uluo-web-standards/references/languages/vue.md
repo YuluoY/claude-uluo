@@ -3,7 +3,7 @@
 **加载条件：** 当前任务涉及 Vue、Vue 3、SFC、Composition API、Options API、Pinia、组件拆分或前端状态管理时加载。若项目已有更具体的 Vue 规范，以项目规范为准；本文件作为质量底线补充。
 
 > 参考：[Official Vue Style Guide](https://vuejs.org/style-guide/)、[VueUse Composable Patterns](https://alexop.dev/posts/vueuse_composables_style_guide/)
-> 格式由 `validate-rules.js` 检查。Vue 专项 lint 由 `eslint-plugin-vue` 处理（见 `assets/eslint.config.mjs`）。SCSS 由 `stylelint` 处理。
+> 格式由 `validate.js` 检查（包含 eslint/stylelint/tsc + DDD 层边界检查）。Vue 专项 lint 由 `eslint-plugin-vue` 处理（见 `assets/eslint.config.mjs`）。SCSS 由 `stylelint` 处理。
 > 项目组织、组件四态、可访问性、性能分别见 `references/architecture.md`、`references/ui-states.md`、`references/accessibility.md`、`references/performance.md`。
 
 ## 目录

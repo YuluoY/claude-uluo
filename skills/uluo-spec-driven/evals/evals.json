@@ -34,7 +34,7 @@
         },
         {
           "id": "validate-pass",
-          "text": "validate-docs.js 运行零失败",
+          "text": "validate.js 运行零失败",
           "check_method": "script"
         },
         {
@@ -67,7 +67,7 @@
         },
         {
           "id": "bug-validate",
-          "text": "validate-docs.js 简化方案模式通过",
+          "text": "validate.js 简化方案模式通过",
           "check_method": "script"
         }
       ]
@@ -95,7 +95,7 @@
         },
         {
           "id": "tech-validate",
-          "text": "validate-docs.js 通过（技术评审场景）",
+          "text": "validate.js 通过（技术评审场景）",
           "check_method": "script"
         }
       ]

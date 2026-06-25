@@ -3,7 +3,7 @@
 **加载条件：** 当前任务涉及 React、React Hooks、JSX、Next.js、Vite React、状态管理（Zustand/Jotai/Redux）、组件拆分或前端状态管理时加载。若项目已有更具体的 React 规范，以项目规范为准；本文件作为质量底线补充。
 
 > 参考：[Airbnb React Style Guide](https://github.com/airbnb/javascript/tree/master/react)、[React Docs: Thinking in React](https://react.dev/learn/thinking-in-react)
-> 格式由 `validate-rules.js` 检查。React 专项 lint 由 `eslint-plugin-react` + `eslint-plugin-react-hooks` 处理（见 `assets/eslint.config.mjs`）。
+> 格式由 `validate.js` 检查（包含 eslint/stylelint/tsc + DDD 层边界检查）。React 专项 lint 由 `eslint-plugin-react` + `eslint-plugin-react-hooks` 处理（见 `assets/eslint.config.mjs`）。
 > 项目组织、组件四态、可访问性、性能分别见 `references/architecture.md`、`references/ui-states.md`、`references/accessibility.md`、`references/performance.md`。
 
 ## 目录

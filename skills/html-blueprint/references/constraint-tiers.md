@@ -6,25 +6,25 @@ html-blueprint 的校验规则按严重程度分为三级：
 
 **定义**：违反即阻断。不符合这些规则的输出不能发布给用户。
 
-**检查方式**：由 `scripts/check-*.js` 强制执行，exit code 1。
+**检查方式**：由 `scripts/checks/*.js` 强制执行，exit code 1。
 
 **HARD 规则清单**：
 
 | 规则 | 检查脚本 |
 |------|---------|
-| data-component 必须 PascalCase | check-data-component.js |
-| data-component 禁止泛名（card/button/table 等） | check-data-component.js |
-| data-list 内的组件必须有 data-convert | check-data-component.js |
-| data-convert 值必须为合法枚举 | check-data-convert.js |
-| data-convert="component" 必须有 data-component | check-data-convert.js |
-| 图表元素必须 data-convert="manual" | check-charts-manual.js |
-| 图表子元素禁止 data-prop/data-component | check-charts-manual.js |
-| form 必须有 data-model | check-form-model.js |
-| form 必须有 data-component | check-form-model.js |
-| 表单控件必须有 data-field | check-form-model.js |
-| 装饰元素必须有 aria-hidden="true" | check-decorative-aria.js |
-| 装饰元素禁止含业务属性 | check-decorative-aria.js |
-| HTML 必须声明 @viewport | check-responsive-viewport.js |
+| data-component 必须 PascalCase | checks/data-component.js |
+| data-component 禁止泛名（card/button/table 等） | checks/data-component.js |
+| data-list 内的组件必须有 data-convert | checks/data-component.js |
+| data-convert 值必须为合法枚举 | checks/data-convert.js |
+| data-convert="component" 必须有 data-component | checks/data-convert.js |
+| 图表元素必须 data-convert="manual" | checks/charts.js |
+| 图表子元素禁止 data-prop/data-component | checks/charts.js |
+| form 必须有 data-model | checks/form-model.js |
+| form 必须有 data-component | checks/form-model.js |
+| 表单控件必须有 data-field | checks/form-model.js |
+| 装饰元素必须有 aria-hidden="true" | checks/decorative-aria.js |
+| 装饰元素禁止含业务属性 | checks/decorative-aria.js |
+| HTML 必须声明 @viewport | checks/responsive-viewport.js |
 
 ## SHOULD（建议约束）
 
@@ -36,18 +36,18 @@ html-blueprint 的校验规则按严重程度分为三级：
 
 | 规则 | 检查脚本 |
 |------|---------|
-| 装饰元素建议 aria-hidden | check-data-convert.js |
-| 禁止 box1/left/text2 等泛名 class | check-class-names.js |
-| 禁止中文 class 名 | check-class-names.js |
-| 禁止 !important | check-forbidden-selectors.js |
-| 禁止深度后代标签选择器 | check-forbidden-selectors.js |
-| 禁止 nth-child 无 class 前缀 | check-forbidden-selectors.js |
-| 禁止 *:not() | check-forbidden-selectors.js |
-| 表单字段建议声明 data-type | check-form-model.js |
-| 提交按钮建议 data-event | check-form-model.js |
-| 设计稿 HTML 缺少 <!-- @theme --> 声明 | check-theme-consistency.js |
-| HTML 中 <style> 重复定义主题已有的 :root token | check-theme-consistency.js |
-| var() 引用主题 CSS 中不存在的 token | check-theme-consistency.js |
+| 装饰元素建议 aria-hidden | checks/data-convert.js |
+| 禁止 box1/left/text2 等泛名 class | checks/class-names.js |
+| 禁止中文 class 名 | checks/class-names.js |
+| 禁止 !important | checks/forbidden-selectors.js |
+| 禁止深度后代标签选择器 | checks/forbidden-selectors.js |
+| 禁止 nth-child 无 class 前缀 | checks/forbidden-selectors.js |
+| 禁止 *:not() | checks/forbidden-selectors.js |
+| 表单字段建议声明 data-type | checks/form-model.js |
+| 提交按钮建议 data-event | checks/form-model.js |
+| 设计稿 HTML 缺少 <!-- @theme --> 声明 | checks/theme-consistency.js |
+| HTML 中 <style> 重复定义主题已有的 :root token | checks/theme-consistency.js |
+| var() 引用主题 CSS 中不存在的 token | checks/theme-consistency.js |
 
 ## WARN（提示约束）
 
@@ -66,7 +66,7 @@ html-blueprint 的校验规则按严重程度分为三级：
 
 ## 执行协议
 
-1. AI 生成 HTML 后，自动运行 `node scripts/validate-all.js`
+1. AI 生成 HTML 后，自动运行 `node scripts/validate.js`
 2. HARD 违规必须修复，修复后重新运行直至通过
 3. SHOULD 违规列出，AI 逐条判断：修复 或 记录理由
 4. WARN 违规由 AI 在转换置信度报告中列出
