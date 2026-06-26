@@ -1,7 +1,7 @@
 ---
 name: html-blueprint
 version: 0.3.0
-description: "HTML-first Component Design Protocol with professional design system integration. Generate browser-renderable HTML/CSS design drafts annotated with data-* attributes, powered by on-demand remote skills: ui-ux-pro-max (67 styles, 161 color palettes, 57 font pairings, 99 UX rules) and design-taste-frontend (anti-slop premium design taste). Use this skill when the user mentions any of: 生成页面, 设计稿, HTML原型, 组件化HTML, UI设计稿转代码, HTML转Vue, HTML转React, 前端设计稿, 页面重构, 表单设计, component blueprint, HTML design draft, design-to-code, UI prototype."
+description: "HTML-first Component Design Protocol with professional design system integration. Generate browser-renderable HTML/CSS design drafts annotated with data-* attributes, powered by mandatory remote skills: ui-ux-pro-max (67 styles, 161 color palettes, 57 font pairings, 99 UX rules) and design-taste-frontend (anti-slop premium design taste). Use this skill when the user mentions any of: 生成页面, 设计稿, HTML原型, 组件化HTML, UI设计稿转代码, HTML转Vue, HTML转React, 前端设计稿, 页面重构, 表单设计, component blueprint, HTML design draft, design-to-code, UI prototype."
 ---
 
 # HTML Blueprint — 需求到设计稿的 AI 转换协议
@@ -35,16 +35,16 @@ flowchart TD
 
 两条路径下游流程一致：提取 Design Spec → 校验 → 生成 HTML → 校验。
 
-## 远程设计知识加载（按需）
+## 远程设计知识加载（必须）
 
-html-blueprint 内置了两个远程设计类 skill，通过 `npx skills add` **按需拉取**，安装到项目本地 `.agents/skills/` 目录。已安装则跳过，支持 `--force` 强制更新。
+html-blueprint 内置了两个远程设计类 skill，**每次生成设计稿前必须加载**。通过 `npx skills add` 拉取，安装到项目本地 `.agents/skills/` 目录。已安装则跳过，支持 `--force` 强制更新。
 
 ### 已集成的远程 Skill
 
-| 名称 | 作用 | 触发条件 |
-|------|------|---------|
-| **ui-ux-pro-max** | 设计系统生成：67 种风格、161 配色、57 字体、99 UX 规则 | 生成 Landing Page、营销页、作品集、仪表盘等视觉要求高的页面 |
-| **design-taste-frontend** | 品味纠偏：AI TELLS 禁令、三旋钮配置、创意武器库 | 用户要求"高端设计"、"避免 AI 味"、"专业设计感" |
+| 名称 | 作用 |
+|------|------|
+| **ui-ux-pro-max** | 设计系统生成：67 种风格、161 配色、57 字体、99 UX 规则 |
+| **design-taste-frontend** | 品味纠偏：AI TELLS 禁令、三旋钮配置、创意武器库 |
 
 ### 加载方式
 
@@ -68,15 +68,14 @@ node scripts/_shared/load.js <skill-name> --force
 
 ### 设计系统生成流程
 
-当需要专业设计支持时，在提取 Design Spec 之前，先加载远程设计知识：
+每次生成设计稿前，必须先加载两个远程设计知识（HARD 约束）：
 
-1. **判断是否需要**：视觉要求高的页面（Landing、作品集、营销页、仪表盘）→ 加载 ui-ux-pro-max
-2. **加载设计知识**：调用 `_shared/load.js` 通过 npx 拉取对应 skill
-3. **读取 SKILL.md**：读取已安装 skill 的 `.agents/skills/<name>/SKILL.md`，提取设计原则
-4. **生成设计系统**：基于用户需求 + 远程 skill 知识，生成设计方案（风格/配色/字体/间距/圆角/阴影/动效）
-5. **融入 Design Spec**：将设计系统写入 Design Spec 的 `visual` 字段
-6. **生成 tokens.css**：将设计系统映射为标准 CSS 变量（见 [theme-consistency.md](references/theme-consistency.md)）
-7. **品味纠偏**：加载 design-taste-frontend，检查 AI 味模式，替换为高级替代方案
+1. **加载设计知识**：调用 `_shared/load.js` 通过 npx 拉取 ui-ux-pro-max 和 design-taste-frontend
+2. **读取 SKILL.md**：读取已安装 skill 的 `.agents/skills/<name>/SKILL.md`，提取设计原则
+3. **生成设计系统**：基于用户需求 + 远程 skill 知识，生成设计方案（风格/配色/字体/间距/圆角/阴影/动效）
+4. **融入 Design Spec**：将设计系统写入 Design Spec 的 `visual` 字段
+5. **生成 tokens.css**：将设计系统映射为标准 CSS 变量（见 [theme-consistency.md](references/theme-consistency.md)）
+6. **品味纠偏**：结合 design-taste-frontend，检查 AI 味模式，替换为高级替代方案
 
 设计系统 → tokens.css 映射规则：
 
@@ -100,7 +99,7 @@ node scripts/_shared/load.js <skill-name> --force
 flowchart TD
     subgraph P1["Phase 1: 全局设定（串行，不可跳过）"]
         S1["Step 1: 需求理解\n识别页面类型和页面清单"]
-        S2["Step 2: 加载设计知识\n按需远程加载 ui-ux-pro-max / design-taste-frontend"]
+        S2["Step 2: 加载设计知识\n必须加载 ui-ux-pro-max + design-taste-frontend"]
         S3["Step 3: 尺寸设定\n查阅 design-dimensions.md\n确定画布/容器/栅格"]
         S4["Step 4: 生成 tokens.css\n→ design/tokens.css"]
         S5["Step 5: 骨架布局\n→ design/layout/"]
@@ -129,7 +128,7 @@ flowchart TD
 | 步骤 | 输入 | 输出 | 参考文档 |
 |------|------|------|---------|
 | Step 1 需求理解 | 用户需求 | 页面类型 + 页面清单 | requirement-extraction-guide.md |
-| Step 2 加载知识 | 页面类型判断 | 远程 SKILL.md（已加载则跳过） | remote-skills.md |
+| Step 2 加载知识 | 无条件 | ui-ux-pro-max + design-taste-frontend SKILL.md（已加载则跳过） | remote-skills.md |
 | Step 3 尺寸设定 | 页面类型 | 画布/容器/栅格参数 | design-dimensions.md |
 | Step 4 tokens.css | 尺寸参数 + 色彩方案 | design/tokens.css | theme-consistency.md |
 | Step 5 骨架布局 | tokens.css + 页面类型 | design/layout/*.html | design-dimensions.md |
@@ -137,7 +136,7 @@ flowchart TD
 | Step 7 逐页生成 | layout + blocks + components | design/pages/*.html | code-generation-guide.md |
 | Step 8 组件抽取 | 跨页复用元素 | design/components/*.html | protocol-spec.md |
 | Step 9 脚本校验 | 所有产物 | 通过/报错 | constraint-tiers.md |
-| Step 10 视觉走查 | 浏览器预览 | 最终确认 | design-taste-frontend（已加载时） |
+| Step 10 视觉走查 | 浏览器预览 | 最终确认 | design-taste-frontend |
 
 **三道 HARD 门禁**在 Step 9 执行，任一失败必须修复后重新校验（loop）：
 
@@ -233,17 +232,18 @@ node scripts/extract.js <input.html> --out <spec.json>
    - 检查 `design/layout/` 目录，骨架布局必须在页面之前生成
    - 详见 `references/theme-consistency.md` 和 `references/design-dimensions.md`
 1. **识别任务类型**：判断是生成新设计稿、review 已有设计稿、还是从需求提取 Design Spec；同时识别页面类型和页面清单（Step 1）。
-2. **生成前加载协议**：任何生成 HTML 设计稿的任务，必须先读取 `references/protocol-spec.md` 了解完整属性字典和组件分类规则；尺寸设定前必须读取 `references/design-dimensions.md`。
-3. **写 CSS 时加载约定**：任何涉及 CSS 的任务，读取 `references/css-conventions.md`。如果项目已有 `design/tokens.css`，还需读取 `references/theme-consistency.md`。
-4. **理解约束分级**：读取 `references/constraint-tiers.md` 区分 HARD（阻断）/ SHOULD（建议）/ WARN（提示）。
-5. **提取 Design Spec 时加载指南**：从需求提取 Design Spec 时，读取 `references/requirement-extraction-guide.md`。
-6. **生成代码时加载指南**：AI 生成框架代码时，读取 `references/code-generation-guide.md`。
-7. **HTML 负责视觉保真**：允许 flex、grid、gradient、box-shadow、backdrop-filter、animation。不要为了"好转换"而牺牲视觉效果。
-8. **data-* 负责语义标注**：每个组件用 data-component（PascalCase）、动态数据用 data-prop、交互触发用 data-event（click/submit/change）、业务动作名用 data-action（camelCase，配合 data-event）、可替换区域用 data-slot、转换策略用 data-convert。
-9. **生成后自检（HARD）**：HTML 输出后立即运行 `node scripts/validate.js <output.html>`，HARD 违规必须修复后才呈现给用户。
-10. **跨蓝图一致性校验**：如果项目中有多个 HTML 设计稿，validate.js 会自动运行主题一致性检查（token 继承、var() 引用、主题 CSS 唯一性）。
-11. **Spec 校验（HARD）**：Spec-First 工作流中，Spec 必须先通过 `checks/spec.js` 校验才能生成 HTML。
-12. **三角校验（HARD）**：Spec-First 工作流完成后，必须运行 `checks/spec-fidelity.js` 校验 Spec ↔ HTML（↔ 代码）一致性，HARD 违规必须修复后才能提交。
+2. **加载远程设计知识（HARD）**：任何生成 HTML 设计稿的任务，必须先加载 ui-ux-pro-max 和 design-taste-frontend（`_shared/load.js --all`）。
+3. **生成前加载协议**：任何生成 HTML 设计稿的任务，必须先读取 `references/protocol-spec.md` 了解完整属性字典和组件分类规则；尺寸设定前必须读取 `references/design-dimensions.md`。
+4. **写 CSS 时加载约定**：任何涉及 CSS 的任务，读取 `references/css-conventions.md`。如果项目已有 `design/tokens.css`，还需读取 `references/theme-consistency.md`。
+5. **理解约束分级**：读取 `references/constraint-tiers.md` 区分 HARD（阻断）/ SHOULD（建议）/ WARN（提示）。
+6. **提取 Design Spec 时加载指南**：从需求提取 Design Spec 时，读取 `references/requirement-extraction-guide.md`。
+7. **生成代码时加载指南**：AI 生成框架代码时，读取 `references/code-generation-guide.md`。
+8. **HTML 负责视觉保真**：允许 flex、grid、gradient、box-shadow、backdrop-filter、animation。不要为了"好转换"而牺牲视觉效果。
+9. **data-* 负责语义标注**：每个组件用 data-component（PascalCase）、动态数据用 data-prop、交互触发用 data-event（click/submit/change）、业务动作名用 data-action（camelCase，配合 data-event）、可替换区域用 data-slot、转换策略用 data-convert。
+10. **生成后自检（HARD）**：HTML 输出后立即运行 `node scripts/validate.js <output.html>`，HARD 违规必须修复后才呈现给用户。
+11. **跨蓝图一致性校验**：如果项目中有多个 HTML 设计稿，validate.js 会自动运行主题一致性检查（token 继承、var() 引用、主题 CSS 唯一性）。
+12. **Spec 校验（HARD）**：Spec-First 工作流中，Spec 必须先通过 `checks/spec.js` 校验才能生成 HTML。
+13. **三角校验（HARD）**：Spec-First 工作流完成后，必须运行 `checks/spec-fidelity.js` 校验 Spec ↔ HTML（↔ 代码）一致性，HARD 违规必须修复后才能提交。
 
 ## 门禁保障
 
