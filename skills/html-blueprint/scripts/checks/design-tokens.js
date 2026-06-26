@@ -32,24 +32,24 @@ import { collectFiles } from '../_shared/collect-files.js'
 const EXTENSIONS = new Set(['.css'])
 
 const HARD_TOKENS = [
-  '--space-4',
-  '--space-8',
-  '--space-16',
-  '--space-24',
-  '--radius-md',
-  '--radius-lg',
-  '--font-size-h1',
-  '--font-size-body-base',
-  '--color-primary',
-  '--color-text-primary',
-  '--color-bg-page',
+  '--space-4', '--space-8', '--space-16', '--space-24',
+  '--radius-md', '--radius-lg',
+  '--font-size-h1', '--font-size-body-base',
+  '--color-primary', '--color-primary-hover',
+  '--color-text-primary', '--color-text-secondary',
+  '--color-bg-page', '--color-bg-surface',
+  '--color-success', '--color-warning', '--color-danger',
+  '--opacity-disabled', '--opacity-overlay',
+  '--motion-duration-medium',
 ]
 
 const SHOULD_TOKENS = [
-  '--breakpoint-md',
-  '--breakpoint-lg',
+  '--breakpoint-md', '--breakpoint-lg',
   '--size-md',
   '--shadow-md',
+  '--elevation-1', '--elevation-3',
+  '--z-dropdown', '--z-modal',
+  '--opacity-hover', '--opacity-press',
 ]
 
 let hardFindings = 0
@@ -79,15 +79,20 @@ function checkControlledExtensions(cssText, filePath) {
         name.startsWith('--canvas-')) continue
 
     if (name.startsWith('--space-')) {
-      const n = parseInt(name.replace('--space-', ''))
-      if (isNaN(n) || n % 4 !== 0) {
-        console.log(`${filePath}:0: 新增间距 ${name}: ${value} 应为 4 的倍数（如 --space-4/8/12/16/.../96），当前值 ${n}`)
-        warnFindings++
+      const pxMatch = value.match(/(\d+(?:\.\d+)?)\s*px/)
+      if (pxMatch) {
+        const pxVal = parseFloat(pxMatch[1])
+        if (pxVal % 4 !== 0) {
+          console.log(`${filePath}:0: 新增间距 ${name}: ${value} — px 值 ${pxVal} 不是 4 的倍数，应使用 4px 网格（4/8/12/16/20/24/...）`)
+          warnFindings++
+        }
       }
     }
 
     if (name.startsWith('--color-') && !name.startsWith('--color-text-') && !name.startsWith('--color-bg-') && !name.startsWith('--color-border-')) {
-      if (/^#[0-9a-fA-F]{3,8}$/.test(value)) {
+      // 基色豁免：色阶 -50~-950 和 semantic base 颜色允许裸 hex 作为原始值定义
+      const isScaleBase = /-(50|100|200|300|400|500|600|700|800|900|950)$/.test(name)
+      if (!isScaleBase && /^#[0-9a-fA-F]{3,8}$/.test(value)) {
         console.log(`${filePath}:0: 新增颜色 ${name}: ${value} 使用裸 hex 值，建议通过 color-mix() 从已有色阶派生`)
         warnFindings++
       }

@@ -40,6 +40,16 @@ flowchart TD
 
 **串行约束（HARD）**：禁止跳步，禁止并行生成多个页面，所有产物输出到 `design/`。
 
+**flow.js 强制使用（HARD）**：每个 Phase 必须通过 flow.js 门禁后才能进入下一 Phase。AI 必须用 `flow.js next` 获取阶段指引，用 `flow.js complete <phaseId>` 完成阶段（自动执行门禁校验），用 `flow.js status` 确认进度。禁止绕过 flow.js 直接写文件。`complete` 失败时必须修复后重新 `complete`，不得跳过门禁。
+
+```bash
+# 必须使用 flow.js 驱动整个流程（HARD，不可绕过）
+node scripts/flow.js <design-dir> init --scenario multi-page
+node scripts/flow.js <design-dir> next          # 读指引
+node scripts/flow.js <design-dir> complete <id>  # 完成阶段（门禁不通过则修复loop）
+node scripts/flow.js <design-dir> status         # 确认进度
+```
+
 ---
 
 ## Phase 0: 需求理解

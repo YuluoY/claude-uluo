@@ -68,8 +68,8 @@ function checkFile(filePath) {
       findings++
     }
 
-    // 检查泛名
-    if (GENERIC_NAMES.has(name.toLowerCase())) {
+    // 检查泛名（components/ 目录豁免——原子组件展示页允许用组件自身名）
+    if (GENERIC_NAMES.has(name.toLowerCase()) && !filePath.includes('/components/')) {
       console.log(`${filePath}:0: data-component "${name}" 是泛名，应使用具体业务名称如 "UserCard", "ProjectTable"`)
       findings++
     }
