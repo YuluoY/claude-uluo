@@ -24,10 +24,9 @@ npx skills add leonxlnx/taste-skill --skill design-taste-frontend -y
 
 ### 触发时机
 
-在以下场景自动触发远程加载：
+**每次生成设计稿前必须加载**（HARD 约束，不可跳过）。
 
-1. 用户明确要求"专业设计风格"、"高端设计"、"避免 AI 味"
-2. 生成 Landing Page、营销页、作品集等视觉要求高的页面
+Phase 0 加载远程知识后，AI 从这些 skill 的 SKILL.md 中提取设计原则，用于指导后续 tokens.css 和组件的生成。
 3. 项目首次生成 `tokens.css`，需要设计系统支撑
 4. 用户提到特定风格名（glassmorphism、bento、brutalism 等）
 

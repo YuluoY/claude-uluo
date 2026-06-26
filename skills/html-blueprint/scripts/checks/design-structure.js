@@ -11,7 +11,10 @@
  *      - @layout 引用的文件必须存在（相对于 page 文件解析 ../layout/<name>.html）（HARD）
  *   2. design/ 下所有 HTML 文件（layout/, blocks/, components/, pages/）必须包含
  *      引用 tokens.css 的 <link rel="stylesheet">（HARD）
- *   3. 若 design/ 存在但 tokens.css 不存在：无 pages 时为 WARN，有 pages 时为 HARD
+ *   3. 若 design/pages/ 包含 HTML 文件：
+ *      - design/component-registry.json 必须存在（HARD）
+ *      - design/index.html 建议存在（WARN）
+ *      - design/tokens/ 目录下至少有 tokens 展示页（WARN）
  *
  * 用法：
  *   node scripts/checks/design-structure.js <dir> [...more]
@@ -103,6 +106,14 @@ function checkProjectRoot(rootDir) {
   const pageHtmlFiles = getHtmlFilesInDir(pagesDir)
   const hasPages = pageHtmlFiles.length > 0
 
+  const registryPath = join(designDir, 'component-registry.json')
+  const indexHtmlPath = join(designDir, 'index.html')
+  const tokensDir = join(designDir, 'tokens')
+
+  const registryExists = existsSync(registryPath)
+  const indexHtmlExists = existsSync(indexHtmlPath)
+  const tokensDirExists = existsSync(tokensDir)
+
   if (!tokensExists) {
     if (hasPages) {
       console.log(`${tokensPath}:0: design/tokens.css 文件不存在，但 design/pages/ 中存在 HTML 文件，必须先创建 tokens.css`)
@@ -111,6 +122,21 @@ function checkProjectRoot(rootDir) {
       console.log(`${tokensPath}:0: design/ 目录存在但未找到 tokens.css，建议创建 tokens.css 定义设计令牌`)
       warnFindings++
     }
+  }
+
+  if (!registryExists && hasPages) {
+    console.log(`${registryPath}:0: design/pages/ 中存在 HTML 文件但缺少 component-registry.json，请先创建组件注册表以确保跨页面一致性`)
+    hardFindings++
+  }
+
+  if (!indexHtmlExists && hasPages) {
+    console.log(`${indexHtmlPath}:0: 建议创建 design/index.html 作为设计系统总入口，参考 examples/index-template.html`)
+    warnFindings++
+  }
+
+  if (!tokensDirExists && hasPages) {
+    console.log(`${tokensDir}:0: 建议创建 design/tokens/ 目录存放 Token 展示页（colors/typography/spacing/radius/shadow/motion）`)
+    warnFindings++
   }
 
   if (hasPages) {

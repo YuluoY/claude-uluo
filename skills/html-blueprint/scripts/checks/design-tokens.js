@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * design-tokens.js — 校验 tokens.css 是否包含必要的核心 token。
+ * design-tokens.js — 校验 tokens.css 是否包含必要的核心 token 和受控扩展合规性。
  *
  * 规则：
  *   HARD（必须存在）：
@@ -13,6 +13,11 @@
  *     --breakpoint-md, --breakpoint-lg
  *     --size-md
  *     --shadow-md
+ *   受控扩展（WARN）：
+ *     - 新增间距必须为 --space-{n}，n 为 4 的倍数
+ *     - 新增颜色禁止裸 hex，应通过 color-mix() 派生
+ *     - 新增字号应遵循 type scale 比率
+ *     - 新增圆角/阴影应从标准刻度中选择
  *
  * 用法：
  *   node scripts/checks/design-tokens.js <css-file-or-dir> [...more]
@@ -56,6 +61,63 @@ function tokenExists(cssText, tokenName) {
   return re.test(cssText)
 }
 
+function checkControlledExtensions(cssText, filePath) {
+  const propRe = /--([\w-]+)\s*:\s*([^;]+);/g
+  let match
+
+  while ((match = propRe.exec(cssText)) !== null) {
+    const name = `--${match[1]}`
+    const value = match[2].trim()
+
+    if (HARD_TOKENS.includes(name) || SHOULD_TOKENS.includes(name)) continue
+    if (name.startsWith('--breakpoint-') || name.startsWith('--container-') ||
+        name.startsWith('--grid-') || name.startsWith('--size-') ||
+        name.startsWith('--font-') || name.startsWith('--line-height-') ||
+        name.startsWith('--letter-spacing-') || name.startsWith('--font-weight-') ||
+        name.startsWith('--motion-') || name.startsWith('--border-') ||
+        name.startsWith('--color-') || name.startsWith('--radius-') ||
+        name.startsWith('--shadow-') || name.startsWith('--space-') ||
+        name.startsWith('--focus-ring') || name.startsWith('--overlay') ||
+        name.startsWith('--canvas-')) continue
+
+    if (name.startsWith('--space-')) {
+      const n = parseInt(name.replace('--space-', ''))
+      if (isNaN(n) || n % 4 !== 0) {
+        console.log(`${filePath}:0: 新增间距 ${name}: ${value} 应为 4 的倍数（如 --space-4/8/12/16/.../96），当前值 ${n}`)
+        warnFindings++
+      }
+    }
+
+    if (name.startsWith('--color-') && !name.startsWith('--color-text-') && !name.startsWith('--color-bg-') && !name.startsWith('--color-border-')) {
+      if (/^#[0-9a-fA-F]{3,8}$/.test(value)) {
+        console.log(`${filePath}:0: 新增颜色 ${name}: ${value} 使用裸 hex 值，建议通过 color-mix() 从已有色阶派生`)
+        warnFindings++
+      }
+    }
+
+    if (name.startsWith('--font-size-') && !name.includes('button') && !name.startsWith('--font-size-body') && !/^--font-size-h\d$/.test(name)) {
+      console.log(`${filePath}:0: 新增字号 ${name}: ${value} 建议遵循 type scale 比率（1.25 或 1.333），从已有字号派生`)
+      warnFindings++
+    }
+
+    if (name.startsWith('--radius-')) {
+      const standard = ['--radius-sm', '--radius-md', '--radius-lg', '--radius-xl', '--radius-2xl', '--radius-full']
+      if (!standard.includes(name)) {
+        console.log(`${filePath}:0: 新增圆角 ${name}: ${value} 建议从标准刻度中选择: sm/md/lg/xl/2xl/full`)
+        warnFindings++
+      }
+    }
+
+    if (name.startsWith('--shadow-')) {
+      const standard = ['--shadow-sm', '--shadow-md', '--shadow-lg', '--shadow-xl', '--shadow-focus-ring']
+      if (!standard.includes(name)) {
+        console.log(`${filePath}:0: 新增阴影 ${name}: ${value} 建议从标准层级中选择: sm/md/lg/xl`)
+        warnFindings++
+      }
+    }
+  }
+}
+
 function checkCssFile(filePath) {
   let content
   try { content = readFileSync(filePath, 'utf-8') }
@@ -87,6 +149,8 @@ function checkCssFile(filePath) {
     console.log(`${filePath}:0: tokens.css 建议补充的 token: ${missingShould.join(', ')}`)
     warnFindings += missingShould.length
   }
+
+  checkControlledExtensions(content, filePath)
 }
 
 function main() {

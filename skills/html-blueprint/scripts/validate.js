@@ -15,6 +15,7 @@
  *   9. checks/theme-consistency.js   → 跨蓝图主题一致性
  *  10. checks/design-structure.js    → design/ 目录结构校验
  *  11. checks/design-tokens.js       → tokens.css 核心 token 校验
+ *  12. checks/component-registry.js  → 组件注册表完整性
  *
  * 用法：
  *   node scripts/validate.js <file-or-dir> [...more]
@@ -42,6 +43,7 @@ const CHECKS = [
   { name: 'theme-consistency', file: 'checks/theme-consistency.js', desc: '跨蓝图主题一致性' },
   { name: 'design-structure', file: 'checks/design-structure.js', desc: 'design/ 目录结构校验' },
   { name: 'design-tokens', file: 'checks/design-tokens.js', desc: 'tokens.css 核心 token 校验' },
+  { name: 'component-registry', file: 'checks/component-registry.js', desc: '组件注册表完整性' },
 ]
 
 function runCheck(name, file, inputs) {

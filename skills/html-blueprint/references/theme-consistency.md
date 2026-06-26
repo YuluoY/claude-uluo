@@ -15,19 +15,28 @@ html-blueprint 的项目级主题管理：通过一个共享 CSS 文件统一定
 
 ---
 
-## 设计系统生成（远程 skill 对接）
+## 设计系统生成（系统先行）
 
-当项目首次需要 `tokens.css` 时，可通过远程加载 ui-ux-pro-max 生成专业设计系统，再映射为标准 CSS 变量。
+Tokens.css 不再从第一个页面需求倒推，而是基于 ui-ux-pro-max **一次性生成完整设计系统**，覆盖 8 个维度（完整清单见 [tokens-checklist.md](tokens-checklist.md)）。后续页面从完整 token 池取用，受控扩展。
 
 ### 生成流程
 
 ```
-用户需求 → npx skills add 加载 ui-ux-pro-max → 生成设计系统 → 映射为 tokens.css
-                                        ↑
-                                     design-taste-frontend（品味纠偏）
+加载远程 skill → 生成完整设计系统 → 映射为 tokens.css（8 维度完整面板）
+    ↑                                       ↑
+ui-ux-pro-max + design-taste-frontend     后续页面只取不增（真缺时受控扩展）
 ```
 
-加载方式：`node scripts/_shared/load.js --all`（详见 [remote-skills.md](remote-skills.md)）
+加载方式：`node scripts/_shared/load.js --all`（Phase 0 必须执行）
+
+### 受控扩展规则
+
+新页面需要新增 token 时，必须遵守硬约束（由 design-tokens.js 校验）：
+- 间距 → `--space-{n}`，n 为 4 的倍数，优先用已有刻度
+- 颜色 → `color-mix(in oklch, var(--color-X), white/black N%)` 从已有色阶派生
+- 字号 → 从已有字号按 type scale 比率（1.25）派生
+- 圆角 → 从 sm/md/lg/xl/2xl/full 中选择
+- 阴影 → 从已有阴影层级中选择
 
 ### 输入参数
 
