@@ -310,6 +310,49 @@
           "check_method": "script"
         }
       ]
+    },
+    {
+      "id": 8,
+      "name": "flow-workflow-state-machine",
+      "description": "v0.4.0 flow.js 流程状态机：init/next/complete/gates 命令",
+      "prompt": "Verify flow.js workflow: init multi-page, next shows Phase 0 guidance, complete phase0 checks remote skills, status shows progress.",
+      "scenario": "v040-flow-workflow",
+      "assertions": [
+        {
+          "id": "flow-init-creates-state",
+          "text": "flow.js init --scenario multi-page creates .blueprint-state.json with 6 phases",
+          "check_method": "script"
+        },
+        {
+          "id": "flow-next-shows-phase0",
+          "text": "flow.js next outputs Phase 0 guidance with required reads and expected outputs",
+          "check_method": "content_check"
+        },
+        {
+          "id": "flow-status-shows-progress",
+          "text": "flow.js status shows current phase as active and remaining as pending",
+          "check_method": "content_check"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "validate-pipeline-includes-registry",
+      "description": "v0.4.0 validate.js pipeline 包含第 12 个检查 component-registry",
+      "prompt": "Run validate.js --help and verify the pipeline lists 12 checks including component-registry as the last one.",
+      "scenario": "v040-validate-pipeline",
+      "assertions": [
+        {
+          "id": "pipeline-has-12-checks",
+          "text": "validate.js --help outputs exactly 12 checks in the pipeline",
+          "check_method": "script"
+        },
+        {
+          "id": "component-registry-is-last",
+          "text": "The last check in the pipeline is component-registry.js — 组件注册表完整性",
+          "check_method": "content_check"
+        }
+      ]
     }
   ]
 }

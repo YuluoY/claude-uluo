@@ -75,8 +75,6 @@ function checkControlledExtensions(cssText, filePath) {
         name.startsWith('--font-') || name.startsWith('--line-height-') ||
         name.startsWith('--letter-spacing-') || name.startsWith('--font-weight-') ||
         name.startsWith('--motion-') || name.startsWith('--border-') ||
-        name.startsWith('--color-') || name.startsWith('--radius-') ||
-        name.startsWith('--shadow-') || name.startsWith('--space-') ||
         name.startsWith('--focus-ring') || name.startsWith('--overlay') ||
         name.startsWith('--canvas-')) continue
 
