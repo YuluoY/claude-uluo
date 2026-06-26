@@ -13,3 +13,8 @@ private/
 dist/
 evals/
 __tests__/
+
+# skill dev files (local only)
+skills/*/package.json
+skills/*/package-lock.json
+skills/*/vitest.config.js

@@ -1,9 +1,0 @@
-{
-  "name": "uluo-skill-creator",
-  "version": "0.3.0",
-  "description": "规范化+流程化的 skill 创建器",
-  "private": true,
-  "scripts": {
-    "test": "node scripts/__tests__/structure.test.js && node scripts/__tests__/skillmd.test.js && node scripts/__tests__/scripts-executable.test.js && node scripts/__tests__/query.test.js && node scripts/__tests__/flow.test.js && node scripts/__tests__/grade.test.js && node scripts/__tests__/research.test.js && node scripts/__tests__/integration.test.js"
-  }
-}
