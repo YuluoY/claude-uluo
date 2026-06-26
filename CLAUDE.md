@@ -107,6 +107,7 @@ claude-uluo workspace 内的 skill 需创建 `.claude-plugin/plugin.json` 用于
 
 | 类型 | 名称 | 路径 |
 |------|------|------|
+| Meta | claude-uluo-all | `plugins/claude-uluo-all/` |
 | Plugin | memex | `plugins/memex/` |
 | Plugin | diagram-compiler | `skills/diagram-compiler/` |
 | Plugin | frontend-visual-qa | `skills/frontend-visual-qa/` |
