@@ -9,9 +9,9 @@
  *   或从编排器 import：import { lintStylelint } from './stylelint.js'
  */
 
-import { collectFiles } from '../lib/collect-files.js'
-import { createReport, addOk, addError, addWarning, printReport } from '../lib/report.js'
-import { runBin, findConfig } from '../lib/run-command.js'
+import { collectFiles } from '../_shared/collect-files.js'
+import { createReport, addOk, addError, addWarning, printReport } from '../_shared/report.js'
+import { runBin, findConfig } from '../_shared/run-command.js'
 
 const STYLE_EXTENSIONS = new Set(['.scss', '.css', '.vue'])
 

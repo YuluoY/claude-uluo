@@ -39,8 +39,7 @@ uluo-change-flow/
 ├── scripts/                     ← 硬约束校验工具
 │   ├── validate.js              ← 主校验入口（7 步管线）
 │   ├── checks/                  ← 6 个校验模块
-│   ├── _shared/                 ← 共享 engine（query/flow）
-│   ├── lib/utils.js             ← 共享工具函数
+│   ├── _shared/                 ← 共享模块（engine + utils）
 │   └── __tests__/               ← 测试（89 个用例）
 └── evals/evals.json             ← 评测用例
 ```

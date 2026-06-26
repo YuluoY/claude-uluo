@@ -14,7 +14,7 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
-import { parseHTML } from './lib/html-parser.js'
+import { parseHTML } from './_shared/html-parser.js'
 
 // ─── 工具函数 ───
 

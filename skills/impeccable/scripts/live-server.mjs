@@ -20,7 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import net from 'node:net';
 import { fileURLToPath } from 'node:url';
-import { parseDesignMd } from './lib/design-parser.mjs';
+import { parseDesignMd } from './_shared/design-parser.mjs';
 import { resolveContextDir } from './context.mjs';
 import { createLiveSessionStore } from './live/session-store.mjs';
 import { validateEvent } from './live/event-validation.mjs';
@@ -34,7 +34,7 @@ import {
   removeLiveServerInfo,
   resolveDesignSidecarPath,
   writeLiveServerInfo,
-} from './lib/impeccable-paths.mjs';
+} from './_shared/impeccable-paths.mjs';
 import { countByPage as countPendingByPage } from './live/manual-edits-buffer.mjs';
 import {
   createManualApplyController,

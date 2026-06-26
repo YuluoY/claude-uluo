@@ -27,7 +27,7 @@ const path = require('path');
 const {
   reset, pass, fail, warn, section, summary,
   fileExists,
-} = require('./lib/utils');
+} = require('./_shared/utils');
 
 // Check modules
 const checks = {

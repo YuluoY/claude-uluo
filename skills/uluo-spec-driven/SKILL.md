@@ -292,7 +292,7 @@ node scripts/flow.js <spec-dir> <command> [options]
 | [validate.js](scripts/validate.js) | 文档规范校验（5 步管线：结构→章节→格式→链接→CHANGELOG） | 文档产出后运行 |
 | [query.js](scripts/query.js) | 无状态流程数据查询（meta/workflow/scenario/references/agents/scripts/constraints） | 了解流程概况时 |
 | [flow.js](scripts/flow.js) | 有状态流程控制（init/next/complete/rollback/gates/skip），门控自动校验 | 执行细化流程时 |
-| [lib/utils.js](scripts/lib/utils.js) | 校验工具函数 | validate.js 依赖 |
+| [_shared/utils.js](scripts/_shared/utils.js) | 校验工具函数 | validate.js 依赖 |
 
 ---
 

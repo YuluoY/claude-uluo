@@ -1,7 +1,7 @@
 // retrospective.md 专有校验
 const fs = require('fs');
 const path = require('path');
-const { checkAuthor } = require('../lib/utils');
+const { checkAuthor } = require('../_shared/utils');
 
 function check(filePath) {
   const findings = [];

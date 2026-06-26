@@ -12,7 +12,7 @@ const {
   extractImpactItems,
   extractTasks,
   extractChecklistItems,
-} = require('../lib/utils');
+} = require('../_shared/utils');
 
 function readFile(dir, name) {
   const p = path.join(dir, name);

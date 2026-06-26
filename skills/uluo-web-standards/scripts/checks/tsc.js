@@ -11,8 +11,8 @@
  *   编排器 import：import { checkTsc } from './tsc.js'
  */
 
-import { createReport, addOk, addError, printReport } from '../lib/report.js'
-import { runBin } from '../lib/run-command.js'
+import { createReport, addOk, addError, printReport } from '../_shared/report.js'
+import { runBin } from '../_shared/run-command.js'
 
 /**
  * 执行 tsc --noEmit 类型检查。

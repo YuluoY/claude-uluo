@@ -2,8 +2,8 @@
  * collect-files.js — 共享工具：递归收集目录中匹配扩展名的文件。
  *
  * 用法（import）：
- *   import { collectFiles } from './lib/collect-files.js'
- *   const files = collectFiles(['src/', 'a.html'], new Set(['.html', '.css']))
+ *   import { collectFiles } from './_shared/collect-files.js'
+ *   const files = collectFiles(['src/', 'a.tsx'], new Set(['.tsx', '.vue']))
  */
 
 import { statSync, readdirSync } from 'fs'
@@ -35,6 +35,7 @@ function walk(dir, extensions, result) {
   catch (_) { return }
 
   for (const entry of entries) {
+    // Skip common non-source directories and dotfiles
     if (entry.name.startsWith('.') || entry.name === 'node_modules' || entry.name === 'dist' || entry.name === 'build' || entry.name === '__pycache__') {
       continue
     }

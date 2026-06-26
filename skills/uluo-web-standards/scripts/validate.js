@@ -15,8 +15,8 @@
  */
 
 import { readFileSync } from 'fs'
-import { collectFiles } from './lib/collect-files.js'
-import { createReport, printReport } from './lib/report.js'
+import { collectFiles } from './_shared/collect-files.js'
+import { createReport, printReport } from './_shared/report.js'
 
 import { lintStylelint } from './checks/stylelint.js'
 import { lintEslint } from './checks/eslint.js'

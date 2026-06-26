@@ -13,7 +13,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { isGeneratedFile } from './lib/is-generated.mjs';
+import { isGeneratedFile } from './_shared/is-generated.mjs';
 import { readBuffer as readManualEditsBuffer } from './live/manual-edits-buffer.mjs';
 import {
   buildSvelteComponentCssAuthoring,

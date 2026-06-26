@@ -1,7 +1,7 @@
 // change-plan.js — L2 变更 Plan 专有校验
 const fs = require('fs');
 const path = require('path');
-const { checkAuthor, extractDeltaItems } = require('../lib/utils');
+const { checkAuthor, extractDeltaItems } = require('../_shared/utils');
 
 function parseSections(content) {
   // 只按 ## （二级标题）切分，### 及以下视为内容

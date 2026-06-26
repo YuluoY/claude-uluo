@@ -6,7 +6,7 @@
  * 不处理闭合修复——假设输入是合理的 html-blueprint 设计稿。
  *
  * 用法：
- *   import { parseHTML } from './lib/html-parser.js'
+ *   import { parseHTML } from './_shared/html-parser.js'
  *   const $ = parseHTML(htmlString)
  *   $('[data-component]').each(el => { ... })
  */

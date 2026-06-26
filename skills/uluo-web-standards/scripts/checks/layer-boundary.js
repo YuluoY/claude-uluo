@@ -10,8 +10,8 @@
  */
 
 import { readFileSync } from 'fs'
-import { collectFiles } from '../lib/collect-files.js'
-import { createReport, addError, printReport } from '../lib/report.js'
+import { collectFiles } from '../_shared/collect-files.js'
+import { createReport, addError, printReport } from '../_shared/report.js'
 
 const CODE_EXTENSIONS = new Set(['.ts', '.tsx'])
 

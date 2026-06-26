@@ -2,7 +2,7 @@
  * 文件收集工具 —— 递归扫描目录，按扩展名过滤。
  *
  * 用法：
- *   import { collectFiles } from './lib/collect-files.js'
+ *   import { collectFiles } from './_shared/collect-files.js'
  *   const jsFiles = collectFiles(inputs, ['.js', '.ts'])
  *   const styleFiles = collectFiles(inputs, ['.scss', '.css', '.vue'])
  */

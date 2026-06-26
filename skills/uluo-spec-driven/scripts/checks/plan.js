@@ -1,7 +1,7 @@
 // plan.md / plans/README.md 专有校验
 const fs = require('fs');
 const path = require('path');
-const { checkAuthor } = require('../lib/utils');
+const { checkAuthor } = require('../_shared/utils');
 
 function parseSections(content) {
   // Only split on ## (level 2) headings — ### and below are treated as content

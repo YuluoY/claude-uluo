@@ -20,8 +20,8 @@
 import { readFileSync, statSync, existsSync } from 'fs'
 import { resolve, basename } from 'path'
 import { fileURLToPath } from 'url'
-import { parseHTML } from '../lib/html-parser.js'
-import { collectFiles } from '../lib/collect-files.js'
+import { parseHTML } from '../_shared/html-parser.js'
+import { collectFiles } from '../_shared/collect-files.js'
 
 // ─── 主校验入口 ──────────────────────────────────────────
 

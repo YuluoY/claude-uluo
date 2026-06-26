@@ -20,7 +20,7 @@
 
 import { readFileSync, existsSync } from 'fs'
 import { resolve, dirname, relative, basename } from 'path'
-import { collectFiles } from '../lib/collect-files.js'
+import { collectFiles } from '../_shared/collect-files.js'
 
 const EXTENSIONS = new Set(['.html', '.css'])
 

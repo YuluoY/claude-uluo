@@ -22,7 +22,7 @@ const path = require('path');
 const {
   reset, pass, fail, warn, section, summary,
   fileExists, dirExists, collectMdFiles, findFeatureDirs, hasHeading,
-} = require('./lib/utils');
+} = require('./_shared/utils');
 
 // Check modules for each document type
 const checks = {

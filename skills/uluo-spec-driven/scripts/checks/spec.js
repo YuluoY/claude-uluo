@@ -1,6 +1,6 @@
 // spec.md 专有校验
 const fs = require('fs');
-const { checkAuthor } = require('../lib/utils');
+const { checkAuthor } = require('../_shared/utils');
 
 /**
  * Parse markdown into sections: { heading: string, level: number, content: string }[]

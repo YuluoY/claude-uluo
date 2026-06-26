@@ -1,7 +1,7 @@
 // change-tasks.js — L3 变更 Tasks 专有校验
 const fs = require('fs');
 const path = require('path');
-const { checkAuthor, extractTasks } = require('../lib/utils');
+const { checkAuthor, extractTasks } = require('../_shared/utils');
 
 function parseSections(content) {
   // 只按 ## （二级标题）切分，### 及以下视为内容

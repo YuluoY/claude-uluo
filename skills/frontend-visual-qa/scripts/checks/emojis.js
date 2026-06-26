@@ -14,7 +14,7 @@
  */
 
 import { readFileSync } from 'fs'
-import { collectFiles } from '../lib/collect-files.js'
+import { collectFiles } from '../_shared/collect-files.js'
 
 // Unicode emoji ranges (simplified, covers most common emoji)
 const EMOJI_RANGES = [

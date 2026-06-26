@@ -17,7 +17,7 @@
 
 import { readFileSync } from 'fs'
 import { extname } from 'path'
-import { collectFiles } from '../lib/collect-files.js'
+import { collectFiles } from '../_shared/collect-files.js'
 
 const EXTENSIONS = new Set(['.vue', '.jsx', '.tsx', '.svelte'])
 

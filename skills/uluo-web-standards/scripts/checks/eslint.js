@@ -7,9 +7,9 @@
  *   node scripts/checks/eslint.js <file> [...more]
  */
 
-import { collectFiles } from '../lib/collect-files.js'
-import { createReport, addOk, addError, printReport } from '../lib/report.js'
-import { runBin, findConfig } from '../lib/run-command.js'
+import { collectFiles } from '../_shared/collect-files.js'
+import { createReport, addOk, addError, printReport } from '../_shared/report.js'
+import { runBin, findConfig } from '../_shared/run-command.js'
 
 const CODE_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.ts', '.tsx', '.vue'])
 

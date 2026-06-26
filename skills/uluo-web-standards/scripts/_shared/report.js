@@ -2,7 +2,7 @@
  * 报告工具 —— 统一的校验报告容器。
  *
  * 用法：
- *   import { createReport, addError, addWarning, printReport } from './lib/report.js'
+ *   import { createReport, addError, addWarning, printReport } from './_shared/report.js'
  *   const report = createReport()
  *   addError(report, 'src/foo.ts', 3, 'MUST fix this')
  *   printReport(report, fileCount)

@@ -18,8 +18,8 @@
  */
 
 import { readFileSync } from 'fs'
-import { parseHTML } from '../lib/html-parser.js'
-import { collectFiles } from '../lib/collect-files.js'
+import { parseHTML } from '../_shared/html-parser.js'
+import { collectFiles } from '../_shared/collect-files.js'
 
 const EXTENSIONS = new Set(['.html'])
 

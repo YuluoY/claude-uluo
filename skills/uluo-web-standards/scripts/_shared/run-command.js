@@ -6,7 +6,7 @@
  * 这样无论用户项目有没有这些包，工具链都能正常工作。
  *
  * 用法：
- *   import { runBin, findConfig } from './lib/run-command.js'
+ *   import { runBin, findConfig } from './_shared/run-command.js'
  *   const result = runBin('eslint', ['--config', configPath, ...files])
  *   if (result.code !== 0) ...
  */

@@ -70,9 +70,8 @@ uluo-spec-driven/
 │   ├── validate.js              ← 主校验入口
 │   ├── query.js                 ← 无状态流程数据查询
 │   ├── flow.js                  ← 有状态流程控制
-│   ├── _shared/                 ← 共享引擎模块
+│   ├── _shared/                 ← 共享模块（engine + utils）
 │   ├── checks/                  ← 7 个文档类型校验模块
-│   ├── lib/utils.js             ← 共享工具函数
 │   └── __tests__/               ← 测试
 └── evals/evals.json             ← 评测用例
 ```

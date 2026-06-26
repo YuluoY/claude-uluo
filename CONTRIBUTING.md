@@ -17,7 +17,13 @@ skills/<name>/        ← Skill（同时也是最小 plugin）
   ├── references/
   ├── examples/
   ├── agents/
-  ├── scripts/ + __tests__/
+  ├── scripts/
+  │   ├── _shared/       ← 辅助模块（工具函数、引擎等），统一目录名
+  │   ├── checks/        ← 校验子模块（按检查项拆分）
+  │   ├── validate.js    ← 校验入口
+  │   ├── query.js       ← 查询入口（可选）
+  │   ├── flow.js        ← 流程入口（可选）
+  │   └── __tests__/
   └── evals/evals.json
 
 plugins/<name>/       ← 完整 Plugin（含 hooks、agents 等）
@@ -26,6 +32,12 @@ plugins/<name>/       ← 完整 Plugin（含 hooks、agents 等）
   ├── hooks/
   └── ...
 ```
+
+### scripts/ 目录规范
+
+- 辅助模块目录统一命名为 `_shared/`（不再使用 `lib/`）
+- 校验子模块放在 `checks/` 目录下，文件名用单词命名（不加 `check-`/`lint-` 前缀）
+- 入口脚本用单词命名（`validate.js`、`query.js`、`flow.js`），不用短横线连接多词
 
 ## 贡献流程
 

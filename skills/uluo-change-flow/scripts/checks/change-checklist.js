@@ -1,7 +1,7 @@
 // change-checklist.js — 独立验收 Checklist 专有校验
 const fs = require('fs');
 const path = require('path');
-const { extractChecklistItems } = require('../lib/utils');
+const { extractChecklistItems } = require('../_shared/utils');
 
 function parseSections(content) {
   // 只按 ## （二级标题）切分，### 及以下视为内容

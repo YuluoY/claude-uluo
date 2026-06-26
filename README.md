@@ -109,6 +109,21 @@ claude plugin uninstall diagram-compiler@claude-uluo
 | impeccable | 前端 UI 设计与审查——UX 评审、视觉层级、无障碍、主题、排版、动效 | 第三方 |
 | skill-creator | Skill 创建与评测——含 evals 基准测试和方差分析 | Claude Code 官方 |
 
+## 🗂️ 脚本目录规范
+
+每个 skill 的 `scripts/` 目录遵循统一结构：
+
+```
+scripts/
+├── _shared/          ← 辅助模块（工具函数、引擎、解析器等）
+├── checks/           ← 校验子模块（按检查项拆分，单词命名）
+├── validate.js       ← 校验入口
+├── query.js          ← 查询入口（可选）
+└── flow.js           ← 流程入口（可选）
+```
+
+> 辅助模块统一使用 `_shared/` 目录名，不再使用 `lib/`。详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
 ## 🤝 贡献
 
 详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
