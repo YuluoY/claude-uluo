@@ -1,6 +1,6 @@
 # Design Token 完整清单
 
-对标 MD3 + Ant Design 5，12 维度完整覆盖。html-blueprint 生成 `tokens.css` 时必须按此清单。
+对标 W3C DTCG v2025.10 + MD3 + Ant Design 5，13 维度完整覆盖。html-blueprint 生成 `tokens.css` 时必须按此清单。
 
 ---
 
@@ -170,7 +170,29 @@ Radius 与 Shape 互补：radius 控制角的圆度值，shape 控制整体形�
 
 ---
 
-## 7. Elevation / Surface（表面层级，独立于 Shadow）
+## 7. Gradient（渐变）
+
+对标 W3C DTCG `gradient` 复合类型。现代 UI 的 Hero 区块、卡片背景、品牌区域等高视觉需求场景依赖渐变。
+
+```
+--gradient-brand（品牌渐变：主色→次色）
+--gradient-hero（Hero 区块渐变，深色→品牌色）
+--gradient-card（卡片微渐变，表面→略微变深）
+--gradient-overlay（遮罩渐变，透明→半透明暗色）
+--gradient-subtle（极微渐变，用于分割线或装饰）
+```
+
+K 值（可选，精细控制）：
+```
+--gradient-angle-brand（品牌渐变角度，默认 135deg）
+--gradient-angle-hero（Hero 渐变角度，默认 180deg）
+```
+
+### HARD token（至少 `--gradient-brand`）
+
+---
+
+## 8. Elevation / Surface（表面层级，独立于 Shadow）
 
 Shadow 是视觉表现，Elevation 是空间层级——控制 background-color 的梯度和表面叠加。对标 MD3 elevation levels 0-5。
 
@@ -187,7 +209,7 @@ Shadow 是视觉表现，Elevation 是空间层级——控制 background-color 
 
 ---
 
-## 8. Z-Index（堆叠顺序）
+## 9. Z-Index（堆叠顺序）
 
 ```
 --z-base（0 — 默认堆叠）
@@ -202,7 +224,7 @@ Shadow 是视觉表现，Elevation 是空间层级——控制 background-color 
 
 ---
 
-## 9. Opacity / State Layer（状态叠加透明度）
+## 10. Opacity / State Layer（状态叠加透明度）
 
 对标 MD3 state layer。所有交互态（hover/press/focus/drag/disabled）通过叠加透明度实现，不通过硬编码颜色。
 
@@ -226,7 +248,7 @@ Shadow 是视觉表现，Elevation 是空间层级——控制 background-color 
 
 ---
 
-## 10. Sizing（尺寸）
+## 11. Sizing（尺寸）
 
 ### 断点 / 容器 / 组件高度 / 图标 / 头像 / 导航 / 表格
 
@@ -244,7 +266,7 @@ Shadow 是视觉表现，Elevation 是空间层级——控制 background-color 
 
 ---
 
-## 11. Border（边框）
+## 12. Border（边框）
 
 ```
 --border-width-thin(1px) / --border-width-medium(2px) / --border-width-thick(4px)
@@ -253,7 +275,7 @@ Shadow 是视觉表现，Elevation 是空间层级——控制 background-color 
 
 ---
 
-## 12. Motion（动效）
+## 13. Motion（动效）
 
 ```
 --motion-duration-fast(100ms) / --motion-duration-medium(200ms) / --motion-duration-slow(300ms)
