@@ -1,5 +1,7 @@
 # Design Spec 格式规范
 
+> **Phase**: Spec-First 工作流
+
 Design Spec 是 html-blueprint 的**单一真相源**。HTML 设计稿和工程代码都从 Spec 生成，确保 100% 一致。
 
 **Design Spec 是 AI 提取的中间契约，用户不手写。** AI 按 [requirement-extraction-guide.md](./requirement-extraction-guide.md) 从需求（uluo-spec-driven 的 spec.md 或自然语言）提取，用户确认后生成 HTML。
@@ -76,7 +78,7 @@ page:                    # 必填，页面元信息
       columns: 12
       components: [HeroBanner]
   layoutRef: main-layout # 可选，引用的骨架布局文件名
-  theme: ../tokens.css   # 可选，主题 token 文件路径
+  theme: ../tokens/tokens.css   # 可选，主题 token 文件路径
   lang: zh-CN            # 可选，默认 zh-CN
 pages:                   # 可选，多页面清单
   - name: Dashboard
@@ -351,7 +353,7 @@ page:
       columns: 9
       components: [StatsGroup, ChartSection]
   layoutRef: dashboard-layout
-  theme: ../tokens.css
+  theme: ../tokens/tokens.css
 
 components:
   - name: StatCard
@@ -423,7 +425,7 @@ page:
   container:
     maxWidth: "640px"
     paddingX: "24px"
-  theme: ../tokens.css
+  theme: ../tokens/tokens.css
 
 components:
   - name: UserForm
@@ -468,7 +470,7 @@ version: "1.0"
 pageType: dashboard
 page:
   name: SalesChartPage
-  theme: ../tokens.css
+  theme: ../tokens/tokens.css
 
 components:
   - name: SalesChart

@@ -19,6 +19,11 @@ const REMOTE_SKILLS = {
     skillName: 'design-taste-frontend',
     description: '品味纠偏：AI TELLS 禁令、三旋钮配置、创意武器库',
   },
+  'styleseed-design-review': {
+    repo: 'bitjaru/styleseed',
+    skillName: 'styleseed-design-review',
+    description: '品牌风格引擎：Vercel/Linear/Notion/Stripe/Toss/Raycast/Arc 7 种品牌皮肤 + 74 条设计规则',
+  },
 }
 
 function getSkillPath(projectRoot, skillName) {

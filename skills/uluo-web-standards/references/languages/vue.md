@@ -216,7 +216,12 @@ const emit = defineEmits<{ 'update:name': [value: string]; 'update:email': [valu
 
 ## 五、Composables
 
-一个文件一个 composable，扁平放置。职责单一，返回值类型显式标注。
+**MUST**
+- 一个文件一个 composable，扁平放置，职责单一，返回值类型显式标注
+- 每个 `export` composable → JSDoc/TSDoc（同 `soft-rules.md` G8.1）
+
+**NEVER**
+- `<template>` 内写注释（G8.6）
 
 ### 输入灵活：MaybeRefOrGetter
 

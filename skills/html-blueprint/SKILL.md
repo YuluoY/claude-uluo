@@ -1,323 +1,152 @@
 ---
 name: html-blueprint
-version: 0.4.0
-description: "HTML-first Component Design Protocol with design system first approach. Generate a complete design system site (tokens → atomic components → business components → pages) with index.html showcase. Powered by mandatory remote skills: ui-ux-pro-max and design-taste-frontend. Use this skill when the user mentions any of: 生成页面, 设计稿, HTML原型, 组件化HTML, UI设计稿转代码, 设计系统, 组件库, component blueprint, HTML design draft, design-to-code, design system."
+version: 0.8.0
+description: "HTML Design System Orchestrator — produce a complete design system site (tokens.css → tokens.html → components.html → pages → index.html). Use this skill when the user mentions any of: 生成页面, 设计稿, HTML原型, 组件化HTML, 设计系统, 组件库, component blueprint, HTML design draft, design-to-code, design system. 即使没有明确说 html-blueprint 也应使用本 skill。"
 ---
 
-# HTML Blueprint — 设计系统驱动的 HTML 生成协议
+# html-blueprint — 设计系统产出编排器
 
-从需求理解到**完整设计系统站点**的 AI 转换协议。产出不再是零散的 HTML 页面，而是以 `design/index.html` 为总入口的完整设计系统——包含 Token 展示、原子组件库、业务页面设计稿。
-
-**核心原则**：系统先行，页面取用。tokens 和原子组件一次配齐，后续产出从池子取用，受控扩展。
+**编排器**：流程由 `flow.js` 完全控制，清单在 `references/`，校验在 `scripts/`。
 
 ---
 
-## 四阶段流程
+## 核心原则
+
+**技能边界**：产出设计系统站点（tokens.css + tokens.html + components.html + pages + index.html）。不教 AI 怎么画——只告诉 AI 必须产出什么、脚本检查是否齐了。
+
+**设计知识来源**：必须加载并使用 ui-ux-pro-max（配色/字体/风格）、design-taste-frontend（品味审查）、styleseed-design-review（品牌规则+设计评分）。
+
+**流程驱动**：`flow.js` 控制每个 Phase 的产出边界和门禁，AI 必须通过 `next` → `complete` 逐步推进。禁止越过 flow.js 直接写文件。
+
+---
+
+## 流程控制（HARD）
+
+```bash
+node scripts/flow.js <design-dir> init --scenario multi-page
+node scripts/flow.js <design-dir> next          # 当前 Phase 产出清单 + 边界约束 + 门禁
+node scripts/flow.js <design-dir> complete <id>  # 门禁校验，失败修复 loop
+node scripts/flow.js <design-dir> status
+```
+
+**flow.js 是所有流程控制的唯一真相源。AI 不自行判断 Phase 顺序，完全由 flow.js 驱动。**
 
 ```mermaid
 flowchart TD
-    subgraph P0["Phase 0: 需求理解"]
-        S0["需求理解\n页面类型 + 页面清单"]
-        S0L["加载远程设计知识\nui-ux-pro-max + design-taste-frontend"]
-    end
-    subgraph P1["Phase 1: 设计系统引导 ★核心"]
-        S1["Step 1: tokens.css\n完整 8 维度 token 面板"]
-        S2["Step 2: Token 展示页\ncolors/typography/spacing/..."]
-        S3["Step 3: 原子组件库\n52 组件生成 + 注册"]
-    end
-    subgraph P2["Phase 2: 骨架 + 业务输出"]
-        S4["Step 4: 骨架布局\n→ design/layout/"]
-        S5["Step 5: 逐页生成\n读 registry → 复用或新建 → 注册"]
-        S6["Step 6: 业务组件抽取\n→ design/components/"]
-    end
-    subgraph P3["Phase 3: 总入口 + 校验"]
-        S7["Step 7: index.html\n分类卡片总入口"]
-        S8["Step 8: 脚本校验\n四道门禁"]
-        S9["Step 9: 视觉走查"]
-    end
-    S0 --> S0L --> S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
+    P0["Phase 0: 加载远程设计知识\nui-ux-pro-max + design-taste-frontend + styleseed"] --> P1a["Phase 1a: tokens/tokens.css + tokens.html"]
+    P1a --> P1b["Phase 1b: components/ 6 类别组件 + registry"]
+    P1b --> P2a["Phase 2a: layout/ 固定骨架"]
+    P2a --> P2b["Phase 2b: pages/ 路由页面"]
+    P2b --> P3["Phase 3: index.html + 全量门禁"]
+    P3 -->|HARD fail| P1a
+    P3 -->|通过| DONE["✅ 交付"]
 ```
 
-**串行约束（HARD）**：禁止跳步，禁止并行生成多个页面，所有产物输出到 `design/`。
-
-**flow.js 强制使用（HARD）**：每个 Phase 必须通过 flow.js 门禁后才能进入下一 Phase。AI 必须用 `flow.js next` 获取阶段指引，用 `flow.js complete <phaseId>` 完成阶段（自动执行门禁校验），用 `flow.js status` 确认进度。禁止绕过 flow.js 直接写文件。`complete` 失败时必须修复后重新 `complete`，不得跳过门禁。
-
-```bash
-# 必须使用 flow.js 驱动整个流程（HARD，不可绕过）
-node scripts/flow.js <design-dir> init --scenario multi-page
-node scripts/flow.js <design-dir> next          # 读指引
-node scripts/flow.js <design-dir> complete <id>  # 完成阶段（门禁不通过则修复loop）
-node scripts/flow.js <design-dir> status         # 确认进度
-```
+**回退规则**：任一 Phase gate fail → 回退到该 Phase 修复 → 重新 `complete` → 门禁通过后继续。
 
 ---
 
-## Phase 0: 需求理解
+## references 引用时机
 
-| 步骤 | 输入 | 输出 | 参考文档 |
-|------|------|------|---------|
-| 需求理解 | 用户需求 | 页面类型 + 页面清单 | requirement-extraction-guide.md |
-| 加载远程知识 | — | ui-ux-pro-max + design-taste-frontend | remote-skills.md |
-
-远程设计知识加载（HARD 约束，不可跳过）：
-```bash
-node scripts/_shared/load.js --all
-```
+| 文件 | Phase | 用途 |
+|------|-------|------|
+| tokens-checklist.md | phase1-tokens | 13 维清单 + 受控扩展规则 |
+| atomic-components-checklist.md | phase1-components | 7 类组件清单 + 展示规格 |
+| component-registry.md | phase1-components / phase2-pages | 查表复用规则 |
+| remote-skills.md | phase0 | 远程 skill 加载命令与仓库地址 |
+| requirement-extraction-guide.md | 提取 Spec 时 | 自然语言 → Design Spec 提取规则 |
+| navigation-protocol.md | phase2-layout / phase2-pages | 导航结构定义 + 跨页一致性校验协议 |
+| protocol-spec.md | 生成 HTML 时 | data-* 属性字典 |
+| css-conventions.md | 写 CSS 时 | BEM + token 引用 |
+| theme-consistency.md | 首次或追加时 | token 继承 |
+| design-dimensions.md | 尺寸设定时 | 画布/容器/栅格 |
+| constraint-tiers.md | 理解约束时 | HARD/SHOULD/WARN |
+| code-generation-guide.md | 生成框架代码时 | Vue/React/Angular 代码生成指南 |
+| design-spec.md | Spec-First 工作流 | Design Spec 完整字段定义 |
 
 ---
 
-## Phase 1: 设计系统引导
+## 硬约束校验
 
-### Step 1: 生成完整 tokens.css
-
-**不是从页面需求倒推**，而是基于 ui-ux-pro-max 生成**完整的 8 维度 token 面板**：
-
-| 维度 | 覆盖 |
+| 脚本 | 用途 |
 |------|------|
-| Color | Primary 10色阶 + Neutral 10色阶 + Semantic + Text + Background + Border |
-| Typography | Family + Size(h1-h6,body,caption) + Weight + Line-height + Letter-spacing |
-| Spacing | 4px网格：4/8/12/16/20/24/32/40/48/56/64/72/80/96 |
-| Radius | sm/md/lg/xl/2xl/full |
-| Shadow | sm/md/lg/xl + focus-ring |
-| Sizing | breakpoints + container + component-heights + icon-sizes + avatar-sizes |
-| Border | width + style + color |
-| Motion | duration(fast/medium/slow) + easing(in/out/in-out) |
-
-完整清单见 [tokens-checklist.md](references/tokens-checklist.md)。
-
-**受控扩展规则**（新增 token 时必须遵守）：
-- 间距 → `--space-{n}`，n 为 4 的倍数
-- 颜色 → `color-mix(in oklch, var(--color-X), white/black N%)` 派生，禁止裸 hex
-- 字号 → 从已有字号按 type scale 比率（1.25）派生
-- 圆角 → 从 sm/md/lg/xl/2xl/full 中选择
-- 阴影 → 从已有阴影层级中选择
-
-参考：[theme-consistency.md](references/theme-consistency.md)、[design-dimensions.md](references/design-dimensions.md)
-
-### Step 2: 生成 Token 展示页
-
-```
-design/tokens/
-├── colors.html       ← 色板墙：色阶 + 语义色标注
-├── typography.html   ← 字号瀑布：h1→caption 实际渲染
-├── spacing.html      ← 间距刻度：视觉化网格
-├── radius.html       ← 圆角对照
-├── shadow.html       ← 阴影层级对比
-└── motion.html       ← 动效示例
-```
-
-### Step 3: 生成原子组件库
-
-52 个原子组件全部生成，每个组件 HTML 按 [component-showcase-template.html](examples/component-showcase-template.html) 模板组织（Anatomy + Variants + States + Sizes + Usage）。全部注册到 `component-registry.json`（status: confirmed）。
-
-完整清单见 [atomic-components-checklist.md](references/atomic-components-checklist.md)。
-
-每个组件展示页必须包含：Anatomy（data-* 标注）、Variants（变体横向排列）、States（状态网格）、Sizes（尺寸对比）、Usage（使用指南）。
-
-参考：[protocol-spec.md](references/protocol-spec.md)、[css-conventions.md](references/css-conventions.md)
+| `scripts/flow.js` | 流程状态控制（唯一的流程真相源） |
+| `scripts/validate.js` | 12 项全量门禁 |
+| `scripts/checks/design-tokens.js` | 13 维覆盖率 + 受控扩展 |
+| `scripts/checks/component-registry.js` | 注册表覆盖率 + 跨页一致性 |
+| `scripts/checks/design-structure.js` | 目录结构 + 标记覆盖率 |
+| `scripts/checks/data-component.js` | PascalCase + 泛名检测 |
 
 ---
 
-## Phase 2: 骨架 + 业务输出
+## 骨架 vs 路由页面协议
 
-### 组件注册表查表（HARD）
+**layout/ = 固定骨架模板**，**pages/ = 自包含路由页面**。AI 必须区分这两个概念。
 
-生成每个页面前，必须先读 `design/component-registry.json`。注册表是跨页面组件**索引**——记录组件名、类型、位置、使用页面。详情见 [component-registry.md](references/component-registry.md)。
+```
+骨架模板 layout/                     自包含页面 pages/
+┌──────────────────────────────┐  ┌──────────────────────────────┐
+│ 参考模板 + 共享 CSS 文件       │  │ 嵌入完整 app-shell           │
+│                              │  │ ┌──────────────────────────┐ │
+│ layout/main-layout.html      │  │ │ .app-shell               │ │
+│   └── layout.css (共享样式)   │  │ │ ├── .sidebar (导航链接)   │ │
+│                              │  │ │ └── .main-area           │ │
+│ sidebar 链接用相对路径:       │  │ │     ├── .header          │ │
+│   href="../pages/*.html"    │  │ │     └── .page-content     │ │
+│                              │  │ └──────────────────────────┘ │
+│ 每个自包含页面复制 app-shell    │  │                              │
+│ 结构，共享 CSS 来自 layout.css │  │ sidebar 链接用同级路径:        │
+│                              │  │   href="dashboard.html"     │ │
+└──────────────────────────────┘  └──────────────────────────────┘
+```
 
-**AI 查表流程**：
-1. 读 registry
-2. 页面需要的每个组件 → name 匹配查表
-3. 已存在 → 复用（`<!-- @component-ref -->`），追加 `usedInPages`
-4. 不存在 → 新建为 business 组件（status: pending）
-5. 页面生成后更新 registry（statistics + updatedAt）
-
-| 步骤 | 输入 | 输出 | 参考文档 |
-|------|------|------|---------|
-| 骨架布局 | tokens.css + 页面类型 | design/layout/*.html | design-dimensions.md |
-| 逐页生成 | registry + layout + blocks | design/pages/*.html | code-generation-guide.md |
-| 业务组件抽取 | 跨页复用元素 | design/components/*.html | component-registry.md |
+**规则**：
+- **一个项目通常只有一个主骨架模板**（main-layout），所有路由页面嵌入其 app-shell 结构
+- 骨架先于页面生成（Phase 2a → 2b），页面不能定义自己的导航栏或 header
+- **页面是自包含的完整 HTML 文档**，直接打开即可工作（无需构建工具注入）
+- 页面通过 `<!-- @layout ../layout/main-layout.html -->` 注释声明引用哪个骨架模板
+- `layout.css` 包含共享样式（.sidebar、.header、.page-content、.stat-card、.content-card、.btn 等），页面 CSS 只写本页唯一的 BEM 样式
+- **导航一致性（HARD）**：`layout/nav-structure.json` 声明导航结构的唯一蓝本。所有页面的 sidebar 必须精确复制 layout 的结构，禁止自行增删。导航中出现的页面必须在 `pages/` 下有对应文件
+- design-structure.js 校验：pages 有文件 → layout 必须有文件 + 每个 page 必须有 @layout 引用 + app-shell 结构完整 + sidebar 链接不是 `href="#"` + 跨页 sidebar 结构一致 + sidebar href 目标存在
 
 ---
 
-## Phase 3: 总入口 + 校验
-
-### Step 7: 生成 index.html
-
-基于 [index-template.html](examples/index-template.html) 生成总入口——分类卡片展示 Token / 原子组件 / 业务组件 / 页面。
-
-### 四道 HARD 门禁
-
-| 门禁 | 校验器 | 时机 | 失败处理 |
-|------|--------|------|---------|
-| Spec 合法性 | checks/spec.js | Design Spec 提取后 | 修复后才能生成 HTML |
-| HTML 协议合规 | validate.js | HTML 生成后 | 修复后才能交付 |
-| Spec↔HTML 一致 | checks/spec-fidelity.js | HTML 交付前 | 修复后才能交付 |
-| 组件注册表完整 | checks/component-registry.js | 多页项目交付前 | 修复后才能交付 |
-
-```bash
-# 全部校验
-node scripts/validate.js <design-dir>
-
-# 流程状态控制（推荐）
-node scripts/flow.js <design-dir> init --scenario multi-page
-node scripts/flow.js <design-dir> next
-node scripts/flow.js <design-dir> complete phase0
-# ... (逐步推进)
-```
-
----
-
-## design/ 工作目录约定
+## 产出清单
 
 ```
-<项目根>/design/
-├── index.html                    ← 总入口：分类卡片（Phase 3 生成）
-├── tokens.css                    ← 完整 token 面板（Phase 1 Step 1 生成，唯一真相源）
-├── component-registry.json       ← 组件注册表（Phase 1 Step 3 初始，Phase 2 持续更新）
-├── tokens/                       ← Token 展示页（Phase 1 Step 2 生成）
-│   ├── colors.html
-│   ├── typography.html
-│   ├── spacing.html
-│   ├── radius.html
-│   ├── shadow.html
-│   └── motion.html
-├── layout/                       ← 骨架布局（Phase 2 生成）
-├── blocks/                       ← 页面区块（Phase 2 生成）
-├── components/                   ← 组件展示（Phase 1 + Phase 2）
-│   ├── button.html               ← 原子组件（Phase 1，status: confirmed）
-│   ├── input.html
+design/
+├── index.html                 ← Phase 3
+├── component-registry.json    ← Phase 1（脚本更新）
+├── taste-review.md            ← Phase 0（品味审查）
+├── tokens/                    ← Phase 1
+│   ├── tokens.css             ← 13 维 token 面板
+│   └── tokens.html            ← 展示页（6 个 @token-section）
+├── icons/                     ← 按需增量（SVG，统一 currentColor）
+│   ├── search.svg
+│   ├── bell.svg
 │   └── ...
-└── pages/                        ← 页面设计稿（Phase 2）
-    ├── dashboard.html            ← 含 <!-- @layout ../layout/main-layout.html -->
-    └── settings.html
-```
-
-**分层规则**：
-- **tokens.css** 全局唯一，所有 HTML 通过 `<link rel="stylesheet" href="../tokens.css">` 引入
-- **component-registry.json** 组件索引，不存完整 spec（详情从 HTML 的 data-* 读取），只做"谁在哪、被谁用"
-- **components/** Phase 1 产出原子组件（confirmed），Phase 2 追加业务组件（pending → 跨页校验后 confirmed）
-- 生成顺序约束：tokens.css → tokens/ → components/（原子） → layout/ → blocks/ → pages/ → components/（业务） → index.html
-
----
-
-## Spec-First 工作流（保留）
-
-配合 uluo-spec-driven 使用时的七步流程：
-
-1. 提取 Design Spec（从 spec.md 或自然语言，见 requirement-extraction-guide.md）
-2. 校验 Design Spec（`node scripts/checks/spec.js <spec.json>`）
-3. 生成 HTML 设计稿（`node scripts/generate.js <spec.json> --out <output.html>`）
-4. 校验 HTML 协议合规（`node scripts/validate.js <output.html>`）
-5. 校验 Spec↔HTML 一致性（`node scripts/checks/spec-fidelity.js <spec.json> <output.html>`）
-6. 生成代码（可选，参考 code-generation-guide.md）
-7. 校验 Spec↔代码一致性（可选）
-
-从 HTML 逆向生成 Spec：
-```bash
-node scripts/extract.js <input.html> --out <spec.json>
+├── components/                ← Phase 1（6 个类别组件）
+│   ├── general.html           ← 通用类
+│   ├── data-entry.html        ← 数据录入类
+│   ├── data-display.html      ← 数据展示类
+│   ├── feedback.html          ← 反馈类
+│   ├── navigation.html        ← 导航类
+│   └── layout.html            ← 布局类
+├── layout/                    ← Phase 2（骨架模板 + 共享 CSS）
+│   ├── main-layout.html       ← app-shell 骨架（导航结构唯一蓝本）
+│   ├── layout.css             ← 共享骨架样式
+│   └── nav-structure.json     ← 导航结构声明（跨页一致性校验依据）
+├── blocks/                    ← Phase 2（可复用区块）
+└── pages/                     ← Phase 2（自包含页面，嵌入 app-shell）
 ```
 
 ---
 
-## 强制工作协议
+## 禁止事项
 
-0. **检查项目结构与主题**：
-   - 检查 `<项目根>/design/` 目录结构是否存在
-   - 检查 tokens.css，存在则继承，不存在则按 Phase 1 完整生成
-   - 检查 component-registry.json，存在则查表复用
-   - 详见 theme-consistency.md 和 component-registry.md
-1. **识别任务类型**：新建设计系统 / 追加页面 / review / 提取 Spec；识别页面类型和清单
-2. **加载远程设计知识（HARD）**：`_shared/load.js --all`，每次生成前必须执行
-3. **加载协议文档**（HARD）：
-   - 生成前 → protocol-spec.md（属性字典 + 组件分类）
-   - 尺寸设定前 → design-dimensions.md
-   - 写 CSS 前 → css-conventions.md
-   - 提取 Spec 前 → requirement-extraction-guide.md
-   - 生成代码前 → code-generation-guide.md
-   - 生成 tokens 前 → tokens-checklist.md
-   - 生成组件前 → atomic-components-checklist.md + component-registry.md
-   - 理解约束 → constraint-tiers.md
-4. **注册表先查后建（HARD）**：新页面前必须读 component-registry.json，已存在组件直接复用，不存在才新建并注册
-5. **HTML 负责视觉保真**：允许 flex/grid/gradient/shadow/filter/animation
-6. **data-* 负责语义标注**：data-component/data-prop/data-event/data-action/data-slot/data-convert
-7. **生成后自检（HARD）**：`node scripts/validate.js <output.html>`，HARD 违规必须修复
-8. **跨蓝图一致性校验**：多页项目自动检查主题一致性和注册表一致性
-9. **Spec 校验（HARD）**：Spec-First 工作流中，Spec 必须先通过 checks/spec.js
-10. **三角校验（HARD）**：Spec↔HTML↔代码 一致性校验
-
----
-
-## 软硬约束分工
-
-| 约束 | 载体 | 适用 |
-|------|------|------|
-| 软约束 | SKILL.md + references/ | 流程编排、设计判断、提取规则、代码生成指南、CSS 约定 |
-| 硬约束 | scripts/ | Spec 校验、HTML 协议合规、Spec↔HTML 一致性、tokens 受控扩展、组件注册表完整性、class 命名、data-* 属性 |
-
-**流程控制**：`flow.js` 提供门控驱动渐进式流程推进，确保系统引导流程被稳固执行。
-
-```bash
-node scripts/flow.js <design-dir> init --scenario multi-page
-node scripts/flow.js <design-dir> next      # 获取当前阶段指引
-node scripts/flow.js <design-dir> complete <phaseId>  # 完成阶段（自动门禁）
-node scripts/flow.js <design-dir> status    # 查看进度
-```
-
----
-
-## 模块加载表
-
-| 文件 | 何时读取 |
-|------|---------|
-| tokens-checklist.md | Phase 1 Step 1 生成 tokens.css 时必读 |
-| atomic-components-checklist.md | Phase 1 Step 3 生成原子组件时必读 |
-| component-registry.md | Phase 1 Step 3 注册 + Phase 2 每页生成前必读 |
-| protocol-spec.md | 生成或 review HTML 时必读 |
-| css-conventions.md | 写 CSS 时加载 |
-| theme-consistency.md | 项目有多页或首次生成 tokens 时 |
-| design-dimensions.md | 尺寸设定和生成 CSS 时必读 |
-| constraint-tiers.md | 理解规则严重程度时 |
-| design-spec.md | Spec-First 工作流必读 |
-| requirement-extraction-guide.md | 从需求提取 Design Spec 时必读 |
-| code-generation-guide.md | AI 生成框架代码时必读 |
-| remote-skills.md | 加载远程设计知识时 |
-
----
-
-## 一票否决项
-
-- `data-component` 值不是 PascalCase
-- `data-component` 使用泛名（card/button/table/box/item/list/...）
-- `data-convert` 值不在合法枚举中
-- `data-convert="component"` 但没有 `data-component`
-- 图表元素没有 `data-convert="manual"`
-- `<form>` 没有 `data-model` 和 `data-component`
-- 表单控件没有 `data-field`
-- `data-decorative="true"` 没有 `aria-hidden="true"`
-- HTML 没有 `<!-- @viewport -->` 声明
-- CSS 使用 `!important`
-- class 使用盒模型位置名或编号名
-- **有 pages 但无 component-registry.json**
-- **新增间距不是 4 的倍数**
-- **新增颜色使用裸 hex 值而非 color-mix() 派生**
-
----
-
-## 默认方向
-
-- 先保证视觉像，再保证能转换。视觉保真优先于组件可维护性
-- 不确定时标记 manual，不强行自动转换
-- 图表默认 manual
-- 不是所有元素都是组件——用 data-convert 区分
-- 装饰元素走 absolute + blur + aria-hidden
-- Design Spec 是 AI 提取的中间契约，用户不手写
-- Spec 是真相源，HTML 和代码都是生成物
-- 代码生成是框架无关的
-- **component-registry.json 是轻量索引**——只存"谁在哪、被谁用"，完整 spec 从 HTML data-* 读取
-
-## 最少提问规则
-
-**仅问一个问题**：
-1. "目标组件库？（Vue 3 / React / 不确定）" → 生成中立 HTML
-2. "需要响应式吗？目标画布尺寸？" → 默认 1440×900
-3. "有现成的设计系统/tokens 吗？" → 有则沿用，无则完整生成
+- 禁止绕过 flow.js 直接写文件
+- 禁止 Phase 间越界——Phase 1 不画页面，Phase 2 不改 tokens/组件
+- 禁止 tokens.html 不使用固定模板骨架
+- 禁止使用 emoji 作为 UI 图标（全部使用 SVG，放 icons/ 目录）
+- 禁止布局 CSS 只写在 layout/*.html 的内嵌 `<style>` 中而未抽离为独立文件（见 css-conventions.md「布局 CSS 共享机制」）
+- 禁止页面自行决定导航项增减——所有 sidebar nav item 必须在 nav-structure.json 中声明，页面精确复制 layout 结构

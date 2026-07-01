@@ -1,5 +1,7 @@
 # CSS 约定
 
+> **Phase**: 写 CSS 时
+
 html-blueprint 的 CSS 规范：BEM 命名 + Hybrid Token + 视觉保真允许项 + 禁止选择器。
 
 ---
@@ -186,7 +188,56 @@ tr:nth-child(2) { background: #eee; }
 
 ---
 
-## 响应式布局声明
+## 布局 CSS 共享机制（HARD）
+
+Phase 2a 生成的骨架布局 CSS 必须被 Phase 2b 所有页面共享，不能仅写在 `layout/*.html` 的内嵌 `<style>` 里。
+
+### 协议
+
+1. **布局 CSS 提取为独立文件** `design/layout/layout.css`
+2. 包含 `.app-shell`、`.sidebar`、`.main-area`、`.header` 等骨架类
+3. `design/layout/*.html` 通过 `<link rel="stylesheet" href="layout.css">` 引用自己
+4. `design/pages/*.html` 通过 `<link rel="stylesheet" href="../layout/layout.css">` 引用
+
+### 禁止模式
+
+```html
+<!-- 禁止：CSS 只写在 layout HTML 的 <style> 里 -->
+<!-- 禁止：pages 重复声明骨架 CSS（WET 重复） -->
+```
+
+### 正确模式
+
+```html
+<!-- layout/dashboard-layout.html -->
+<head>
+  <link rel="stylesheet" href="../tokens/tokens.css">
+  <link rel="stylesheet" href="layout.css">        ← 引用独立文件
+  <style>
+    /* 仅布局特有的 page-specific 样式 */
+  </style>
+</head>
+
+<!-- pages/overview.html -->
+<head>
+  <link rel="stylesheet" href="../tokens/tokens.css">
+  <link rel="stylesheet" href="../layout/layout.css">  ← 共享骨架 CSS
+  <style>
+    /* 仅此页面特有的样式 */
+  </style>
+</head>
+```
+
+### design/ 目录期望结构
+
+```
+design/
+├── layout/
+│   ├── layout.css               ← 共享骨架 CSS（抽出）
+│   └── dashboard-layout.html    ← 骨架 HTML（引用 layout.css）
+└── pages/
+    └── overview.html             ← 页面（引用 layout/layout.css）
+```
 
 ```html
 <!-- @viewport width:1440 height:900 -->

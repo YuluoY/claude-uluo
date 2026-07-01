@@ -1,5 +1,7 @@
 # 远程设计 Skill 加载协议
 
+> **Phase**: Phase 0 — 加载远程设计知识时
+
 html-blueprint 通过 `npx skills add` 从 skills.sh 远程拉取外部设计类 skill，安装到项目本地 `.agents/skills/` 目录。已安装则跳过，无需重复拉取。
 
 ---
@@ -8,14 +10,16 @@ html-blueprint 通过 `npx skills add` 从 skills.sh 远程拉取外部设计类
 
 | 名称 | 仓库 | install name | 作用 |
 |------|------|-------------|------|
-| ui-ux-pro-max | nextlevelbuilder/ui-ux-pro-max-skill | `ui-ux-pro-max` | 设计系统生成：67 种风格、161 配色、57 字体、99 UX 规则 |
-| design-taste-frontend | leonxlnx/taste-skill | `design-taste-frontend` | 品味纠偏：AI TELLS 禁令、三旋钮配置、创意武器库 |
+| **ui-ux-pro-max** | nextlevelbuilder/ui-ux-pro-max-skill | `ui-ux-pro-max` | 设计系统生成：67 种风格、161 配色、57 字体、99 UX 规则 |
+| **design-taste-frontend** | leonxlnx/taste-skill | `design-taste-frontend` | 品味纠偏：AI TELLS 禁令、三旋钮配置、创意武器库 |
+| **styleseed-design-review** | bitjaru/styleseed | `styleseed-design-review` | 品牌风格引擎：Vercel/Linear/Notion/Stripe/Toss/Raycast/Arc 7 种品牌皮肤 + 74 条设计规则 |
 
 手动安装命令：
 
 ```bash
 npx skills add nextlevelbuilder/ui-ux-pro-max-skill --skill ui-ux-pro-max -y
 npx skills add leonxlnx/taste-skill --skill design-taste-frontend -y
+npx skills add bitjaru/styleseed --skill styleseed-design-review -y
 ```
 
 ---
@@ -63,6 +67,16 @@ npx skills update
 ```
 
 ---
+
+## 三个 skill 的分工
+
+| skill | 使用场景 | 用法 |
+|-------|---------|------|
+| **ui-ux-pro-max** | 无品牌要求，从产品类型/行业生成设计系统 | `search.py "<产品> <行业>" --design-system` + `--domain color/typography/style/ux` |
+| **design-taste-frontend** | 全部场景（品味品质保障） | 读取 SKILL.md，应用 AI TELLS 禁令 + 三旋钮配置 |
+| **styleseed** | 有明确的品牌倾向（Vercel/Linear/Apple 等） | 读取 SKILL.md（74 条设计规则），按品牌规则检查 token/组件一致性 |
+
+品牌皮肤文件（`skins/vercel/theme.css` 等）完整仓库：`https://github.com/bitjaru/styleseed`
 
 ## 使用方式
 

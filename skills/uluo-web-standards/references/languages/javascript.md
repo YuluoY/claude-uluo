@@ -414,11 +414,18 @@ export function calcFinalPrice(price, vipLevel)
 
 ## 公共 API 文档
 
-导出函数、类、常量必须有 JSDoc：
+> 细则见 `soft-rules.md` G8。生成代码时逐条执行。
+
+**MUST**
+- 每个 `export` 函数、类、常量 → JSDoc：`@description` + 每个 `@param` + 有返回值时 `@returns`
+- 行内/块注释写 WHAT：做了什么、是什么（业务含义、字段含义、步骤说明）
+
+**NEVER**
+- WHY 注释、dead code 注释、修改日志、分区标记
 
 ```javascript
 /**
- * 计算订单总金额（含折扣和运费）。
+ * 计算订单总金额（含折扣）。
  * @param {OrderItem[]} items
  * @param {number} discountRate - 折扣率 (0–1)
  * @returns {{ total: number, subtotal: number }}
@@ -468,5 +475,5 @@ describe('calculateTotal', () =>
 - [ ] switch 有 `default`？
 - [ ] 纯函数在 utils/，业务工具在 business-utils/？
 - [ ] 一个文件一个函数？
-- [ ] 公共 API 有 JSDoc？
+- [ ] 公共 API 有 JSDoc（G8.1）？
 - [ ] 异步操作使用 `to()` 元组？

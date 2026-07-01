@@ -1,5 +1,7 @@
 # Design Token 完整清单
 
+> **Phase**: Phase 1a — 生成 tokens.css 前必读
+
 对标 W3C DTCG v2025.10 + MD3 + Ant Design 5，13 维度完整覆盖。html-blueprint 生成 `tokens.css` 时必须按此清单。
 
 ---

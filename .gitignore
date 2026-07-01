@@ -11,7 +11,8 @@ node_modules/
 private/
 .trae/
 dist/
-evals/
+.vscode/
+evals/workspaces/
 __tests__/
 
 # skill dev files (local only)

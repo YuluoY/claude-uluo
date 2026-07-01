@@ -490,7 +490,7 @@ function generateHTML(spec, options = {}) {
   const pageName = page.name || (spec.components && spec.components[0] && spec.components[0].name) || 'Document'
   const lang = page.lang || 'zh-CN'
   const viewport = page.viewport
-  const theme = page.theme || '../tokens.css'
+  const theme = page.theme || '../tokens/tokens.css'
 
   let layoutRef = null
   if (type === 'page') {

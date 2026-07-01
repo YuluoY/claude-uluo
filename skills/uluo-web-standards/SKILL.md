@@ -56,13 +56,24 @@ MEDIUM/HEAVY 任务完成后，必须通过以下闸门：
 | **stylelint** | 同上 | 手动修复 → 重跑 |
 | **eslint** | `assets/eslint.config.mjs` | 修复 → 重跑 |
 | **tsc --noEmit** | TypeScript 编译器 | 修复类型错误 → 重跑 |
+| **G8 注释格式** | `scripts/checks/comment-format.js` | 修复单行块注释 / 星号列 / store label → 重跑 |
 | **DDD 层边界检查** | `scripts/checks/layer-boundary.js` | 修复跨层依赖 → 重跑 |
 
 **回退闭环**：任一闸门失败 → 修复 → 从该闸门重新执行。全部通过后才算完成。
 
 ```bash
 node scripts/validate.js <files>
+node scripts/checks/comment-format.js <file-or-dir>   # 仅 G8 注释格式
 ```
+
+**G8 注释格式检查器**（`scripts/checks/comment-format.js`）：
+- 规则定义：`references/soft-rules.md` **G8.7**
+- 集成：`validate.js` 第 6 步自动执行
+- 单独跑：`node .agents/skills/uluo-web-standards/scripts/checks/comment-format.js <path>`
+- plotvine monorepo 门禁：`pnpm lint:comments`（`scripts/lint-comments.mjs`）
+  - `apps/desktop/src/components` 全量 baseline
+  - git 工作区变更的其它 `.ts/.vue/.js` 增量扫描（含 `packages/ui` 改动）
+  - **禁止照抄旧代码注释**；以 G8.7 为准
 
 ---
 
@@ -95,6 +106,7 @@ node scripts/validate.js <files>
 - ❌ 不改变用户已使用的命名约定
 - ❌ 不把一个函数拆成多个文件
 - ✅ 只做：消除嵌套、提取魔法值、修复歧义命名、Guard Clause 化
+- ✅ 注释：遵守 `soft-rules.md` G8（写 WHAT/是什么；不写 WHY；export 仍须 JSDoc；question-only 不加注释）
 
 ---
 

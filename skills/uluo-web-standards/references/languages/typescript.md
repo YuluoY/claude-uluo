@@ -364,6 +364,32 @@ export const orderApi = {
 
 ---
 
+## 公共 API 文档
+
+> 细则见 `soft-rules.md` G8。
+
+**MUST**
+- 每个 `export` 函数、类、composable、store action、复杂 export 类型/接口 → TSDoc：`@description` + 每个 `@param` + 有返回值时 `@returns`
+- 行内/块注释写 WHAT：做了什么、是什么
+- 块注释格式（G8.7）：禁止单行 `/** ... */`；多行时 `*` 列对齐；简单单行说明用 `//`
+
+**正确示例**
+
+```typescript
+// 侧栏默认宽度（px）
+export const SIDEBAR_WIDTH = 280
+
+/**
+ * Skill 选项 id 列表（展示文案走 i18n：aiPanel.skills.{id}）
+ */
+export const SKILL_IDS = ['default', 'polish'] as const
+```
+
+**NEVER**
+- WHY 注释、dead code 注释、修改日志、分区标记
+
+---
+
 ## 输出前自检
 
 - [ ] `strict: true` + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes`？
@@ -376,3 +402,4 @@ export const orderApi = {
 - [ ] switch 穷举守卫 `satisfies never`？
 - [ ] 状态模型用 discriminated union？
 - [ ] 跨领域类型在 `types/`，领域类型在 `features/<domain>/types/`？
+- [ ] export 公共 API 有 TSDoc（G8.1）？

@@ -1,5 +1,7 @@
 # 需求到 Design Spec 提取指南
 
+> **Phase**: 提取 Design Spec 时
+
 AI 从需求（uluo-spec-driven 的 spec.md 或自然语言）提取 Design Spec 的规则。Design Spec 是 AI 提取的中间契约，用户不手写。
 
 ---

@@ -16,7 +16,7 @@
  *   node scripts/flow.js <design-dir> skip <phaseId> --reason <理由>
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync, readdirSync } from 'fs'
 import { join, dirname } from 'path'
 import { spawnSync } from 'child_process'
 import { fileURLToPath } from 'url'
@@ -29,96 +29,141 @@ const STATE_FILE = '.blueprint-state.json'
 const SINGLE_PAGE_PHASES = [
   {
     id: 'phase0',
-    title: 'Phase 0: 需求理解 + 加载远程知识',
-    description: '理解用户需求，识别页面类型和页面清单，加载 ui-ux-pro-max 和 design-taste-frontend',
+    title: 'Phase 0: 加载并使用远程设计知识',
+    description: '加载 ui-ux-pro-max + design-taste-frontend + styleseed-design-review，获取设计系统参数，执行品味审查',
+    boundary: {
+      only: '加载 3 个远程 skill、搜索设计参数、审查品牌方向',
+      not: '不生成任何文件（除 taste-review.md）',
+      actions: [
+        '1. node scripts/_shared/load.js --all',
+        '2. 有品牌倾向（Vercel/Linear/Apple 等）？→ 读取 .agents/skills/styleseed-design-review/SKILL.md 的 74 条设计规则',
+        '3. python3 .agents/skills/ui-ux-pro-max/scripts/search.py "<产品> <行业> <风格>" --design-system -p "<项目>" -f markdown',
+        '4. python3 .agents/skills/ui-ux-pro-max/scripts/search.py "<产品>" --domain color',
+        '5. python3 .agents/skills/ui-ux-pro-max/scripts/search.py "<产品>" --domain typography',
+        '6. python3 .agents/skills/ui-ux-pro-max/scripts/search.py "<关键词>" --domain ux',
+        '7. 读取 .agents/skills/design-taste-frontend/SKILL.md，逐条审查配色/层次/动效',
+        '8. 审查结论写入 design/taste-review.md',
+      ],
+    },
     gates: [
-      { id: 'remote-skills', type: 'script', desc: '远程 skill 已加载', check: 'load-verify' },
+      { id: 'remote-skills', type: 'script', desc: '3 个远程 skill 已安装', check: 'load-verify' },
     ],
     requiredReads: [
-      'references/requirement-extraction-guide.md',
       'references/remote-skills.md',
     ],
-    outputs: ['页面清单（口头确认即可）'],
+    outputs: ['design/taste-review.md（品味审查结论）'],
   },
   {
     id: 'phase1-tokens',
-    title: 'Phase 1: 生成完整 tokens.css',
-    description: '基于 ui-ux-pro-max 生成完整设计 token 面板（8 维度）',
+    title: 'Phase 1a: tokens（完整面板 + 展示页）',
+    description: '生成 tokens/tokens.css（13 维）和 tokens/tokens.html（6 个 @token-section）',
+    boundary: {
+      only: '生成 tokens/ 目录下的 tokens.css + tokens.html',
+      not: '不生成组件、不生成页面、不生成布局',
+    },
     gates: [
-      { id: 'tokens-exists', type: 'file-exists', path: 'tokens.css', desc: 'tokens.css 存在' },
-      { id: 'tokens-valid', type: 'script', desc: 'tokens.css 通过核心 token 校验', command: 'node scripts/checks/design-tokens.js' },
+      { id: 'tokens-css-exists', type: 'file-exists', path: 'tokens/tokens.css', desc: 'tokens/tokens.css 存在' },
+      { id: 'tokens-valid', type: 'script', desc: '13 维 HARD token 全部存在', command: 'node scripts/checks/design-tokens.js' },
+      { id: 'tokens-showcase', type: 'script', desc: 'tokens/tokens.html 6 个 @token-section 标记', check: 'tokens-showcase' },
     ],
     requiredReads: [
       'references/tokens-checklist.md',
-      'references/theme-consistency.md',
-      'references/design-dimensions.md',
     ],
-    outputs: ['design/tokens.css'],
+    outputs: ['design/tokens/tokens.css', 'design/tokens/tokens.html'],
   },
   {
     id: 'phase1-components',
-    title: 'Phase 1: 生成原子组件库',
-    description: '生成全部原子组件并注册到 component-registry.json',
+    title: 'Phase 1b: 6 个类别组件 HTML + registry',
+    description: '生成 6 个类别文件（general.html / data-entry.html / data-display.html / feedback.html / navigation.html / layout.html），每类含该类全部组件展示（Anatomy/Variants/States/Sizes），全部注册到 component-registry.json',
+    boundary: {
+      only: '生成 6 个类别 HTML + 更新 component-registry.json',
+      not: '不修改 tokens/ 下的文件、不生成页面、不生成布局',
+    },
     gates: [
-      { id: 'registry-exists', type: 'file-exists', path: 'component-registry.json', desc: 'component-registry.json 存在' },
-      { id: 'atomics-registered', type: 'script', desc: '所有原子组件已注册', command: 'node scripts/checks/component-registry.js' },
+      { id: 'atomics-6-files', type: 'script', desc: '6 个类别文件全部存在', check: 'atomics-6-files' },
+      { id: 'registry-valid', type: 'script', desc: 'registry 覆盖所有 data-component', command: 'node scripts/checks/component-registry.js' },
     ],
     requiredReads: [
       'references/atomic-components-checklist.md',
       'references/component-registry.md',
-      'references/protocol-spec.md',
     ],
     outputs: [
-      'design/components/*.html（全部原子组件）',
-      'design/component-registry.json（含全部原子组件，status: confirmed）',
+      'design/components/general.html',
+      'design/components/data-entry.html',
+      'design/components/data-display.html',
+      'design/components/feedback.html',
+      'design/components/navigation.html',
+      'design/components/layout.html',
+      'design/component-registry.json',
     ],
   },
   {
     id: 'phase2-layout',
-    title: 'Phase 2: 骨架布局',
-    description: '生成页面骨架布局',
+    title: 'Phase 2a: 骨架布局（固定骨架）',
+    description: '生成固定的骨架布局到 layout/（导航+侧边栏+容器+页脚，<!-- @slot content -->），所有页面共用同一个骨架',
+    boundary: {
+      only: '生成 design/layout/ 固定骨架 + design/blocks/ 页面区块。sidebar 导航链接必须使用真实路径（如 href="../pages/dashboard.html"），禁止 href="#"',
+      not: '不修改 tokens/、components/ 下的文件、不生成路由页面、不修改骨架的导航结构',
+      actions: [
+        '1. 生成 layout/nav-structure.json — 导航结构的唯一声明文件，列出所有 sections/items 和 href',
+        '2. 生成 layout/main-layout.html — 包含完整的 app-shell 骨架：.app-shell > .sidebar + .main-area > .header + .page-content，sidebar 与 nav-structure.json 一致',
+        '3. 生成 layout/layout.css — 共享骨架 CSS（sidebar、header、content-area、stat-card、content-card、charts-row、page-header、.btn 等）',
+        '4. 所有 sidebar__link 的 href 必须是真实页面路径（如 href="../pages/dashboard.html"），禁止使用 href="#"',
+        '5. 导航中出现的页面必须在 pages/ 下有对应 HTML 文件，不存在的页面不允许出现在导航中',
+      ],
+    },
     gates: [
       { id: 'layout-exists', type: 'dir-has-files', path: 'layout', desc: 'design/layout/ 包含 HTML 文件' },
+      { id: 'blocks-exists', type: 'dir-has-files', path: 'blocks', desc: 'design/blocks/ 包含 HTML 文件（如适用）' },
     ],
-    requiredReads: [
-      'references/design-dimensions.md',
-    ],
-    outputs: ['design/layout/*.html'],
+    requiredReads: ['references/design-dimensions.md'],
+    outputs: ['design/layout/*.html', 'design/blocks/*.html'],
   },
   {
     id: 'phase2-pages',
-    title: 'Phase 2: 逐页生成 + 业务组件抽取',
-    description: '逐页生成设计稿，从 registry 查表复用组件，新建组件注册',
+    title: 'Phase 2b: 路由页面（引用骨架）',
+    description: '逐页生成路由页面到 design/pages/，每页通过 <!-- @layout ../layout/main-layout.html --> 引用同一骨架，从 registry 查表复用组件',
+    boundary: {
+      only: '生成 design/pages/ 路由页面 + 更新 registry.businessComponents。每个页面必须嵌入完整 app-shell 结构（.app-shell/.sidebar/.main-area），sidebar 链接使用同级路径（如 href="dashboard.html"）',
+      not: '不修改 tokens/、components/ 下的文件、layout/ 骨架（不修改导航栏、侧边栏等全局元素）。页面中的 CSS 禁止重复 layout.css 已有的共享样式（.stat-card、.content-card、.btn 等）。禁止自行增删 sidebar 导航项',
+      actions: [
+        '1. 读取 design/layout/main-layout.html 了解骨架结构，然后为每个页面嵌入 app-shell（sidebar + header 直接复制进来）',
+        '2. 读取 design/layout/nav-structure.json，精确复制其导航结构到每个页面，禁止自行增删 nav item',
+        '3. sidebar__link 的 href 使用同级目录路径（如 href="dashboard.html"），当前页面标记 sidebar__link--active',
+        '4. 页面 CSS 只写本页唯一的 BEM 样式（如 dashboard__* / settings-* / filter-bar 等），不从 layout.css 已有的 .btn、.stat-card、.content-card 等复制',
+        '5. 从 component-registry.json 查表复用已有组件，避免重复定义',
+        '6. 所有 sidebar href 目标文件必须存在，不存在的页面不要出现在导航中',
+      ],
+    },
+    requiredReads: [
+      'references/component-registry.md',
+      'references/css-conventions.md',
+      'references/navigation-protocol.md',
+    ],
     gates: [
-      { id: 'pages-linked', type: 'script', desc: '页面 @layout 引用正确', command: 'node scripts/checks/design-structure.js' },
-      { id: 'registry-coverage', type: 'script', desc: '所有 data-component 在 registry 中', command: 'node scripts/checks/component-registry.js' },
+      { id: 'pages-linked', type: 'script', desc: '@layout + tokens.css 引用正确', command: 'node scripts/checks/design-structure.js' },
+      { id: 'registry-coverage', type: 'script', desc: 'data-component 在 registry + 跨页一致', command: 'node scripts/checks/component-registry.js' },
     ],
     requiredReads: [
       'references/component-registry.md',
-      'references/code-generation-guide.md',
       'references/css-conventions.md',
     ],
-    outputs: [
-      'design/pages/*.html',
-      'design/blocks/*.html',
-      'design/components/*.html（新增业务组件）',
-    ],
+    outputs: ['design/pages/*.html'],
   },
   {
     id: 'phase3',
-    title: 'Phase 3: 总入口 + 校验',
-    description: '生成 index.html 总入口，运行全部门禁',
+    title: 'Phase 3: index.html + 全量门禁',
+    description: '生成 index.html 总入口，运行 12 项全量门禁，HARD=0 方可交付',
+    boundary: {
+      only: '生成 index.html + 运行全部门禁',
+      not: '不修改任何 Phase 0-2 的产出（除非门禁 fail 回退修复）',
+    },
     gates: [
       { id: 'index-exists', type: 'file-exists', path: 'index.html', desc: 'index.html 存在' },
-      { id: 'all-gates-pass', type: 'script', desc: 'validate.js 全部门禁通过', command: 'node scripts/validate.js' },
+      { id: 'all-gates-pass', type: 'script', desc: 'validate.js 12 项 HARD=0', command: 'node scripts/validate.js' },
     ],
-    requiredReads: [
-      'references/constraint-tiers.md',
-    ],
-    outputs: [
-      'design/index.html',
-      'design/tokens/*.html',
-    ],
+    requiredReads: ['references/constraint-tiers.md'],
+    outputs: ['design/index.html（设计系统站点完成）'],
   },
 ]
 
@@ -200,8 +245,28 @@ function verifyGate(gate, designDir) {
       if (!existsSync(loadScript)) return { pass: false, reason: 'load.js 不存在' }
       const result = spawnSync('node', [loadScript, '--list'], { encoding: 'utf-8', timeout: 10000 })
       const output = result.stdout || ''
-      const bothInstalled = output.includes('ui-ux-pro-max') && output.includes('design-taste-frontend')
-      return { pass: bothInstalled, reason: bothInstalled ? '两个远程 skill 已安装' : '远程 skill 未完全加载，请运行: node scripts/_shared/load.js --all' }
+      const allInstalled = output.includes('ui-ux-pro-max') && output.includes('design-taste-frontend') && output.includes('styleseed-design-review')
+      return { pass: allInstalled, reason: allInstalled ? '3 个远程 skill 已安装' : '远程 skill 未完全加载，请运行: node scripts/_shared/load.js --all' }
+    }
+    if (gate.check === 'tokens-showcase') {
+      const tokensFile = join(designDir, 'tokens', 'tokens.html')
+      if (!existsSync(tokensFile)) return { pass: false, reason: 'design/tokens/tokens.html 不存在' }
+      const content = readFileSync(tokensFile, 'utf-8')
+      const required = ['colors', 'typography', 'spacing', 'radius', 'shadow', 'motion']
+      const missing = required.filter(s => !content.includes(`@token-section: ${s}`))
+      if (missing.length === 0) {
+        return { pass: true, reason: '6 个 @token-section 标记全部存在' }
+      }
+      return { pass: false, reason: `缺 ${missing.length}/6 个 @token-section: ${missing.join(', ')}` }
+    }
+    if (gate.check === 'atomics-6-files') {
+      const compDir = join(designDir, 'components')
+      const required = ['general.html', 'data-entry.html', 'data-display.html', 'feedback.html', 'navigation.html', 'layout.html']
+      const missing = required.filter(f => !existsSync(join(compDir, f)))
+      if (missing.length === 0) {
+        return { pass: true, reason: '6 个类别组件文件全部存在' }
+      }
+      return { pass: false, reason: `缺 ${missing.length}/6 个类别文件: components/${missing.join(', components/')}` }
     }
     if (gate.command) {
       const cmdParts = gate.command.split(/\s+/)
@@ -408,7 +473,19 @@ function printPhaseGuidance(state, idx) {
   const phase = state.phases[idx]
   console.log(`\n── ${phase.title} ──`)
   console.log(phase.description)
-  console.log('\n门禁:')
+  if (phase.boundary) {
+    console.log('\n⚡ 此 Phase 只做:')
+    console.log(`  ${phase.boundary.only}`)
+    console.log('🚫 此 Phase 禁止:')
+    console.log(`  ${phase.boundary.not}`)
+    if (phase.boundary.actions) {
+      console.log('\n必须执行的动作:')
+      for (const action of phase.boundary.actions) {
+        console.log(`  ${action}`)
+      }
+    }
+  }
+  console.log('\n门禁 (complete 时自动校验):')
   for (const gate of phase.gates) {
     console.log(`  ☐ ${gate.desc}`)
   }
@@ -419,9 +496,6 @@ function printPhaseGuidance(state, idx) {
   console.log('\n预期产出:')
   for (const out of phase.outputs) {
     console.log(`  → ${out}`)
-  }
-  if (phase.skipAllowed) {
-    console.log('\n⚠ 此阶段可跳过，但跳过可能影响最终质量')
   }
   console.log('')
 }

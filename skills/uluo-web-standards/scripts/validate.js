@@ -9,6 +9,7 @@
  *   3. eslint           → JS/TS/Vue 代码质量 + 格式 + 命名
  *   4. tsc --noEmit     → TS 类型检查
  *   5. 自定义检查        → DDD 层依赖边界
+ *   6. 自定义检查        → G8 注释格式（comment-format）
  *
  * 用法：
  *   node scripts/validate.js <file-or-dir> [...more]
@@ -22,6 +23,7 @@ import { lintStylelint } from './checks/stylelint.js'
 import { lintEslint } from './checks/eslint.js'
 import { checkTsc } from './checks/tsc.js'
 import { checkLayerBoundary } from './checks/layer-boundary.js'
+import { checkCommentFormat } from './checks/comment-format.js'
 
 const CODE_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.ts', '.tsx', '.vue'])
 const STYLE_EXTENSIONS = new Set(['.scss', '.css', '.vue'])
@@ -62,6 +64,7 @@ function main()
   {
     const content = readFileSync(filePath, 'utf-8')
     checkLayerBoundary(filePath, content, report)
+    checkCommentFormat(filePath, content, report)
   }
 
   printReport(report, jsFiles.length)

@@ -1,0 +1,76 @@
+{
+  "skill_name": "uluo-web-standards",
+  "evals": [
+    {
+      "id": 1,
+      "name": "light-refactor",
+      "prompt": "重构这个 Vue 3 函数，嵌套太深了：function processData(items) { const result = []; for (const item of items) { if (item.active) { if (item.type === 'A') { if (item.value > 100) { result.push({ ...item, processed: true }); } } } } return result; }",
+      "expected_output": "使用 Guard Clause 扁平化嵌套，提取魔法值 100 为常量，不改命名约定，不拆分文件（LIGHT 路径）",
+      "assertions": [
+        "uses-guard-clause: Uses guard clause (early return) to flatten nesting",
+        "extracts-magic-number: Extracts magic number 100 to a named constant",
+        "no-file-split: Does not create new files or directories",
+        "preserves-naming: Preserves existing variable/function names",
+        "light-path: Follows LIGHT path (no architecture changes, no new modules)"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "medium-vue-component",
+      "prompt": "用 Vue 3 Composition API 创建一个 UserList 组件，展示用户列表，支持搜索过滤和分页。需要处理 loading、empty、error 三种状态。",
+      "expected_output": "Vue 3 SFC 组件，使用 Composition API，覆盖四态（loading/empty/error/success），使用 BEM 命名，引用 CSS 变量 token，遵循 DDD 分层",
+      "assertions": [
+        "uses-composition-api: Uses <script setup> with Composition API (ref/computed/watch)",
+        "covers-four-states: Implements loading, empty, error, and success states",
+        "uses-bem-naming: CSS classes follow BEM naming convention",
+        "uses-css-variables: References CSS custom properties (var(--xxx)) instead of hardcoded colors",
+        "has-search-filter: Implements search filter functionality",
+        "has-pagination: Implements pagination",
+        "ddd-layered: Component is placed in correct DDD layer (not mixing domain/UI logic)"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "heavy-module-setup",
+      "prompt": "搭建一个用户管理模块的前端项目结构，包含列表页、详情页、编辑表单。使用 Vue 3 + TypeScript + Pinia。需要 DDD 分层架构。",
+      "expected_output": "完整的 DDD 分层目录结构（domain/application/infrastructure/presentation），每层职责清晰，含 API 契约设计和基础设施配置",
+      "assertions": [
+        "ddd-vertical-slice: Uses DDD vertical slice architecture (feature-based, not layer-based)",
+        "ddd-horizontal-layers: Has clear horizontal layers (domain/application/infrastructure/presentation)",
+        "layer-boundary-clean: No cross-layer dependency violations (domain doesn't import infrastructure)",
+        "uses-typescript: Uses TypeScript with proper type definitions",
+        "uses-pinia: Uses Pinia for state management in application layer",
+        "has-api-contract: Defines API contract with typed request/response interfaces",
+        "four-states-covered: List page covers loading/empty/error/success states"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "react-hooks-pattern",
+      "prompt": "用 React + TypeScript 创建一个 useFetch hook，支持请求取消、错误重试、loading 状态。然后写一个使用这个 hook 的 DataGrid 组件。",
+      "expected_output": "自定义 Hook 遵循 React Hooks 规范，DataGrid 组件覆盖四态，使用 SCSS Modules + BEM",
+      "assertions": [
+        "hook-rules: Custom hook follows React Hooks rules (no conditional hooks, proper dependency array)",
+        "request-cancellation: Implements AbortController for request cancellation",
+        "error-retry: Implements error retry mechanism",
+        "four-states: DataGrid covers loading/empty/error/success states",
+        "uses-scss-modules: Uses SCSS Modules (.module.scss) with BEM naming",
+        "uses-css-variables: References CSS custom properties for theming"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "api-design-review",
+      "prompt": "Review 这个 REST API 设计并指出问题：GET /api/getUserList?type=1&status=active&limit=20&page=1 返回 { code: 200, msg: 'success', data: { list: [...], total: 100 } }。POST /api/createUser 传 { name: '张三', age: 25 } 返回 { code: 200, msg: 'success' }",
+      "expected_output": "指出 RESTful 命名问题（动词在 URL）、缺少错误码体系、响应格式不规范、缺少分页元数据、缺少版本控制",
+      "assertions": [
+        "flags-restful-naming: Identifies non-RESTful URL naming (getUserList should be GET /api/users)",
+        "flags-error-codes: Identifies missing HTTP status codes and error code system",
+        "flags-response-format: Identifies non-standard response format (code/msg/data wrapper issues)",
+        "flags-pagination-meta: Identifies missing pagination metadata (total/page/limit in headers or meta)",
+        "flags-versioning: Identifies missing API versioning (/v1/ or header-based)",
+        "suggests-fixes: Provides concrete fix directions for each issue"
+      ]
+    }
+  ]
+}

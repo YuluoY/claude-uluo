@@ -1,5 +1,7 @@
 # 网页设计尺寸标准规范
 
+> **Phase**: 尺寸设定时
+
 > 基于 Ant Design 5.x、Material Design 3、8pt 网格系统及 Figma 社区共识整理  
 > 本规范作为 AI 生成 HTML 设计稿的基准参考，所有尺寸数值以 px 为单位
 

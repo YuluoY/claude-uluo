@@ -1,0 +1,109 @@
+{
+  "skill_name": "diagram-compiler",
+  "evals": [
+    {
+      "name": "flowchart-template-path",
+      "description": "用户请求画流程图，验证路径 A 模板路径工作流（template → 填充 → enforce → 输出）",
+      "prompt": "画一个用户登录流程图，包含账号密码登录和第三方登录两个分支",
+      "assertions": [
+        {"type": "contains", "value": "flowchart"},
+        {"type": "contains", "value": "template"},
+        {"type": "contains", "value": "enforce"},
+        {"type": "script", "value": "python3 scripts/_shared/mermaid.py template --type flowchart"}
+      ]
+    },
+    {
+      "name": "quadrant-data-driven-path",
+      "description": "用户请求画象限图，验证路径 B 数据驱动工作流（schema → 构建数据 → generate → 输出）",
+      "prompt": "画一个技术选型象限图，对比 React/Vue/Angular/Svelte 在性能和生态两个维度",
+      "assertions": [
+        {"type": "contains", "value": "quadrant"},
+        {"type": "contains", "value": "schema"},
+        {"type": "contains", "value": "generate"},
+        {"type": "contains", "value": "yaml"}
+      ]
+    },
+    {
+      "name": "layered-architecture",
+      "description": "用户请求画分层技术架构图，验证 Matplotlib/PIL 渲染路径与 YAML layout 数据驱动",
+      "prompt": "画一个电商系统的分层技术架构图，包含客户端层、网关层、服务层、数据层",
+      "assertions": [
+        {"type": "contains", "value": "layered_architecture"},
+        {"type": "contains", "value": "layout"},
+        {"type": "file_exists", "value": "assets/layouts/architecture-layout.yaml"}
+      ]
+    },
+    {
+      "name": "sequence-diagram",
+      "description": "用户请求画时序图，验证 Mermaid sequenceDiagram 模板路径与 participant ASCII 规范",
+      "prompt": "画一个用户下单的时序图，包含用户、订单服务、支付服务、库存服务四个参与者，展示从下单到支付完成的完整流程",
+      "assertions": [
+        {"type": "contains", "value": "sequenceDiagram"},
+        {"type": "contains", "value": "participant"},
+        {"type": "contains", "value": "->>"},
+        {"type": "contains", "value": "-->>"}
+      ]
+    },
+    {
+      "name": "er-diagram",
+      "description": "用户请求画 ER 图，验证 Mermaid erDiagram 模板路径与 PK/FK/关系基数规范",
+      "prompt": "画一个电商系统的 ER 图，包含用户、商品、订单三个实体，标注主键外键和一对多关系",
+      "assertions": [
+        {"type": "contains", "value": "erDiagram"},
+        {"type": "contains", "value": "PK"},
+        {"type": "contains", "value": "FK"},
+        {"type": "contains", "value": "||--o{"}
+      ]
+    },
+    {
+      "name": "gantt-chart",
+      "description": "用户请求画甘特图，验证 Mermaid gantt 模板路径与 dateFormat/section/任务状态规范",
+      "prompt": "画一个产品研发项目的甘特图，包含需求、设计、开发、测试四个阶段，标注关键路径和里程碑",
+      "assertions": [
+        {"type": "contains", "value": "gantt"},
+        {"type": "contains", "value": "dateFormat"},
+        {"type": "contains", "value": "section"},
+        {"type": "contains", "value": "milestone"}
+      ]
+    },
+    {
+      "name": "pie-chart",
+      "description": "用户请求画饼图，验证 Mermaid pie 模板路径与数据项引号规范",
+      "prompt": "画一个技术栈使用占比的饼图，包含前端 35%、后端 30%、数据库 20%、DevOps 15% 四个类别",
+      "assertions": [
+        {"type": "contains", "value": "pie"},
+        {"type": "contains", "value": "title"},
+        {"type": "regex", "value": "\".+?\"\\s*:\\s*\\d+"}
+      ]
+    },
+    {
+      "name": "state-diagram",
+      "description": "用户请求画状态图，验证 Mermaid stateDiagram-v2 模板路径与 [*] 起止/转移标签规范",
+      "prompt": "画一个订单状态流转图，包含待支付、已支付、已发货、已签收、已取消五个状态，标注转移条件",
+      "assertions": [
+        {"type": "contains", "value": "stateDiagram-v2"},
+        {"type": "contains", "value": "[*]"},
+        {"type": "contains", "value": "-->"}
+      ]
+    },
+    {
+      "name": "mindmap",
+      "description": "用户请求画思维导图，验证 Mermaid mindmap 模板路径与 root((...)) 根节点/缩进层级规范",
+      "prompt": "画一个技术选型思维导图，从中心主题'技术栈选型'展开前端、后端、数据库、DevOps 四个分支，每个分支至少 2 个子节点",
+      "assertions": [
+        {"type": "contains", "value": "mindmap"},
+        {"type": "contains", "value": "root(("}
+      ]
+    },
+    {
+      "name": "radar-chart",
+      "description": "用户请求画雷达图，验证 Matplotlib 渲染路径与 YAML 数据驱动（axes/series/values 结构）",
+      "prompt": "画一个技术方案多维对比雷达图，对比微服务和单体架构在性能、可维护性、开发效率、社区生态、学习成本五个维度",
+      "assertions": [
+        {"type": "contains", "value": "radar"},
+        {"type": "contains", "value": "axes"},
+        {"type": "contains", "value": "values"}
+      ]
+    }
+  ]
+}

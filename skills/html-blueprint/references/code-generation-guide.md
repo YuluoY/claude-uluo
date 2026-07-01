@@ -1,5 +1,7 @@
 # AI 代码生成指南
 
+> **Phase**: 生成框架代码时
+
 AI 参考 Design Spec 生成任意框架代码的指南。html-blueprint 不提供代码生成器——AI 根据本指南自行生成。
 
 ---
@@ -7,19 +9,19 @@ AI 参考 Design Spec 生成任意框架代码的指南。html-blueprint 不提�
 ## 串行生成规则与文件输出
 
 1. **串行生成顺序（HARD）**：必须严格按以下顺序生成，不可颠倒：
-   - 第一步：design/tokens.css（全局设计 token）
+   - 第一步：design/tokens/tokens.css（全局设计 token）
    - 第二步：design/layout/*.html（骨架布局）
    - 第三步：design/blocks/*.html（页面区块）
    - 第四步：design/pages/*.html（页面，引用 layout + blocks）
    - 第五步：design/components/*.html（抽取的可复用组件）
 
 2. **文件输出路径规则**：
-   - tokens.css → `design/tokens.css`
+   - tokens.css → `design/tokens/tokens.css`
    - 骨架布局 → `design/layout/<name>-layout.html`
    - 页面区块 → `design/blocks/<name>-section.html` 或 `design/blocks/<name>-group.html`
    - 原子组件 → `design/components/<name>.html`
    - 页面 → `design/pages/<name>.html`
-   - 所有 HTML 都必须在文件头部添加 `<!-- @theme ../tokens.css -->` 注释
+   - 所有 HTML 都必须在文件头部添加 `<!-- @theme ../tokens/tokens.css -->` 注释
    - pages/ 下的 HTML 必须添加 `<!-- @layout ../layout/<layout-name>.html -->` 注释声明引用的骨架
 
 3. **尺寸规范遵循**：

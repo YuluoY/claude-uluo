@@ -1,5 +1,7 @@
 # 主题一致性协议
 
+> **Phase**: 首次生成或追加设计稿时
+
 html-blueprint 的项目级主题管理：通过一个共享 CSS 文件统一定义 design token，所有设计稿通过 `<link>` 引入，保证多页面的色彩、间距、圆角、字号体系一致。
 
 **主题来源**：主题 token 可从远程设计 skill（ui-ux-pro-max）生成的设计系统映射而来，也可手动定义。
@@ -12,6 +14,43 @@ html-blueprint 的项目级主题管理：通过一个共享 CSS 文件统一定
 2. **设计稿 HTML 通过 `<link>` 引入主题** — 不重复定义 `:root` token
 3. **组件样式用 `var()` 引用 token** — `color: var(--color-text-primary)` 而非硬编码
 4. **每个 HTML 独立可渲染** — `<link>` 使用相对路径，主题 CSS 在则页面正常展示
+
+---
+
+## 布局 CSS 共享机制
+
+页面骨架的 CSS 分为两层：
+
+### 第一层：layout.css（共享骨架样式）
+
+`layout/layout.css` 包含所有页面公用的结构样式，每个页面通过 `<link>` 引入：
+
+| 选择器 | 说明 |
+|--------|------|
+| `.app-shell` | 页面主容器（flex 布局） |
+| `.sidebar` / `.sidebar__*` | 导航侧边栏 |
+| `.main-area` | 主内容区 |
+| `.header` / `.header__*` | 顶部导航栏 |
+| `.page-content` | 内容容器（flex:1 + 滚动 + padding） |
+| `.page-header` / `.page-header__*` | 页面标题区 |
+| `.stat-grid` / `.stat-card` / `.stat-card__*` | 指标卡片网格 |
+| `.content-card` / `.content-card__*` | 通用内容卡片 |
+| `.charts-row` | 图表行容器 |
+| `.btn` / `.btn--*` / `.btn__*` | 共享按钮样式 |
+
+### 第二层：页面级 `<style>`（唯一 BEM 样式）
+
+每个 `pages/*.html` 只写本页独有的样式，**禁止重复 layout.css 已有的共享选择器**：
+
+```
+✅ 允许：.dashboard__time-range { ... }     ← 本页唯一
+✅ 允许：.settings-nav__link--active { ... } ← 本页唯一
+❌ 禁止：.btn { ... }                      ← 在 layout.css
+❌ 禁止：.stat-card { ... }                ← 在 layout.css
+❌ 禁止：.content-card__body { ... }       ← 在 layout.css
+```
+
+design-structure.js 会检测 page `<style>` 中的重复并发出 WARN。
 
 ---
 
@@ -75,7 +114,7 @@ ui-ux-pro-max + design-taste-frontend     后续页面只取不增（真缺时�
 ### 文件位置与命名
 
 ```
-<项目根>/design/tokens.css
+<项目根>/design/tokens/tokens.css
 ```
 
 同一项目中可以有且仅有一个主题 CSS。
@@ -86,16 +125,16 @@ ui-ux-pro-max + design-taste-frontend     后续页面只取不增（真缺时�
 
 ```
 <项目根>/design/
-├── tokens.css              ← 全局唯一主题文件
+├── tokens/tokens.css          ← 全局唯一主题文件
 ├── design-spec.yaml        ← Design Spec
 ├── layout/                 ← 骨架布局
-│   └── *.html              → <link rel="stylesheet" href="../tokens.css">
+│   └── *.html              → <link rel="stylesheet" href="../tokens/tokens.css">
 ├── blocks/                 ← 页面区块
-│   └── *.html              → <link rel="stylesheet" href="../tokens.css">
+│   └── *.html              → <link rel="stylesheet" href="../tokens/tokens.css">
 ├── components/             ← 可复用组件
-│   └── *.html              → <link rel="stylesheet" href="../tokens.css">
+│   └── *.html              → <link rel="stylesheet" href="../tokens/tokens.css">
 └── pages/                  ← 页面设计稿
-    └── *.html              → <link rel="stylesheet" href="../tokens.css">
+    └── *.html              → <link rel="stylesheet" href="../tokens/tokens.css">
 ```
 
 | 目录 | 内容 | 典型场景 |
@@ -105,7 +144,7 @@ ui-ux-pro-max + design-taste-frontend     后续页面只取不增（真缺时�
 | `components/` | 可复用组件 | 确认弹窗、通知提示、表单模块、列表卡片 |
 | `pages/` | 完整页面设计稿 | 仪表盘、设置页、用户详情、登录页 |
 
-`data-page` 声明的完整页面放在 `pages/`，页面区块放在 `blocks/`，骨架布局放在 `layout/`，无 `data-page` 的可复用组件放在 `components/`。四个子目录均在 `design/` 下一层，因此统一通过 `<link href="../tokens.css">` 引用主题。`validate.js` 扫描时自动覆盖所有子目录。`<!-- @theme -->` 声明统一为 `../tokens.css`。
+`data-page` 声明的完整页面放在 `pages/`，页面区块放在 `blocks/`，骨架布局放在 `layout/`，无 `data-page` 的可复用组件放在 `components/`。四个子目录均在 `design/` 下一层，因此统一通过 `<link href="../tokens/tokens.css">` 引用主题。`validate.js` 扫描时自动覆盖所有子目录。`<!-- @theme -->` 声明统一为 `../tokens/tokens.css`。
 
 ### 标准 Token 清单
 
@@ -334,9 +373,9 @@ ui-ux-pro-max + design-taste-frontend     后续页面只取不增（真缺时�
 ### 场景 A：项目中尚无蓝图（首次生成）
 
 1. 询问用户目标画布尺寸和响应式需求（最少提问规则）
-2. 创建 `design/` 目录，**同步生成 `design/tokens.css`**，包含完整的 `:root` token 定义
+2. 创建 `design/` 目录，**同步生成 `design/tokens/tokens.css`**，包含完整的 `:root` token 定义
 3. 判断设计稿类型：骨架布局 → `design/layout/<name>.html`；页面区块 → `design/blocks/<name>.html`；可复用组件 → `design/components/<name>.html`；完整页面 → `design/pages/<name>.html`
-4. 生成设计稿 HTML，`<link rel="stylesheet" href="../tokens.css">` 引入主题，组件样式用 `var()` 引用
+4. 生成设计稿 HTML，`<link rel="stylesheet" href="../tokens/tokens.css">` 引入主题，组件样式用 `var()` 引用
 5. 告知用户项目结构已就绪，后续设计稿将自动继承主题
 
 ### 场景 B：项目中已有 `tokens.css`
@@ -360,14 +399,14 @@ ui-ux-pro-max + design-taste-frontend     后续页面只取不增（真缺时�
 ```html
 <!-- @page DashboardPage -->
 <!-- @viewport width:1440 height:900 -->
-<!-- @theme ../tokens.css -->
+<!-- @theme ../tokens/tokens.css -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard</title>
-<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../tokens/tokens.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {

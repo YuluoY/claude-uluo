@@ -18,6 +18,7 @@
   - [G6. 文件纯度](#g6-file-purity)
   - [G7. 设计质量（SHOULD）](#g7-design-quality)
   - [G8. 代码注释](#g8-code-comments)
+    - G8.0 默认 · G8.1 MUST JSDoc · G8.2 MUST WHAT · G8.3 NEVER WHY · G8.4–G8.6
 - [§ 组件规则（Vue）](#component-rules-vue)
 - [§ 组件规则（React）](#component-rules-react)
 - [§ 架构规则](#architecture-rules)
@@ -105,8 +106,18 @@
 
 ### G8. 代码注释
 
-- [ ] **G8.1 注释 WHY 而非 WHAT**：注释解释的是"为什么这样做"而非"代码做了什么"？
-- [ ] **G8.2 public API 文档**：所有导出函数、导出类、复杂导出接口是否有 JSDoc/TSDoc 注释说明意图和参数？
+- [ ] **G8.0 默认**：写 WHAT（做了什么 / 是什么），不写 WHY；命名已表达的，不重复写。
+- [ ] **G8.1 MUST JSDoc**：每个 `export` 函数、类、composable、store action、复杂 export 类型/接口 → JSDoc/TSDoc 含 `@description`（一句话）、每个参数 `@param`、有返回值时 `@returns`。
+- [ ] **G8.2 MUST WHAT**：非显而易见逻辑、业务概念、字段含义、步骤意图 → 注释说明做了什么或是什么；可附 `@see`。
+- [ ] **G8.3 NEVER WHY**：禁止动机/取舍/历史类 WHY 注释（如 `// 因为…所以…`、`// 为避免 bug 才…`）。
+- [ ] **G8.4 NEVER 垃圾注释**：禁止注释掉的 dead code、修改日志（`// 2024-xx-xx 改`）、分区标记（`// ===== xxx =====`）。
+- [ ] **G8.5 NEVER 场景**：question-only、review-only、未改代码的任务 → 不新增任何注释。
+- [ ] **G8.6 例外**：用户消息含「不要注释」或 `no comments` → 本次零注释；仅改样式/文案/配置值 → 不新增注释；Vue `<script>` export 仍须 JSDoc，`<template>` 禁止注释。
+- [ ] **G8.7 MUST 块注释格式**（`scripts/checks/comment-format.js` 硬约束）：
+  - 单行说明 → 只用 `//`，禁止 `/** ... */` 写在一行
+  - export / 接口 / 函数 → 多行块注释，opening 行仅 `/**`，正文行 ` * ...`，closing ` */`
+  - 多行块注释内层 `*` 与 opening 行 `*` **同列对齐**
+  - `stores/**`、`constants.ts` 禁止 `label: 'UI文案'`，仅存 id/key，展示走 i18n
 
 ---
 
@@ -219,7 +230,7 @@ Phase 4 中模型逐条自述时，使用以下格式：
 - [x] G5.1-G5.4 命名 — <简述>
 - [x] G6.1-G6.3 文件纯度 — <简述>
 - [x] G7.1-G7.7 设计质量 — <简述>
-- [x] G8.1-G8.2 代码注释 — <简述>
+- [x] G8.0-G8.7 代码注释 — <简述>
 
 #### § <场景专项规则>（如适用）
 - [x] ...

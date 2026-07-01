@@ -280,6 +280,13 @@ const suggestions = useMemo(() => search(deferredQuery), [deferredQuery])
 
 ## 七、自定义 Hook
 
+**MUST**
+- 一个文件一个 Hook，职责单一
+- 每个 `export` Hook → TSDoc（同 `soft-rules.md` G8.1）
+
+**NEVER**
+- JSX 内写 WHY 注释（G8.3）
+
 ```typescript
 // 一个文件一个 Hook，职责单一
 export function useDebouncedValue<T>(value: T, delay: number): T

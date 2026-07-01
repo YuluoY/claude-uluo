@@ -168,24 +168,24 @@ function extractComponentDeclarations(designDir) {
       catch (_) { continue }
       const $ = parseHTML(content)
       const components = []
-      $('[data-component]').each(el => {
+      $('[data-component]').each((i, el) => {
         const name = el.attr('data-component')
         if (!name) return
         const props = []
         const events = []
-        el.find('[data-prop]').each(child => {
+        el.find('[data-prop]').each((j, child) => {
           const propName = child.attr('data-prop')
           const propType = child.attr('data-type') || 'string'
           if (propName) props.push({ name: propName, type: propType })
         })
-        el.find('[data-event]').each(child => {
+        el.find('[data-event]').each((k, child) => {
           const evtName = child.attr('data-action') || child.attr('data-event')
           const trigger = child.attr('data-event')
           if (evtName) events.push({ name: evtName, trigger: trigger || 'click' })
         })
         const deco = el.find('[data-decorative]')
         const decoratives = []
-        deco.each(d => {
+        deco.each((l, d) => {
           const dn = d.attr('data-decorative')
           if (dn) decoratives.push(dn)
         })

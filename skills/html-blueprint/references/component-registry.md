@@ -1,5 +1,7 @@
 # 组件注册表协议
 
+> **Phase**: Phase 1b（注册） / Phase 2b（查表）
+
 component-registry.json 是跨页面组件的**共享索引**。不存储完整 props/events 定义（详情从 HTML data-* 属性读取），只记录"谁在哪、被谁用"。
 
 ---

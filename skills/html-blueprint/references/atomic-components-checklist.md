@@ -1,5 +1,7 @@
 # 原子组件完整清单
 
+> **Phase**: Phase 1b — 生成原子组件前必读
+
 Phase 1 Step 3 必须生成以下全部原子组件。每个组件 HTML 文件输出到 `design/components/`，并注册到 `component-registry.json`。
 
 ---
@@ -112,6 +114,17 @@ Phase 1 Step 3 必须生成以下全部原子组件。每个组件 HTML 文件�
 
 ---
 
+## 页面生成指引（Phase 2b）
+
+每个路由页面 `pages/*.html` 必须是**自包含页面**：
+
+- 嵌入完整的 `.app-shell > .sidebar + .main-area > .header + .page-content` 结构
+- sidebar 导航链接使用同级目录路径（如 `href="dashboard.html"`），当前页面标记 `sidebar__link--active`
+- 页面 CSS 只写本页唯一的 BEM 样式，不从 `layout.css` 已有的 `.btn`、`.stat-card`、`.content-card` 等共享样式复制
+- `layout/main-layout.html` 作为参考模板，`layout.css` 提供共享 CSS
+
+---
+
 ## 每个组件的 HTML 展示要求
 
 每个组件 HTML 文件必须包含：
@@ -141,4 +154,3 @@ Phase 1 Step 3 必须生成以下全部原子组件。每个组件 HTML 文件�
 </section>
 ```
 
-图表类（Chart）不预生成，归 `data-convert="manual"`。

@@ -1,5 +1,7 @@
 # HTML Blueprint 协议规范
 
+> **Phase**: 生成或 review HTML 时
+
 本文档是 html-blueprint 协议的完整参考。HTML 负责视觉保真，`data-*` 属性负责组件语义。本文件为**属性字典 + 组件分类 + 转换报告格式 + 禁止模式**。
 
 ---
