@@ -200,6 +200,14 @@ function check(filePath) {
     if (failedItems.length > 0) {
       findings.push({ type: 'warn', msg: `${fname}: 有 ${failedItems.length} 个不通过项` });
     }
+
+    // 6c. 遗留待 review 项（[ ]）——review 结论必须实时落盘，不允许只口头 review
+    const pendingItems = items.filter(i => i.status === 'pending');
+    if (pendingItems.length > 0) {
+      findings.push({ type: 'warn', msg: `${fname}: 有 ${pendingItems.length} 个检查点仍为待 review（[ ]）——review 结论必须实时落盘为 [x]/[-]；遗留 [ ] 在 --strict 模式（Phase 8 门禁）下判为失败` });
+    } else {
+      findings.push({ type: 'pass', msg: `${fname}: 无遗留待 review 检查点（review 状态已全部落盘）` });
+    }
   }
 
   // ── 7. Review 结论与检查点状态一致性 ──────────────────────

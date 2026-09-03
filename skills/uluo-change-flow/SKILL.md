@@ -125,13 +125,15 @@ flowchart TD
 ```
 
 - Phase 6：checklist 独立于三层，逐条可 review
-- Phase 7：修改 spec.md / plan.md / tasks.md / 代码 / 设计稿
-- Phase 8：回退时修复该层级文档 + 同步更新下游 + 重新执行相关任务
+- Phase 7：修改 spec.md / plan.md / tasks.md / 代码 / 设计稿；**每完成一项任务立即回写 tasks.md 任务状态（[ ]→[x]）**——任务清单即进度看板
+- Phase 8：回退时修复该层级文档 + 同步更新下游 + 重新执行相关任务；**review 结论实时落盘为 checklist.md 三态标记**，禁止只口头 review 不更新文档
 - Phase 9：记录 review 通过结论 + 回退历史（如有），归档到 `changes/CHG-<NNN>/`
 
 ### 流程执行协议（flow.js）
 
 **有状态流程控制**：执行变更流程时，在 `CHG-<NNN>/` 目录下使用 `flow.js` 进行渐进式流程推进。flow.js 通过状态文件（`.skill-state.json`）追踪进度，门控自动校验前置条件，确保流程稳固。
+
+**状态文件生命周期**：`.skill-state.json` 是运行时产物，不是变更归档交付物——`init` 时自动将忽略条目写入 git 根目录 `.gitignore`（非 git 环境自动跳过）；流程完成（最后一个阶段 complete/skip）时自动清理；历史遗留文件可用 `cleanup` 命令清除。
 
 #### 命令协议
 
@@ -148,6 +150,7 @@ node scripts/flow.js <chg-dir> <command> [options]
 | `rollback <phaseId>` | 回退到指定阶段（继续从该阶段推进） | — |
 | `gates` | 列出当前阶段的门控项 | — |
 | `skip <phaseId>` | 手动跳过阶段（需说明理由） | `--reason <理由>` |
+| `cleanup` | 清理运行时状态文件（流程完成时已自动清理，用于历史遗留） | — |
 
 #### 执行流程
 
@@ -200,20 +203,23 @@ node scripts/flow.js <chg-dir> <command> [options]
   - `changes/`
     - `CHG-001/` → spec.md / plan.md / tasks.md / checklist.md / change-record.md
     - `CHG-002/` → ...
-    - `CHANGELOG-changes.md` ← 变更历史索引
+    - `CHANGELOG.md` ← 变更历史索引
   - `verification-report.md`
 
 **关键约定：**
 - 原始 spec/plan/tasks 位于特性目录顶层，变更时被修改（不是只读）
 - 每次变更归档到独立的 `CHG-<NNN>/` 目录，编号递增（CHG-001、CHG-002...）
-- `CHANGELOG-changes.md` 汇总所有变更摘要
+- `changes/CHANGELOG.md` 汇总所有变更摘要（位于 changes/ 目录内，与项目根 `./CHANGELOG.md` 互不冲突）
 - `change-record.md` 在 Phase 9 执行后产出，记录 review 结论和回退历史
+- `.skill-state.json` 为 flow.js 运行时状态，不属于变更归档交付物：流程进行中存在、完成后自动清理，init 时已自动加入 `.gitignore`
 
 ---
 
 ## checklist review 状态约定
 
 **三态标记**：`[ ]`待review / `[x]`通过 / `[-]`不通过（标注回退）。
+
+**落盘要求**：review 结论必须实时写入 checklist.md 的三态标记——遗留 `[ ]` 即 review 未完成，validate.js --strict（Phase 8 门控）会将其判为失败，流程无法进入 Phase 9。
 
 回退标注格式：
 
@@ -296,11 +302,12 @@ node scripts/validate.js specs/<feature>/changes/CHG-<NNN>/ --strict
 
 ## 禁止事项
 
-**七条禁令**：跳过checklist/不通过却推进/只归档不更新/职责越界/重复内容/编号跳号/事后补record。
+**八条禁令**：跳过checklist/不通过却推进/只归档不更新/执行不回写状态/职责越界/重复内容/编号跳号/事后补record。
 
 - **禁止跳过 checklist 直接执行**——checklist 是变更质量的最后一道闸门
 - **禁止 checklist 不通过却继续推进**——必须回退到对应层级修复
 - **禁止只归档不更新原始文档**——原始 spec/plan/tasks 必须同步修改
+- **禁止执行不回写状态**——每完成一项任务立即勾选 tasks.md（[ ]→[x]），review 结论立即落盘 checklist.md 三态标记；文档状态就是进度真相
 - **禁止三层职责越界**——spec 不写怎么改、plan 不写文件路径、tasks 不写验收点
 - **禁止 checklist 重复三层内容**——checklist 只抽 review 检查点，不复制文档正文
 - **禁止变更编号跳号**——CHG-001 → CHG-002 连续递增

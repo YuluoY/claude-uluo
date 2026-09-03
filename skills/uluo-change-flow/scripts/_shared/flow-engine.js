@@ -84,6 +84,41 @@ function writeState(skillPath, state) {
   fs.renameSync(tmpPath, statePath);
 }
 
+function deleteState(skillPath) {
+  const statePath = getStateFilePath(skillPath);
+  if (fs.existsSync(statePath)) {
+    fs.unlinkSync(statePath);
+    return true;
+  }
+  return false;
+}
+
+// 状态文件是运行时产物，不入库：init 时自动向 git 根目录 .gitignore 追加忽略条目
+function ensureGitignoreEntry(skillPath) {
+  let gitRoot = null;
+  try {
+    gitRoot = child_process.execSync('git rev-parse --show-toplevel', {
+      cwd: skillPath, encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'],
+    }).trim();
+  } catch (e) {
+    return 'not-a-git-repo';
+  }
+  if (!gitRoot) return 'not-a-git-repo';
+
+  const gitignorePath = path.join(gitRoot, '.gitignore');
+  let content = '';
+  if (fs.existsSync(gitignorePath)) {
+    content = fs.readFileSync(gitignorePath, 'utf-8');
+    if (content.split('\n').some(line => line.trim() === STATE_FILE)) {
+      return 'already-ignored';
+    }
+  }
+  const prefix = content && !content.endsWith('\n') ? '\n' : '';
+  const header = content.includes('# uluo skill flow runtime state') ? '' : '# uluo skill flow runtime state\n';
+  fs.appendFileSync(gitignorePath, `${prefix}${header}${STATE_FILE}\n`, 'utf-8');
+  return 'updated';
+}
+
 function resolveScriptCommand(command, skillRoot) {
   const parts = command.split(' ');
   const cmd = parts[0];
@@ -268,7 +303,8 @@ function cmdInit(args, skillPath, config) {
       currentPhase: state.currentPhase,
       autoSkippedPhases: state.autoSkippedPhases,
       completed: state.completed,
-      createdAt: state.createdAt
+      createdAt: state.createdAt,
+      gitignore: ensureGitignoreEntry(skillPath)
     }
   };
 }
@@ -358,21 +394,21 @@ function cmdComplete(args, skillPath, config) {
   if (nextPhase === null) {
     state.completed = true;
     state.history.push({ action: 'finish', timestamp: new Date().toISOString() });
+    deleteState(skillPath);
   } else {
     state.currentPhase = nextPhase;
+    writeState(skillPath, state);
   }
 
-  writeState(skillPath, state);
-
-  return {
-    success: true,
-    data: {
-      completedPhase: phaseId,
-      nextPhase: state.completed ? null : state.currentPhase,
-      completed: state.completed,
-      progress: getProgress(state, config.WORKFLOW)
-    }
+  const data = {
+    completedPhase: phaseId,
+    nextPhase: state.completed ? null : state.currentPhase,
+    completed: state.completed,
+    progress: getProgress(state, config.WORKFLOW)
   };
+  if (state.completed) data.stateCleanedUp = true;
+
+  return { success: true, data };
 }
 
 function cmdStatus(args, skillPath, config) {
@@ -525,16 +561,34 @@ function cmdSkip(args, skillPath, config) {
     }
   }
 
-  writeState(skillPath, state);
+  if (state.completed) {
+    deleteState(skillPath);
+  } else {
+    writeState(skillPath, state);
+  }
 
+  const data = {
+    skippedPhase: phaseId,
+    reason,
+    currentPhase: state.completed ? null : state.currentPhase,
+    completed: state.completed,
+    progress: getProgress(state, config.WORKFLOW)
+  };
+  if (state.completed) data.stateCleanedUp = true;
+
+  return { success: true, data };
+}
+
+function cmdCleanup(args, skillPath) {
+  const removed = deleteState(skillPath);
   return {
     success: true,
     data: {
-      skippedPhase: phaseId,
-      reason,
-      currentPhase: state.completed ? null : state.currentPhase,
-      completed: state.completed,
-      progress: getProgress(state, config.WORKFLOW)
+      stateFile: STATE_FILE,
+      removed,
+      message: removed
+        ? `已清理运行时状态文件 ${STATE_FILE}`
+        : `无 ${STATE_FILE}，无需清理`
     }
   };
 }
@@ -567,6 +621,9 @@ function printPretty(result, command, skillPath, config) {
       console.log(`${BOLD}场景:${NC}     ${MAGENTA}${data.scenario}${NC}`);
       console.log(`${BOLD}当前阶段:${NC} Phase ${data.currentPhase}`);
       console.log(`${BOLD}自动跳过:${NC} ${data.autoSkippedPhases.length > 0 ? data.autoSkippedPhases.map(p => `Phase ${p}`).join(', ') : '无'}`);
+      if (data.gitignore === 'updated') {
+        console.log(`${BOLD}gitignore:${NC} 已追加 ${STATE_FILE} 忽略条目`);
+      }
       console.log('');
       break;
 
@@ -615,6 +672,9 @@ function printPretty(result, command, skillPath, config) {
       console.log('─────────────────────────────────────────────────────────');
       if (data.completed) {
         console.log(`${BOLD}${GREEN}🎉 流程全部完成！${NC}`);
+        if (data.stateCleanedUp) {
+          console.log(`${BOLD}状态文件:${NC} ${STATE_FILE} 已自动清理`);
+        }
       } else {
         console.log(`${BOLD}下一阶段:${NC} Phase ${data.nextPhase}`);
       }
@@ -700,11 +760,21 @@ function printPretty(result, command, skillPath, config) {
       console.log(`${BOLD}理由:${NC} ${data.reason}`);
       if (data.completed) {
         console.log(`${BOLD}${GREEN}🎉 流程全部完成！${NC}`);
+        if (data.stateCleanedUp) {
+          console.log(`${BOLD}状态文件:${NC} ${STATE_FILE} 已自动清理`);
+        }
       } else {
         console.log(`${BOLD}当前阶段:${NC} Phase ${data.currentPhase}`);
       }
       const progressBar2 = renderProgressBar(data.progress);
       console.log(`${BOLD}进度:${NC} ${progressBar2} ${data.progress}%`);
+      console.log('');
+      break;
+
+    case 'cleanup':
+      console.log(`\n${BOLD}${CYAN}${data.message}${NC}`);
+      console.log('─────────────────────────────────────────────────────────');
+      console.log(`${BOLD}目标目录:${NC} ${skillPath}`);
       console.log('');
       break;
   }
@@ -735,6 +805,7 @@ function showHelp(config) {
   console.log(`  ${GREEN}rollback${NC} ${YELLOW}<phaseId>${NC}              回退到指定阶段`);
   console.log(`  ${GREEN}gates${NC} ${YELLOW}[phaseId]${NC}                查看门控状态（指定phaseId或当前阶段）`);
   console.log(`  ${GREEN}skip${NC} ${YELLOW}<phaseId>${NC} ${MAGENTA}--reason <理由>${NC}  手动跳过阶段`);
+  console.log(`  ${GREEN}cleanup${NC}                          清理运行时状态文件 ${STATE_FILE}（流程完成时已自动清理，此命令用于历史遗留）`);
   console.log('');
   console.log(`${BOLD}退出码:${NC}`);
   console.log(`  ${GREEN}0${NC} = 成功`);
@@ -784,6 +855,9 @@ function run(config, argv) {
         break;
       case 'skip':
         result = cmdSkip(args, targetPath, config);
+        break;
+      case 'cleanup':
+        result = cmdCleanup(args, targetPath);
         break;
       default:
         showHelp(config);

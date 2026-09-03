@@ -15,6 +15,7 @@
 - `[ ]` 待 review
 - `[x]` review 通过
 - `[-]` review 不通过（需标注回退层级和原因）
+- review 结论必须实时落盘为上述标记——遗留 `[ ]` 会被 validate.js --strict（Phase 8 门控）判为失败
 
 ## Spec Review
 - [ ] 影响范围清单中所有文档影响项都有对应 plan delta

@@ -115,7 +115,7 @@ flowchart TD
     P3 --> P4[Phase 4: 源码分析<br/>加载 analysis-protocol.md]
     P4 --> P5[Phase 5: 产出 plans<br/>加载 plan-template.md]
     P5 --> P6[Phase 6: 产出 tasks<br/>加载 tasks-template.md]
-    P6 --> P7[Phase 7: 执行编码<br/>按 tasks 逐 phase 实现<br/>测试通过 → 追加 CHANGELOG]
+    P6 --> P7[Phase 7: 执行编码<br/>按 tasks 逐 phase 实现<br/>完成一项勾选一项<br/>测试通过 → 追加 CHANGELOG]
     P7 --> P8[Phase 8: 验收<br/>🎯 可选启动 reviewer 子代理<br/>加载 verification-report-template.md]
     P8 --> P9[Phase 9: 复盘<br/>加载 retrospective-template.md]
 
@@ -152,6 +152,8 @@ flowchart TD
 
 **有状态流程控制**：执行细化流程时，在 `specs/<feature>/` 目录下使用 `flow.js` 进行渐进式流程推进。flow.js 通过状态文件（`.skill-state.json`）追踪进度，门控自动校验前置条件，确保流程稳固。
 
+**状态文件生命周期**：`.skill-state.json` 是运行时产物，不是文档交付物——`init` 时自动将忽略条目写入 git 根目录 `.gitignore`（非 git 环境自动跳过）；流程完成（最后一个阶段 complete/skip）时自动清理；历史遗留文件可用 `cleanup` 命令清除。
+
 #### 命令协议
 
 ```bash
@@ -167,6 +169,7 @@ node scripts/flow.js <spec-dir> <command> [options]
 | `rollback <phaseId>` | 回退到指定阶段（继续从该阶段推进） | — |
 | `gates` | 列出当前阶段的门控项 | — |
 | `skip <phaseId>` | 手动跳过阶段（需说明理由） | `--reason <理由>` |
+| `cleanup` | 清理运行时状态文件（流程完成时已自动清理，用于历史遗留） | — |
 
 #### 执行流程
 
@@ -252,6 +255,7 @@ node scripts/flow.js <spec-dir> <command> [options]
   - L1 领域层（按领域）：`specs/<domain>/layout.md` 或 `specs/<domain>/layout/`、`specs/<domain>/feature-<name>.md`
   - L2 组件层（全局清单）：`specs/components/atomic.md`、`specs/components/business.md`
 - 领域名使用 kebab-case（如 `user/`、`payment/`、`infrastructure/`）；跨领域特性归入 `shared/` 领域
+- `.skill-state.json` 为 flow.js 运行时状态，不属于文档交付物：流程进行中存在于 `specs/<feature>/`，完成后自动清理，init 时已自动加入 `.gitignore`
 
 ---
 
@@ -366,4 +370,5 @@ node scripts/flow.js <spec-dir> <command> [options]
 - **禁止把所有 plan 塞一个文件**——多 slice 必须拆分子 plan，README.md 做索引
 - **禁止把所有 tasks 放一个文件**——必须按 phase 拆分（简化方案也至少 2 phase 分节）
 - **禁止事后补文档**——文档和代码同步产出，不事后回忆
+- **禁止执行不回写状态**——每完成一个任务立即勾选 tasks/phase*.md 对应任务（[ ]→[x]），文档状态即进度真相
 - **禁止堆砌无意义内容**——不适用章节标注 "N/A"，不编造
