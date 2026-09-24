@@ -1,0 +1,44 @@
+{
+  "name": "paper",
+  "description": "浅色：米白纸面、墨色文字、朱红强调，适合概念讲解、人文与科普",
+  "dark": false,
+  "colors": {
+    "bg": "#F7F4EC",
+    "surface": "#FFFFFF",
+    "surfaceAlt": "#EFE9DC",
+    "border": "#D9D0BE",
+    "text": "#1F2328",
+    "textMuted": "#5E6570",
+    "accent": "#C8442B",
+    "accent2": "#2B6CB0",
+    "success": "#2F855A",
+    "warning": "#B7791F",
+    "danger": "#C53030"
+  },
+  "background": { "type": "dots", "colors": ["#F7F4EC", "#CFC6B2"], "opacity": 0.55 },
+  "fonts": {
+    "heading": ["Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", "serif"],
+    "body": ["PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "sans-serif"],
+    "mono": ["JetBrains Mono", "SF Mono", "Menlo", "Consolas", "DejaVu Sans Mono", "monospace"]
+  },
+  "type": { "display": 112, "h1": 84, "h2": 62, "h3": 46, "body": 38, "small": 28, "code": 30 },
+  "radius": 12,
+  "space": 28,
+  "motion": { "easing": [0.22, 1, 0.36, 1], "durationSec": 0.7, "staggerSec": 0.1 },
+  "code": { "theme": "github-light", "background": "#FBFAF6", "lineHighlight": "rgba(200, 68, 43, 0.12)", "lineNumber": "#A0A7B0" },
+  "viz": {
+    "node": "#FFFFFF",
+    "nodeText": "#1F2328",
+    "edge": "#9AA3AE",
+    "marks": {
+      "active": "#2B6CB0",
+      "compare": "#B7791F",
+      "done": "#2F855A",
+      "visited": "#A0A7B0",
+      "path": "#C8442B",
+      "swap": "#C53030",
+      "found": "#6B46C1",
+      "muted": "#E6E0D2"
+    }
+  }
+}

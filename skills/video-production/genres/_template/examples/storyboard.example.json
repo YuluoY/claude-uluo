@@ -1,0 +1,14 @@
+{
+  "shots": [
+    {
+      "id": "demo",
+      "intent": "这一镜要让观众看懂的关系",
+      "visual": "画面形式：用什么画、怎么动",
+      "source": { "type": "scene", "component": "YourScene", "props": { "title": "标题", "items": ["第一点", "第二点"] } },
+      "sentences": [
+        { "text": "第一句口播，对应第一点。" },
+        { "text": "第二句口播，对应第二点。" }
+      ]
+    }
+  ]
+}

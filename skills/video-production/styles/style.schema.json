@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "video-production/style.schema.json",
+  "title": "视觉风格（styles/<name>/theme.json）",
+  "description": "风格只管“长什么样”：颜色、背景、字体、字号、圆角间距、动效曲线、代码与可视化配色。字号和间距以画面短边 1080 像素为基准，渲染时按实际画幅等比缩放。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "description", "dark", "colors", "background", "fonts", "type", "radius", "space", "motion", "code", "viz"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "description": "与目录名一致", "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "description": { "description": "一句话说明适合什么内容", "type": "string", "minLength": 1 },
+    "dark": { "type": "boolean" },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bg", "surface", "surfaceAlt", "border", "text", "textMuted", "accent", "accent2", "success", "warning", "danger"],
+      "properties": {
+        "bg": { "description": "画面底色（#RRGGBB，动效里会做透明度混合）", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "surface": { "description": "卡片、面板底色", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "surfaceAlt": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "border": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "text": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "textMuted": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "accent": { "description": "主强调色：当前焦点、高亮", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "accent2": { "description": "第二强调色：对比项", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "success": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "warning": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "danger": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+      }
+    },
+    "background": {
+      "description": "场景背景：solid 纯色 / gradient 径向渐变 / grid 网格 / dots 点阵；colors[0] 为底色，colors[1] 为渐变或纹理色",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "colors"],
+      "properties": {
+        "type": { "enum": ["solid", "gradient", "grid", "dots"] },
+        "colors": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" } },
+        "opacity": { "description": "纹理透明度", "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "fonts": {
+      "description": "字体回退列表。Linux 渲染中文需要在 video.config.json 的 fonts 里提供字体文件，并把它的 family 放在列表前面",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["heading", "body", "mono"],
+      "properties": {
+        "heading": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "body": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "mono": { "description": "等宽字体：代码面板与代码变形动画按字符宽度排版，必须是等宽字体", "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "type": {
+      "description": "字号（像素，短边 1080 基准）",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display", "h1", "h2", "h3", "body", "small", "code"],
+      "properties": {
+        "display": { "type": "number", "minimum": 8, "maximum": 400 },
+        "h1": { "type": "number", "minimum": 8, "maximum": 400 },
+        "h2": { "type": "number", "minimum": 8, "maximum": 400 },
+        "h3": { "type": "number", "minimum": 8, "maximum": 400 },
+        "body": { "type": "number", "minimum": 8, "maximum": 400 },
+        "small": { "type": "number", "minimum": 8, "maximum": 400 },
+        "code": { "type": "number", "minimum": 8, "maximum": 400 }
+      }
+    },
+    "radius": { "type": "number", "minimum": 0, "maximum": 200 },
+    "space": { "description": "基础间距", "type": "number", "minimum": 0, "maximum": 200 },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["easing", "durationSec", "staggerSec"],
+      "properties": {
+        "easing": { "description": "cubic-bezier 四个控制点", "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number", "minimum": -2, "maximum": 3 } },
+        "durationSec": { "description": "元素进入/变化的默认时长", "type": "number", "minimum": 0.05, "maximum": 5 },
+        "staggerSec": { "description": "多个元素依次出现的间隔", "type": "number", "minimum": 0, "maximum": 2 }
+      }
+    },
+    "code": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["theme", "background", "lineHighlight", "lineNumber"],
+      "properties": {
+        "theme": { "description": "shiki 代码配色（模板内置这几种）", "enum": ["github-dark", "github-light", "one-dark-pro", "vitesse-dark", "vitesse-light", "min-light", "min-dark", "nord", "dracula"] },
+        "background": { "type": "string", "minLength": 1 },
+        "lineHighlight": { "description": "当前执行行的底色", "type": "string", "minLength": 1 },
+        "lineNumber": { "type": "string", "minLength": 1 }
+      }
+    },
+    "viz": {
+      "description": "数据结构可视化配色；marks 是步骤里给元素打的语义标记",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node", "nodeText", "edge", "marks"],
+      "properties": {
+        "node": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "nodeText": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "edge": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "marks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["active", "compare", "done", "visited", "path", "swap", "found", "muted"],
+          "properties": {
+            "active": { "description": "正在处理", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "compare": { "description": "正在比较", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "done": { "description": "已确定/已完成", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "visited": { "description": "访问过", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "path": { "description": "结果路径", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "swap": { "description": "交换/修改", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "found": { "description": "命中/找到", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "muted": { "description": "暂不相关（压暗）", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+          }
+        }
+      }
+    }
+  }
+}

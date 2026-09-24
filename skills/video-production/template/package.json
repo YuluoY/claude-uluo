@@ -1,0 +1,26 @@
+{
+  "name": "video-project",
+  "private": true,
+  "description": "video-production 视频项目（Remotion）。删掉 node_modules 后用 pnpm install 可原样重装。",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.528",
+    "@shikijs/magic-move": "4.4.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "remotion": "4.0.528",
+    "shiki": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.4",
+    "@types/react": "19.3.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}

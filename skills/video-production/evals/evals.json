@@ -1,0 +1,78 @@
+{
+  "skill_name": "video-production",
+  "evals": [
+    {
+      "id": 1,
+      "name": "algorithm-from-topic",
+      "prompt": "帮我做一个 60 秒左右的 B 站横屏视频，讲清楚二分查找，要有代码逐行高亮和数组的可视化。",
+      "expected_output": "按 produce 流程建项目（genre=algorithm，preset=landscape-1080p），写 brief、trace、分镜，经过检查点后 build/render，成片通过验收",
+      "files": [],
+      "assertions": [
+        "先做能力盘点，并把结论写进 brief.md",
+        "运行 vp.py init，genre 为 algorithm，preset 为 landscape-1080p",
+        "在 src/algo/<id>/ 写了展示代码 code.* 和 trace.ts，trace.ts 的 t.step 行号与展示代码对应",
+        "运行 vp.py trace 后再写 storyboard 的 steps，steps 首尾相接且不超出步数",
+        "storyboard 每个镜头都写了 intent（要表达的关系）和 visual",
+        "有口播的镜头没有写 durationSec",
+        "在写画面和出片前把 script.md 给用户确认（检查点 2），并用 vp.py stills 给出风格静帧（检查点 3）",
+        "先 vp.py render --preview，再 vp.py render；成片验收报告没有错误",
+        "没有编造原理之外的数字"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "script-to-video-verbatim",
+      "prompt": "这是我写好的口播稿（evals/files/script.md），做成抖音竖屏视频，稿子别改。",
+      "expected_output": "按已有稿落地：口播逐字来自原稿，只断句与分镜；preset 为竖屏；读音问题用 say / pronunciations 处理",
+      "files": [
+        "evals/files/script.md"
+      ],
+      "assertions": [
+        "preset 为 portrait-1080x1920",
+        "storyboard 里所有句子的 text 拼起来与原稿正文一致（只允许断句）",
+        "原稿里的英文缩写或公式通过 say 或 voice.pronunciations 处理读音，没有改显示文字",
+        "没有补充原稿没有的信息或数字",
+        "成片通过验收，字幕位于竖屏底部安全区之上"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "footage-subtitles",
+      "prompt": "给我这个录屏 ~/Movies/talk.mp4（运行评测时换成任意一段带中文口播的视频）加上中文字幕，顺便给我一份口播文稿。声音有点小。",
+      "expected_output": "footage 模式：asr → 校对 → build → render；成片带字幕，transcript.md/txt 与字幕来自同一份校对稿，音量通过 gainDb/loudness 处理",
+      "files": [],
+      "assertions": [
+        "运行 vp.py init --mode footage --source 指向用户给的视频",
+        "运行 vp.py asr 生成 captions/transcript.proof.json",
+        "校对只修改了 text 字段，没有改 id 和 asr，也没有调整时间",
+        "设置了 audio.gainDb 或保持 audio.loudness.enabled 来处理音量",
+        "交付了 renders/final.mp4、captions/final.srt 和 transcript.md",
+        "验收报告没有错误"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "config-change-rerun",
+      "prompt": "字幕字太小了，调到 64，另外整体语速快一点。",
+      "expected_output": "修改 video.config.json 的 captions.style.fontSize 与 voice.rate，重新 build 与 render，说明哪些步骤重跑了",
+      "files": [],
+      "assertions": [
+        "修改的是 video.config.json（captions.style.fontSize = 64，voice.rate 为正的百分比），没有改生成文件",
+        "运行 vp.py build：因为语速变了所有句子重新配音，时间轴与字幕随之更新",
+        "运行 vp.py render 并通过验收"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "no-image-generation-cover",
+      "prompt": "做完之后顺便出个封面。",
+      "expected_output": "先判断当前是否有生图工具：有则生成无字背景图 cover/background.png 并运行 vp.py cover；没有则说明跳过封面",
+      "files": [],
+      "assertions": [
+        "明确说明当前是否具备图片生成能力",
+        "有生图能力时生成的背景图不含文字，标题由 vp.py cover 排版",
+        "没有生图能力时跳过封面并在 brief.md 记录，没有伪造封面图"
+      ]
+    }
+  ]
+}

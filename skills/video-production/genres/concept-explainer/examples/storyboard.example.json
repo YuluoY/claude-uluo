@@ -1,0 +1,107 @@
+{
+  "shots": [
+    {
+      "id": "title",
+      "chapter": "现象",
+      "intent": "点题：今天讲缓存，从一个人人遇到过的现象切入",
+      "visual": "标题卡",
+      "source": { "type": "scene", "component": "TitleCard", "props": { "kicker": "一分钟讲清", "title": "缓存", "subtitle": "为什么第二次打开会快很多" } },
+      "sentences": [
+        { "text": "同一个网页，第二次打开为什么快了很多？" }
+      ]
+    },
+    {
+      "id": "idea",
+      "chapter": "原理",
+      "intent": "原理是一条先后链：先查近处，有就直接用，没有才去远处取并留一份",
+      "visual": "四个步骤框依次出现，当前步骤高亮",
+      "source": {
+        "type": "scene",
+        "component": "FlowSteps",
+        "props": {
+          "title": "每次要数据时",
+          "steps": [
+            { "label": "发出请求" },
+            { "label": "先查近处的缓存" },
+            { "label": "有：直接拿走", "detail": "不用再跑远路" },
+            { "label": "没有：去源头取", "detail": "取回来顺手存一份" }
+          ],
+          "at": ["req", "check", "hit", "miss"]
+        }
+      },
+      "transition": { "type": "fade" },
+      "sentences": [
+        { "text": "每次要数据时，程序不会直接去远处的源头取。", "cues": [{ "id": "req", "at": "要数据" }] },
+        { "text": "它先看看离自己近的地方有没有现成的一份。", "cues": [{ "id": "check", "at": "近的地方" }] },
+        { "text": "有，就直接拿走；", "cues": [{ "id": "hit", "at": "直接拿走" }] },
+        { "text": "没有，才去源头取，顺手在近处也存一份。", "cues": [{ "id": "miss", "at": "去源头取" }] }
+      ]
+    },
+    {
+      "id": "term",
+      "chapter": "术语",
+      "intent": "看懂机制之后再给名字：近处这一份叫缓存，找到了叫命中",
+      "visual": "术语、释义、例子依次出现",
+      "source": {
+        "type": "scene",
+        "component": "Definition",
+        "props": { "term": "缓存命中", "definition": "要的数据已经在缓存里，直接拿到，不用去源头", "example": "第二次打开同一张图片，浏览器直接用本地存的那份", "at": ["t", "d", "e"] }
+      },
+      "transition": { "type": "fade" },
+      "sentences": [
+        { "text": "近处存的这一份，就叫缓存。", "cues": [{ "id": "t", "at": "缓存" }] },
+        { "text": "要的东西刚好在缓存里，叫缓存命中。", "cues": [{ "id": "d", "at": "缓存命中" }] },
+        { "text": "你第二次打开网页，图片就是这么来的。", "cues": [{ "id": "e", "at": "第二次" }] }
+      ]
+    },
+    {
+      "id": "compare",
+      "chapter": "术语",
+      "intent": "命中与未命中的差别：快慢，以及未命中时会补存",
+      "visual": "左右对比两栏，逐行出现",
+      "source": {
+        "type": "scene",
+        "component": "Compare",
+        "props": {
+          "left": { "title": "命中", "points": ["从近处拿，快", "不打扰源头"] },
+          "right": { "title": "未命中", "points": ["去源头取，慢", "取回后存进缓存"] },
+          "at": ["r1", "r2"]
+        }
+      },
+      "transition": { "type": "fade" },
+      "sentences": [
+        { "text": "命中时从近处拿，快，也不用打扰源头。", "cues": [{ "id": "r1", "at": "命中" }] },
+        { "text": "没命中就得去源头取，慢一些，但取回来会存进缓存，下次就快了。", "cues": [{ "id": "r2", "at": "没命中" }] }
+      ]
+    },
+    {
+      "id": "pitfall",
+      "chapter": "反例",
+      "intent": "缓存的代价：源头变了缓存没跟上，就会看到旧内容",
+      "visual": "三条要点逐条出现，形成因果链",
+      "source": {
+        "type": "scene",
+        "component": "BulletList",
+        "props": { "title": "缓存也会出错", "items": ["源头的数据改了", "缓存里还是旧的", "你看到的就是过期内容"], "numbered": true }
+      },
+      "transition": { "type": "fade" },
+      "sentences": [
+        { "text": "但缓存也会出错：源头的数据改了，" },
+        { "text": "缓存里却还是旧的，" },
+        { "text": "你看到的就是过期的内容。所以缓存要设过期时间，或者在源头变化时及时更新。" }
+      ]
+    },
+    {
+      "id": "recap",
+      "chapter": "小结",
+      "intent": "压成一句话：用空间换时间，并且要记得更新",
+      "visual": "一句话大字，关键词变色",
+      "source": { "type": "scene", "component": "Statement", "props": { "text": "缓存：用一点空间换时间，但要记得更新", "emphasis": ["空间换时间", "更新"], "at": "sum" } },
+      "transition": { "type": "fade" },
+      "holdSec": 0.8,
+      "sentences": [
+        { "text": "一句话：缓存是用一点空间换时间，但要记得更新。", "cues": [{ "id": "sum", "at": "空间换时间" }] }
+      ]
+    }
+  ]
+}

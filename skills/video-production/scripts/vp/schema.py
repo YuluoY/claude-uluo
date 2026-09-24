@@ -1,7 +1,7 @@
 """JSON Schema 子集校验器（draft-07 的一部分关键字），免去 jsonschema 依赖。
 
 只支持 SUPPORTED_KEYWORDS 里的关键字；schema 用到别的关键字时 unsupported_keywords() 会报出来，
-测试保证项目自带的 schema 不越界。
+测试保证项目自带的 schema 不越界。$defs 只作存放子 schema 之用，由调用方取出后单独校验（不支持 $ref）。
 """
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ SUPPORTED_KEYWORDS = {
     "type", "enum", "properties", "additionalProperties", "required",
     "minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum",
     "minLength", "maxLength", "pattern", "items", "minItems", "maxItems",
+    "$defs",
 }
 
 
@@ -118,9 +119,9 @@ def unsupported_keywords(schema: Any, path: str = "$") -> list[str]:
         if key not in SUPPORTED_KEYWORDS:
             found.append(f"{path}.{key}")
             continue
-        if key == "properties":
+        if key in ("properties", "$defs"):
             for prop, sub in value.items():
-                found.extend(unsupported_keywords(sub, f"{path}.properties.{prop}"))
+                found.extend(unsupported_keywords(sub, f"{path}.{key}.{prop}"))
         elif key in ("items", "additionalProperties") and isinstance(value, dict):
             found.extend(unsupported_keywords(value, f"{path}.{key}"))
     return found

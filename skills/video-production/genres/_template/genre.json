@@ -1,0 +1,8 @@
+{
+  "name": "your-genre",
+  "title": "类型中文名",
+  "description": "一句话：讲什么内容、核心画面是什么",
+  "scenes": ["YourScene"],
+  "dependencies": {},
+  "usesTraces": false
+}

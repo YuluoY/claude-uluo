@@ -73,9 +73,9 @@
       "description": "去 AI 腔——审查并重写中文文本，清除中文 AI 写作套路（词表分档、场景宽严、语气校准、绝不注入护栏），支持检测/编辑/重写三种模式，配扫描与改稿护栏脚本"
     },
     {
-      "name": "speech-aligned-hard-subs",
-      "source": "./skills/speech-aligned-hard-subs",
-      "description": "口播对齐硬字幕——词级时间轴烧硬字幕 + 口播正文 md/txt，可选抬音量；本地录屏/讲解视频字幕对不齐、要烧字幕或要文稿时使用"
+      "name": "video-production",
+      "source": "./skills/video-production",
+      "description": "口播稿 → 视频项目——React/Remotion 逐帧画面 + edge-tts 词级配音 + ffmpeg 混音与验收，声画字共用一条时间轴；一份 JSON 配置全部参数，算法讲解等类型与风格可扩展；也能给已有视频转写、校对并加字幕"
     }
   ]
 }

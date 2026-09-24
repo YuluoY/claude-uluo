@@ -164,3 +164,37 @@ def process_inner(text: str, mode: str) -> str:
     if run:
         collapsed.append(FULLWIDTH_SPACE if FULLWIDTH_SPACE in run else " ")
     return "".join(collapsed)
+
+
+_JIEBA = None
+_JIEBA_CHECKED = False
+
+
+def word_boundaries(text: str) -> "set[int] | None":
+    """中文分词得到的词边界位置（词的起止下标集合）。没装 jieba 时返回 None。
+
+    只在词元不是来自 TTS 词边界（按字估算、whisper 单字）时用来决定字幕在哪里断开。
+    """
+    global _JIEBA, _JIEBA_CHECKED
+    if not _JIEBA_CHECKED:
+        _JIEBA_CHECKED = True
+        try:
+            import logging
+            import warnings
+
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", DeprecationWarning)  # jieba 导入 pkg_resources 会触发弃用警告
+                import jieba  # type: ignore
+
+            jieba.setLogLevel(logging.WARNING)
+            _JIEBA = jieba
+        except Exception:  # noqa: BLE001 — jieba 是可选依赖
+            _JIEBA = None
+    if _JIEBA is None:
+        return None
+    out: set[int] = {0, len(text)}
+    pos = 0
+    for w in _JIEBA.cut(text, HMM=True):
+        pos += len(w)
+        out.add(pos)
+    return out

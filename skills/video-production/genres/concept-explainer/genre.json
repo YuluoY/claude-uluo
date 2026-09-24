@@ -1,0 +1,8 @@
+{
+  "name": "concept-explainer",
+  "title": "概念讲解",
+  "description": "通用讲解：先现象、再原理、再术语、再反例；标题、要点、流程、对比、定义、数据、时间线、图片局部、代码片段",
+  "scenes": ["BarChart", "BigNumber", "BulletList", "CodeSnippet", "Compare", "Definition", "EventLine", "FlowSteps", "ImageFocus", "Quote", "Statement", "TitleCard"],
+  "dependencies": {},
+  "usesTraces": false
+}

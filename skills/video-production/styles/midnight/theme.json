@@ -1,0 +1,44 @@
+{
+  "name": "midnight",
+  "description": "深色：深蓝底、高对比、青色强调，适合技术讲解、算法与代码",
+  "dark": true,
+  "colors": {
+    "bg": "#0F172A",
+    "surface": "#1E293B",
+    "surfaceAlt": "#273449",
+    "border": "#334155",
+    "text": "#E2E8F0",
+    "textMuted": "#94A3B8",
+    "accent": "#38BDF8",
+    "accent2": "#F472B6",
+    "success": "#4ADE80",
+    "warning": "#FBBF24",
+    "danger": "#F87171"
+  },
+  "background": { "type": "gradient", "colors": ["#0F172A", "#1B2A4A"] },
+  "fonts": {
+    "heading": ["PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "sans-serif"],
+    "body": ["PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "sans-serif"],
+    "mono": ["JetBrains Mono", "SF Mono", "Menlo", "Consolas", "DejaVu Sans Mono", "monospace"]
+  },
+  "type": { "display": 112, "h1": 84, "h2": 62, "h3": 46, "body": 38, "small": 28, "code": 30 },
+  "radius": 18,
+  "space": 28,
+  "motion": { "easing": [0.16, 1, 0.3, 1], "durationSec": 0.6, "staggerSec": 0.08 },
+  "code": { "theme": "github-dark", "background": "#0B1222", "lineHighlight": "rgba(56, 189, 248, 0.18)", "lineNumber": "#475569" },
+  "viz": {
+    "node": "#1E293B",
+    "nodeText": "#E2E8F0",
+    "edge": "#475569",
+    "marks": {
+      "active": "#38BDF8",
+      "compare": "#FBBF24",
+      "done": "#4ADE80",
+      "visited": "#64748B",
+      "path": "#F472B6",
+      "swap": "#F87171",
+      "found": "#A78BFA",
+      "muted": "#1A2436"
+    }
+  }
+}

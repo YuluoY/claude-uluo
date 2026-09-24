@@ -1,0 +1,8 @@
+{
+  "name": "algorithm",
+  "title": "算法讲解",
+  "description": "逐行讲代码 + 数据结构可视化：算法真实跑一遍记录每一步，代码高亮、图形和口播读同一份记录",
+  "scenes": ["AlgoScene", "CodeBuild"],
+  "dependencies": {},
+  "usesTraces": true
+}
