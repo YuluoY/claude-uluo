@@ -60,15 +60,27 @@ def cmd_check(args) -> int:
     return 0
 
 
-def _cfg(project: Project) -> dict:
+def _cfg(project: Project, overrides=None) -> dict:
     from .config import load_project_config
 
-    return load_project_config(project.config_path)
+    return load_project_config(project.config_path, overrides=overrides)
+
+
+def _overrides(args):
+    """命令行开关折叠成配置覆盖：--textless 去掉画面上所有文字（场景文案、章节名、字幕），只留代码与数值。"""
+    if not getattr(args, "textless", False):
+        return None
+    return {
+        "sceneText": "off",
+        "captions": {"enabled": False},
+        "overlays": {"chapterBar": {"showLabels": False}},
+    }
 
 
 def cmd_build(args) -> int:
     project = _project(args)
-    cfg = _cfg(project)
+    overrides = _overrides(args)
+    cfg = _cfg(project, overrides)
     if cfg["mode"] == "footage":
         from .footage import build
 
@@ -77,7 +89,7 @@ def cmd_build(args) -> int:
     else:
         from .pipeline import build
 
-        r = build(project, force_tts=args.force_tts, force_traces=args.force_traces, log=_log)
+        r = build(project, force_tts=args.force_tts, force_traces=args.force_traces, log=_log, overrides=overrides)
         human = (
             f"时长 {r['durationSec']}s：{r['shots']} 个镜头、{r['sentences']} 句、{r['captions']} 块字幕；"
             f"字幕时间来源 {r['timing']}；本次重跑：{'、'.join(r['rerun']) or '无（都已是最新）'}"
@@ -227,7 +239,9 @@ def cmd_render(args) -> int:
     from .pipeline import output_path
 
     project = _project(args)
-    cfg = _cfg(project)
+    overrides = _overrides(args)
+    suffix = "-textless" if overrides else ""
+    cfg = _cfg(project, overrides)
     if cfg["mode"] == "footage":
         from .footage import build, render
 
@@ -238,7 +252,7 @@ def cmd_render(args) -> int:
         from .pipeline import build
 
         if not args.no_build:
-            r = build(project, log=_log)
+            r = build(project, log=_log, overrides=overrides)
             for w in r["warnings"]:
                 _log(f"  ! {w}")
         tl = rm.read_generated(project, "timeline")
@@ -259,7 +273,7 @@ def cmd_render(args) -> int:
         if args.preview and frames is None and cfg["render"]["preview"]["maxSeconds"]:
             last = min(tl["durationInFrames"], int(cfg["render"]["preview"]["maxSeconds"] * tl["fps"])) - 1
             frames = (0, max(0, last))
-        out = output_path(project, cfg, args.preview)
+        out = output_path(project, cfg, args.preview, suffix=suffix)
         rm.render_video(project, cfg, out, preview=args.preview, frames=frames)
         c = cfg["captions"]
         if c["enabled"] and c["render"] in ("soft", "both") and not args.preview:
@@ -428,6 +442,7 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("build", help="配音/转写 → 时间轴 → 混音 → 字幕 → 生成数据")
     s.add_argument("--force-tts", action="store_true", help="忽略配音缓存重新合成")
     s.add_argument("--force-traces", action="store_true", help="重新运行算法 trace")
+    s.add_argument("--textless", action="store_true", help="隐藏说明性文字、章节名和字幕，只留代码与数值（Mute Test 用）")
     s.set_defaults(func=cmd_build)
 
     s = sub.add_parser("tts", help="只做配音")
@@ -457,6 +472,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--no-build", action="store_true")
     s.add_argument("--skip-qa", action="store_true")
     s.add_argument("--skip-layout", action="store_true", help="成片前不做版面检测")
+    s.add_argument("--textless", action="store_true", help="出无文字版：隐藏说明性文字、章节名和字幕，输出名加 -textless")
     s.set_defaults(func=cmd_render)
 
     s = sub.add_parser("layout", help="版面检测：实际渲染关键帧，找出压盖、越界、溢出、放不下的文字")

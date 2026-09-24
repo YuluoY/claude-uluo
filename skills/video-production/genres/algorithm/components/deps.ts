@@ -2,23 +2,33 @@
 export {
   Box,
   bodyStyle,
+  Card,
+  cardPadding,
   CodeMorph,
   CodePanel,
   codePanelHeight,
+  ease,
   fitCodeFontSize,
+  fontStack,
+  headingStyle,
   monoStyle,
+  rectStyle,
   SceneTitle,
   Slide,
   splitH,
+  splitV,
   stackV,
   TextBlock,
   textWidth,
+  useCueProgress,
+  useCurrentIndex,
   useRevealFrames,
   useRevealProgress,
+  useSceneText,
   useSlide,
   useTextFitGroup,
   useTitleLayout,
   withAlpha,
 } from '../../engine';
-export type { Rect, TextStyle } from '../../engine';
-export { useVideoConfig } from 'remotion';
+export type { Rect, TextStyle, Theme } from '../../engine';
+export { useCurrentFrame, useVideoConfig } from 'remotion';

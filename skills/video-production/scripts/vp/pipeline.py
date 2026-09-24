@@ -127,8 +127,8 @@ def _timeline_if_current(tl: Optional[dict], sb: Storyboard) -> Optional[dict]:
     return None
 
 
-def build(project: Project, *, force_tts: bool = False, force_traces: bool = False, log=log_default) -> dict:
-    cfg = load_project_config(project.config_path)
+def build(project: Project, *, force_tts: bool = False, force_traces: bool = False, log=log_default, overrides=None) -> dict:
+    cfg = load_project_config(project.config_path, overrides=overrides)
     if cfg["mode"] != "produce":
         raise VPError("build 的 produce 流程只用于 mode=produce")
     themes = ensure_project_assets(project, cfg)
@@ -247,9 +247,9 @@ def stills_frames(project: Project) -> list[tuple[str, int]]:
     return out
 
 
-def output_path(project: Project, cfg: dict, preview: bool) -> Path:
+def output_path(project: Project, cfg: dict, preview: bool, *, suffix: str = "") -> Path:
     from .config import container_for
 
     if preview:
-        return project.renders_dir / "preview.mp4"
-    return project.renders_dir / f"{cfg['render']['outputName']}.{container_for(cfg['video']['codec'])}"
+        return project.renders_dir / f"preview{suffix}.mp4"
+    return project.renders_dir / f"{cfg['render']['outputName']}{suffix}.{container_for(cfg['video']['codec'])}"

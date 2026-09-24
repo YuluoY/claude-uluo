@@ -50,6 +50,7 @@ license: MIT
 5. **画面 → 检查点 3**：优先用类型包场景，缺的在 `src/scenes/` 写（references/scenes.md）。按内容挑 3 个风格，`VP stills --styles a,b,c` 给用户看静帧，定下风格；输出里的版面问题必须改到零（references/design.md）。
 6. **预览 → 检查点 4**：`VP render --preview`。
 7. **成片与验收**：`VP render`（先版面检测，再出片，再自动验收）。`qa/report.md` 的错误必须修，警告逐条判断，抽帧逐张看。
+   讲"为什么"的镜头要做 **Mute Test**：`VP build --textless && VP stills`，把画面文字全遮住后图形还得自己讲得通；需要交付无字版就 `VP render --textless`（同时关字幕与章节名，输出 `renders/final-textless.mp4`）。
 8. **封面**：有生图能力时生成无字背景图 `cover/background.png`，`VP cover`；没有就跳过。
 9. **清理**：`VP cleanup`。保留 lockfile、`audio/tts/`、素材、源码、成片。
 

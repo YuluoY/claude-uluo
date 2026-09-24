@@ -1,6 +1,7 @@
 {
   "mode": "produce",
   "title": "",
+  "sceneText": "auto",
   "language": "zh-CN",
   "video": {
     "width": 1920,
@@ -33,6 +34,9 @@
     }
   },
   "overlays": {
+    "pageNumber": true,
+    "header": true,
+    "sectionNumber": true,
     "watermark": {
       "enabled": false,
       "text": "",
@@ -68,7 +72,8 @@
       "trackColor": "auto",
       "labelGap": 10,
       "labelAlign": "center",
-      "labelSize": 0
+      "labelSize": 0,
+      "showLabels": true
     }
   },
   "fonts": [],

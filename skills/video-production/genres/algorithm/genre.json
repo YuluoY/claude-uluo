@@ -1,8 +1,8 @@
 {
   "name": "algorithm",
   "title": "算法讲解",
-  "description": "逐行讲代码 + 数据结构可视化：算法真实跑一遍记录每一步，代码高亮、图形和口播读同一份记录",
-  "scenes": ["AlgoScene", "CodeBuild"],
+  "description": "逐行讲代码 + 数据结构可视化：算法真实跑一遍记录每一步，代码高亮、图形和口播读同一份记录；另有图形优先的概念场景（路线图/数组板/前缀和之桥/哈希桶/区间阶梯/代价曲线/滑动窗口扫描/类比轴）",
+  "scenes": ["AlgoScene", "CodeBuild", "ArrayBoard", "BucketMap", "GrowthCurves", "GuessRange", "Odometer", "PrefixBridge", "RangeLadder", "Roadmap", "WindowSweep"],
   "dependencies": {},
   "usesTraces": true
 }

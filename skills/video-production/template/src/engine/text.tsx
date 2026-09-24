@@ -6,6 +6,7 @@
 import { measureText } from '@remotion/layout-utils';
 import React, { useMemo } from 'react';
 import type { Rect } from './layout';
+import { useSceneText } from './sceneText';
 
 export type TextStyle = {
   /** CSS font-family 串（fontStack 的结果） */
@@ -385,6 +386,9 @@ export type TextBlockProps = {
 
 /** 按 fit 的结果逐行画出文字 */
 export const TextBlock: React.FC<TextBlockProps> = ({ fit, text, style, rect, width, height, align = 'left', valign = 'top', color, emphasis, emphasisColor, name, css }) => {
+  if (!useSceneText()) {
+    return null;
+  }
   const w = rect?.w ?? width ?? fit.width;
   const h = rect?.h ?? height ?? fit.height;
   const top = valign === 'top' ? 0 : valign === 'center' ? (h - fit.height) / 2 : h - fit.height;

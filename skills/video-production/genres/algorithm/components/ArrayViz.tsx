@@ -1,6 +1,6 @@
 // 数组：格子或柱状，标记着色，指针箭头；给了 ids 时交换/移动会做位移动画。
 import React from 'react';
-import { fontStack, useTheme, useUnit } from '../../engine';
+import { fontStack, useSceneText, useTheme, useUnit } from '../../engine';
 import { markColor, textOn } from './colors';
 import type { ArrayState } from './viz-types';
 
@@ -11,12 +11,17 @@ const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFi
 export const ArrayViz: React.FC<Props> = ({ state, prev, progress, width, height }) => {
   const theme = useTheme();
   const unit = useUnit();
+  const on = useSceneText();
   const n = Math.max(1, state.values.length);
-  const labelH = state.label ? theme.type.small * unit * 1.6 : 0;
-  const pointerH = state.pointers && Object.keys(state.pointers).length ? theme.type.small * unit * 2.2 : 0;
-  const indexH = theme.type.small * unit * 1.4;
+  // 槽位不够高时（一行可视化只有一百多像素）三条带和字号一起收，保证不越界
+  const avail = Math.max(24, height - 4 * unit);
+  const ifs = Math.min(theme.type.small * unit * 0.8, avail * 0.09);
+  const pfs = Math.min(theme.type.small * unit, avail * 0.12);
+  const labelH = state.label && on ? Math.min(theme.type.small * unit * 1.6, avail * 0.17) : 0;
+  const pointerH = state.pointers && Object.keys(state.pointers).length ? pfs * 2.2 : 0;
+  const indexH = ifs * 1.6 + 4 * unit;
   const gap = 10 * unit;
-  const cell = Math.max(8, Math.min((width - gap * (n - 1)) / n, state.bars ? width : height - labelH - pointerH - indexH, 150 * unit));
+  const cell = Math.max(8, Math.min((width - gap * (n - 1)) / n, state.bars ? width : avail - labelH - pointerH - indexH, 150 * unit));
   const rowW = n * cell + (n - 1) * gap;
   const left0 = (width - rowW) / 2;
   const xOf = (i: number) => left0 + i * (cell + gap);
@@ -26,12 +31,12 @@ export const ArrayViz: React.FC<Props> = ({ state, prev, progress, width, height
     prev.ids.forEach((id, i) => prevPos.set(String(id), i));
   }
   const maxAbs = Math.max(1, ...state.values.map((v) => Math.abs(num(v) ?? 0)));
-  const barArea = height - labelH - pointerH - indexH;
+  const barArea = Math.max(8, avail - labelH - pointerH - indexH);
   const top = labelH + pointerH;
 
   return (
     <div style={{ position: 'relative', width, height, fontFamily: fontStack(theme.fonts.mono) }}>
-      {state.label ? (
+      {state.label && on ? (
         <div style={{ position: 'absolute', left: 0, top: 0, fontSize: theme.type.small * unit, color: theme.colors.textMuted, fontFamily: fontStack(theme.fonts.body) }}>
           {state.label}
         </div>
@@ -81,7 +86,7 @@ export const ArrayViz: React.FC<Props> = ({ state, prev, progress, width, height
       {state.values.map((_, i) => (
         <div
           key={`i${i}`}
-          style={{ position: 'absolute', left: xOf(i), width: cell, top: top + (state.bars ? barArea : cell) + 4 * unit, textAlign: 'center', fontSize: theme.type.small * unit * 0.8, color: theme.colors.textMuted }}
+          style={{ position: 'absolute', left: xOf(i), width: cell, top: top + (state.bars ? barArea : cell) + 4 * unit, textAlign: 'center', fontSize: ifs, color: theme.colors.textMuted }}
         >
           {i}
         </div>
@@ -101,7 +106,7 @@ export const ArrayViz: React.FC<Props> = ({ state, prev, progress, width, height
               top: labelH,
               transform: 'translateX(-50%)',
               textAlign: 'center',
-              fontSize: theme.type.small * unit,
+              fontSize: pfs,
               color: theme.colors.accent,
               lineHeight: 1.1,
             }}

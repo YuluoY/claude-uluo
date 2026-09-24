@@ -2,9 +2,10 @@
 // 装饰只出现在边距、角落或很低的不透明度下，不影响正文对比度；版面检测会忽略装饰层（data-vp-ignore）。
 import React, { createContext, useContext } from 'react';
 import { AbsoluteFill } from 'remotion';
-import { timeline } from './data';
+import { settings, timeline } from './data';
 import { type FrameLayout, inset, type Rect, rectStyle, useFrameLayout } from './layout';
 import { withAlpha } from './motion';
+import { useSceneText } from './sceneText';
 import { useShotOptional } from './shot';
 import { useTextFit, TextBlock, type TextFit, type TextStyle } from './text';
 import { fontStack, useTheme } from './theme';
@@ -268,6 +269,7 @@ export const Decor: React.FC<{ theme: Theme; frame: FrameLayout; sectionNumber?:
 const pad2 = (n: number) => String(n).padStart(2, '0');
 
 export const Chrome: React.FC<{ theme: Theme; frame: FrameLayout }> = ({ theme, frame }) => {
+  const on2 = useSceneText();
   const shot = useShotOptional();
   if (!frame.header || !shot) {
     return null;
@@ -276,6 +278,7 @@ export const Chrome: React.FC<{ theme: Theme; frame: FrameLayout }> = ({ theme, 
   const h = frame.header;
   const fs = theme.type.small * u * 0.8;
   const total = timeline.shots.length;
+  const showPage = on2 && theme.chrome.pageNumber && settings.overlays.pageNumber !== false;
   // 开了章节条时页眉不再重复章节名，只留页码
   const chapter = theme.chrome.chapter && !frame.chapterBar ? shot.chapter : null;
   return (
@@ -288,7 +291,7 @@ export const Chrome: React.FC<{ theme: Theme; frame: FrameLayout }> = ({ theme, 
           </>
         ) : null}
       </div>
-      {theme.chrome.pageNumber ? (
+      {showPage ? (
         <div style={{ fontFamily: fontStack(theme.fonts.mono), fontSize: fs, color: theme.colors.textMuted, letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>
           <span style={{ color: theme.colors.text }}>{pad2(shot.index + 1)}</span> / {pad2(total)}
         </div>
@@ -316,7 +319,7 @@ export const Slide: React.FC<SlideProps> = ({ children, chrome = true, decor = t
   const shot = useShotOptional();
   const frame0 = useFrameLayout(theme);
   const frame = chrome ? frame0 : withoutHeader(frame0);
-  const pageNo = sectionNumber === undefined ? (shot ? pad2(shot.index + 1) : null) : sectionNumber;
+  const pageNo = sectionNumber === undefined ? (settings.overlays.sectionNumber !== false && shot ? pad2(shot.index + 1) : null) : sectionNumber;
   return (
     <SlideContext.Provider value={{ frame, theme, unit: frame.unit * frame.typeScale }}>
       {/* data-vp-content：本页实际的内容区（关掉页眉时更高），版面检测按它判断越界 */}
@@ -474,7 +477,11 @@ export const useTitleLayout = (text: string | undefined, area?: Rect, opts?: { m
 };
 
 export const SceneTitle: React.FC<{ layout: TitleLayout; text?: string; style?: React.CSSProperties; reveal?: number }> = ({ layout, text, style, reveal }) => {
+  const on = useSceneText();
   const { theme, unit } = useSlide();
+  if (!on) {
+    return null;
+  }
   if (!layout.fit || !layout.titleRect || !text) {
     return null;
   }

@@ -85,6 +85,7 @@ export {
   type SlideProps,
   type TitleLayout,
 } from './slide';
+export { useSceneText } from './sceneText';
 export { Stage, useCaptionReserve, useContentBox, useSafeInsets } from './Stage';
 export { atomize, FitText, fitText, fitTextGroup, TextBlock, textWidth, useTextFit, useTextFitGroup, wrapText, type GroupItem, type TextFit, type TextStyle } from './text';
 export { fontStack, ThemeProvider, useTheme, useUnit } from './theme';

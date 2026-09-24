@@ -48,8 +48,8 @@ def load_user_defaults() -> dict:
     return data
 
 
-def resolve_config(project_cfg: Optional[dict], *, user_defaults: Optional[dict] = None) -> dict:
-    """返回合并并校验后的完整配置。user_defaults 为 None 时从默认位置读取。"""
+def resolve_config(project_cfg: Optional[dict], *, user_defaults: Optional[dict] = None, overrides: Optional[dict] = None) -> dict:
+    """返回合并并校验后的完整配置。user_defaults 为 None 时从默认位置读取；overrides 优先级最高（命令行开关用）。"""
     defaults = load_json(DEFAULTS_PATH)
     user = load_user_defaults() if user_defaults is None else user_defaults
     proj = project_cfg or {}
@@ -65,6 +65,8 @@ def resolve_config(project_cfg: Optional[dict], *, user_defaults: Optional[dict]
     merged = deep_merge(merged, presets[preset_name]["config"])
     merged = deep_merge(merged, proj)
     merged["preset"] = preset_name
+    if overrides:
+        merged = deep_merge(merged, overrides)
 
     errors = validate(merged, load_json(SCHEMA_PATH))
     if not errors:
@@ -74,8 +76,8 @@ def resolve_config(project_cfg: Optional[dict], *, user_defaults: Optional[dict]
     return merged
 
 
-def load_project_config(config_path: Path) -> dict:
-    return resolve_config(load_json(config_path))
+def load_project_config(config_path: Path, *, overrides: Optional[dict] = None) -> dict:
+    return resolve_config(load_json(config_path), overrides=overrides)
 
 
 def semantic_errors(cfg: dict) -> list[str]:

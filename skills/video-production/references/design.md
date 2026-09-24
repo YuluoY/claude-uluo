@@ -136,8 +136,31 @@
 | `labelGap`（ruler） | 章节名距线的距离（像素，默认 10） |
 | `labelAlign`（ruler） | 章节名在区间里 `center` 居中 / `start` 靠左 |
 | `labelSize`（ruler） | 章节名字号（像素）；`0` = 自动 |
+| `showLabels`（ruler） | 是否画章节名 |
 
 - 章节来自 storyboard 里镜头的 `chapter`：没写 `chapter` 的镜头归到前一章。
 - 开了章节条，页眉不再重复章节名（只留页码），内容区、字幕带、水印都会自动让开。
 - 章节名太长会显示省略号（预检会警告）；章节太多每格放不下会报错：合并章节或换更宽的画幅。
 - 细进度条 `overlays.progressBar` 与章节条可以同时开，但一般二选一。
+
+### 页数 / 页眉 / 背景序号（都能单独关）
+
+画面上和"第几页"有关的四处元素是各自独立的开关：
+
+| 参数 | 默认 | 设为 `false` 之后 |
+|---|---|---|
+| `overlays.chapterBar.showLabels` | `true` | 刻度尺上的章节名不画（进度色块与刻度保留） |
+| `overlays.pageNumber` | `true` | 右上角页码不画（还要主题 `chrome.pageNumber` 允许） |
+| `overlays.header` | `true` | 页眉带整条不预留，内容区上边界跟着上移（页码关掉后就不会剩一条空带） |
+| `overlays.sectionNumber` | `true` | 背景里那个淡淡的大号镜头序号（主题 `decor.sectionNumber`）不画 |
+
+只要"顶部刻度尺 + 干净画面"就三个都关：`pageNumber=false, header=false, sectionNumber=false`。
+
+## 画面文字总开关（sceneText）
+
+`sceneText: "auto" | "off"` 控制画面上所有**说明性文字**：标题（`SceneTitle`）、正文与要点（`TextBlock` / `FitText`）、标签（`Label`）。置 `off` 时这些原语直接不画；**代码、数值（数组/表格里的数、变量面板）、字幕、章节条不受影响**——它们要么是必须精确的内容，要么是独立叠加层。
+
+- 出无文字版：`VP render --textless`（同时关字幕、关章节名），输出 `renders/final-textless.mp4`。
+- **Mute Test**：教学视频的硬要求是"把画面文字全部遮住，故事仍然成立"。做法是 `VP build --textless && VP stills`，逐张确认每个镜头的图形骨架自己讲得通。
+- 只画文字的场景（BulletList / Statement / Definition / Compare / Quote）在 `off` 时是空镜——这正说明它们的意义全靠文字，别把它们放在"必须纯图形也成立"的位置。
+- 章节名单独由 `overlays.chapterBar.showLabels` 控制；字幕由 `captions.enabled` 控制。

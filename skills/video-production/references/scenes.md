@@ -119,6 +119,7 @@ export const MyScene: React.FC<SceneProps<Props>> = ({ props }) => (
 | `useStepIndex()` | 当前算法步骤号（按 storyboard 的 steps） |
 | `mixColor(a, b, p)` / `withAlpha(hex, a)` | 颜色过渡 / 透明度 |
 | `getTrace(id)` | 读取算法 trace |
+| `useSceneText()` | 画面文字是否开启（`sceneText: "off"` 时为 `false`）：自定义场景用它决定要不要画标题/标签/正文 |
 
 旧写法 `Stage`（Slide + 一个铺满内容区的 flex 槽位）仍可用，适合快速试验；正式场景按上面的方式算矩形。
 

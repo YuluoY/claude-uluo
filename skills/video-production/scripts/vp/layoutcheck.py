@@ -49,7 +49,7 @@ def frame_layout(cfg: dict, theme: dict, width: Optional[int] = None, height: Op
             lift = ch + gap
     gutter = round(theme["space"] * unit)
     top = inner_top
-    if theme["chrome"]["header"]:
+    if theme["chrome"]["header"] and cfg["overlays"].get("header", True) is not False:
         top = inner_top + theme["type"]["small"] * unit * 1.5 + gutter
     captions = None
     c = cfg["captions"]

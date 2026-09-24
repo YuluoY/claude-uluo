@@ -121,7 +121,8 @@ export const computeFrameLayout = (width: number, height: number, s: Settings, t
 
   let top = inner.y;
   let header: Rect | null = null;
-  if (theme.chrome.header) {
+  // 页码关掉后页眉会剩一条空白带：overlays.header=false 直接不预留
+  if (theme.chrome.header && s.overlays.header !== false) {
     const hh = theme.type.small * unit * 1.5;
     header = { x: inner.x, y: inner.y, w: inner.w, h: hh };
     top = inner.y + hh + gutter;

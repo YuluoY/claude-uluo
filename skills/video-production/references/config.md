@@ -32,6 +32,7 @@
 | `mode` | "produce" / "footage" | "produce" | produce：从口播/分镜制作新视频；footage：给已有视频转写并烧字幕 |
 | `preset` | string | "landscape-1080p" | 平台预设名，见 config/presets.json；只覆盖画幅、安全区、字幕尺寸这类平台相关字段 |
 | `title` | string | "" | 视频标题，用于口播正文标题与进度条 |
+| `sceneText` | "auto" / "off" | "auto" | 画面文字总开关：auto = 正常；off = 隐藏所有说明性文字（标题、标签、正文、注释条），只保留代码、数值、字幕与章节条 |
 | `language` | string（格式 `^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$`） | "zh-CN" | BCP 47 语言标签，如 zh-CN、en-US |
 | `genre` | string（格式 `^[a-z0-9][a-z0-9-]*$`） | "concept-explainer" | 主类型包名（genres/<name>），决定讲解结构与可用组件 |
 | `style` | string（格式 `^[a-z0-9][a-z0-9-]*$`） | "midnight" | 视觉风格包名（styles/<name> 或项目内 styles/<name>） |
@@ -153,6 +154,7 @@
 | `overlays.chapterBar.labelGap` | number（≥0，≤80） | 10 | ruler：章节名距线的距离（像素，短边 1080 基准） |
 | `overlays.chapterBar.labelAlign` | "center" / "start" | "center" | ruler：章节名在区间里居中还是靠左 |
 | `overlays.chapterBar.labelSize` | number（≥0，≤200） | 0 | ruler：章节名字号（像素，短边 1080 基准）；0 = 自动 |
+| `overlays.chapterBar.showLabels` | boolean | true | 是否画章节名 |
 | `fonts` | array | [] | 需要随项目加载的本地字体文件（放在 public/ 下）。Linux 渲染中文必须提供 |
 | `cover.enabled` | "auto" / true / false | "auto" | auto：模型有生图能力才做封面；false：不做；true：必须做（无生图能力时报告无法完成） |
 | `cover.aspect` | string（格式 `^[0-9]+:[0-9]+$`） | "16:9" | 封面宽高比，如 16:9、9:16、3:4；短边固定 1080 像素 |

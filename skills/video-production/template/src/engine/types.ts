@@ -192,9 +192,17 @@ export type Settings = {
   mode: 'produce' | 'footage';
   title: string;
   language: string;
+  /** 画面文字总开关：auto = 正常；off = 隐藏所有说明性文字，只留代码、数值、字幕与章节条 */
+  sceneText: 'auto' | 'off';
   video: { width: number; height: number; fps: number; safeArea: SafeArea };
   captions: { burn: boolean; maxLines: number; style: CaptionStyle };
   overlays: {
+    /** 右上角页码（章节条在顶部时页眉只剩它）；false 就完全不画 */
+    pageNumber: boolean;
+    /** 页眉带：页码关掉后它会是空白带，false 就不预留这块高度 */
+    header: boolean;
+    /** 背景里那个大号镜头序号（主题 decor.sectionNumber）；false 连它一起不画 */
+    sectionNumber: boolean;
     watermark: { enabled: boolean; text: string; image: string | null; position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'; opacity: number; size: number };
     progressBar: { enabled: boolean; position: 'top' | 'bottom'; height: number; showChapters: boolean };
     chapterBar: {
@@ -234,6 +242,8 @@ export type Settings = {
       labelAlign: 'center' | 'start';
       /** ruler：章节名字号（像素，短边 1080 基准）；0 = 自动 */
       labelSize: number;
+      /** 是否画章节名（sceneText=off 时通常也不需要） */
+      showLabels: boolean;
     };
   };
   fonts: FontSpec[];

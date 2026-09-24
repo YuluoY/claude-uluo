@@ -110,7 +110,7 @@ const RulerBar: React.FC<{ bar: Rect; cells: Array<Rect & Segment>; u: number; t
         <div style={{ position: 'absolute', left: 0, top: topSide ? 0 : h - railT, width: bar.w, height: railT, backgroundColor: railColor }} />
       ) : null}
       {/* 章节名：居中在区间里，距线 labelGap */}
-      {cells.map((c, i) => {
+      {(cfg.showLabels ? cells : []).map((c, i) => {
         const on = frame >= c.start && frame < c.end;
         const done = frame >= c.end;
         const color = on ? theme.colors.accent : done ? theme.colors.text : theme.colors.textMuted;
@@ -211,7 +211,7 @@ const BoxesBar: React.FC<{ bar: Rect; cells: Array<Rect & Segment>; u: number; t
                 <div style={{ width: ((cfg.showProgress ? p : active || done ? 1 : 0) * 100) + '%', height: '100%', backgroundColor: theme.colors.accent }} />
               </div>
             ) : null}
-            <div style={{ position: 'absolute', inset: 0, bottom: track, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: st.family, fontWeight: active ? 700 : 500, fontSize: fs, color: fg, whiteSpace: 'pre' }}>{label}</div>
+            <div style={{ position: 'absolute', inset: 0, bottom: track, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: st.family, fontWeight: active ? 700 : 500, fontSize: fs, color: fg, whiteSpace: 'pre' }}>{cfg.showLabels ? label : null}</div>
           </div>
         );
       })}

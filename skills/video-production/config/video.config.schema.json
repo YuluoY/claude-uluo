@@ -5,12 +5,13 @@
   "description": "合并顺序：技能 defaults.json → 用户级默认（~/.config/video-production/defaults.json 或 $VP_USER_DEFAULTS）→ preset → 项目 video.config.json。对象逐层合并，数组与标量整体替换。校验针对合并后的结果。",
   "type": "object",
   "additionalProperties": false,
-  "required": ["mode", "preset", "title", "language", "genre", "style", "video", "audio", "voice", "asr", "pacing", "captions", "transition", "overlays", "fonts", "cover", "render", "footage", "qa", "cleanup"],
+  "required": ["mode", "preset", "title", "sceneText", "language", "genre", "style", "video", "audio", "voice", "asr", "pacing", "captions", "transition", "overlays", "fonts", "cover", "render", "footage", "qa", "cleanup"],
   "properties": {
     "$schema": { "type": "string" },
     "mode": { "description": "produce：从口播/分镜制作新视频；footage：给已有视频转写并烧字幕", "enum": ["produce", "footage"] },
     "preset": { "description": "平台预设名，见 config/presets.json；只覆盖画幅、安全区、字幕尺寸这类平台相关字段", "type": "string", "minLength": 1 },
     "title": { "description": "视频标题，用于口播正文标题与进度条", "type": "string" },
+    "sceneText": { "description": "画面文字总开关：auto = 正常；off = 隐藏所有说明性文字（标题、标签、正文、注释条），只保留代码、数值、字幕与章节条", "enum": ["auto", "off"] },
     "language": { "description": "BCP 47 语言标签，如 zh-CN、en-US", "type": "string", "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$" },
     "genre": { "description": "主类型包名（genres/<name>），决定讲解结构与可用组件", "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
     "style": { "description": "视觉风格包名（styles/<name> 或项目内 styles/<name>）", "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
@@ -188,9 +189,12 @@
     "overlays": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["watermark", "progressBar", "chapterBar"],
+      "required": ["pageNumber", "header", "sectionNumber", "watermark", "progressBar", "chapterBar"],
       "properties": {
-        "watermark": {
+        "pageNumber": { "description": "右上角页码；false 完全不画（开了顶部章节条时页眉只剩页码）", "type": "boolean" },
+    "header": { "description": "页眉带：页码关掉后页眉是空白带，false 就不预留这块高度，内容整体上移", "type": "boolean" },
+    "sectionNumber": { "description": "背景大号镜头序号（主题 decor.sectionNumber 开启时）；false 连它一起不画，画面只有章节刻度尺", "type": "boolean" },
+    "watermark": {
           "type": "object",
           "additionalProperties": false,
           "required": ["enabled", "text", "image", "position", "opacity", "size"],
@@ -219,7 +223,7 @@
           "description": "章节条：默认刻度尺（ruler，贴视频边）；也可换成画面上方或下方的一排格子。每格一个章节（storyboard 镜头的 chapter），当前章节高亮并显示播放进度。开启后内容区与字幕带自动让开。footage 模式忽略",
           "type": "object",
           "additionalProperties": false,
-          "required": ["enabled", "position", "style", "widths", "showProgress", "height", "tickPosition", "tickLength", "tickWidth", "tickColor", "tickColorIdle", "tickEvery", "rail", "railThickness", "railColor", "progressThickness", "progressColor", "trackColor", "labelGap", "labelAlign", "labelSize"],
+          "required": ["enabled", "position", "style", "widths", "showProgress", "height", "tickPosition", "tickLength", "tickWidth", "tickColor", "tickColorIdle", "tickEvery", "rail", "railThickness", "railColor", "progressThickness", "progressColor", "trackColor", "labelGap", "labelAlign", "labelSize", "showLabels"],
           "properties": {
             "enabled": { "description": "是否显示章节条", "type": "boolean" },
             "position": { "description": "贴着安全区上沿还是下沿（下沿时字幕整体上移）", "enum": ["top", "bottom"] },
@@ -241,7 +245,8 @@
             "trackColor": { "description": "ruler：轨道颜色（进度色块未覆盖的部分）；auto = 弱化文字色", "type": "string", "minLength": 1 },
             "labelGap": { "description": "ruler：章节名距线的距离（像素，短边 1080 基准）", "type": "number", "minimum": 0, "maximum": 80 },
             "labelAlign": { "description": "ruler：章节名在区间里居中还是靠左", "enum": ["center", "start"] },
-            "labelSize": { "description": "ruler：章节名字号（像素，短边 1080 基准）；0 = 自动", "type": "number", "minimum": 0, "maximum": 200 }
+            "labelSize": { "description": "ruler：章节名字号（像素，短边 1080 基准）；0 = 自动", "type": "number", "minimum": 0, "maximum": 200 },
+            "showLabels": { "description": "是否画章节名", "type": "boolean" }
           }
         }
       }

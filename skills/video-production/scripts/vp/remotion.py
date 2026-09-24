@@ -230,6 +230,7 @@ def settings_payload(cfg: dict, theme_name: str, themes: dict[str, dict], *, foo
     return {
         "mode": cfg["mode"],
         "title": cfg["title"],
+        "sceneText": cfg.get("sceneText", "auto"),
         "language": cfg["language"],
         "video": {"width": w, "height": h, "fps": cfg["video"]["fps"], "safeArea": cfg["video"]["safeArea"]},
         "captions": {"burn": burn, "maxLines": c["maxLines"], "style": c["style"]},
