@@ -1,0 +1,9 @@
+{
+  "name": "avoid-ai-writing",
+  "version": "1.1.0",
+  "description": "去 AI 腔：审查并重写中文文本，分档词表、场景宽严、语气校准、绝不注入护栏，配扫描与改稿护栏脚本",
+  "author": { "name": "claude-uluo" },
+  "keywords": ["writing", "chinese", "ai-writing", "de-ai", "editing", "去AI味"],
+  "license": "MIT",
+  "skills": "./"
+}

@@ -66,6 +66,11 @@
       "name": "uluo-skill-creator",
       "source": "./skills/uluo-skill-creator",
       "description": "规范化+流程化的 skill 创建器——软约束 md + 硬约束 scripts 分工，引用远程 skill-creator 做校验审计"
+    },
+    {
+      "name": "avoid-ai-writing",
+      "source": "./skills/avoid-ai-writing",
+      "description": "去 AI 腔——审查并重写中文文本，清除中文 AI 写作套路（词表分档、场景宽严、语气校准、绝不注入护栏），支持检测/编辑/重写三种模式，配扫描与改稿护栏脚本"
     }
   ]
 }

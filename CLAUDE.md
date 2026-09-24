@@ -120,3 +120,4 @@ claude-uluo workspace 内的 skill 需创建 `.claude-plugin/plugin.json` 用于
 | Plugin | uluo-skill-creator | `skills/uluo-skill-creator/` |
 | Plugin | uluo-web-standards | `skills/uluo-web-standards/` |
 | Plugin | ui-component-creator | `skills/ui-component-creator/` |
+| Plugin | avoid-ai-writing | `skills/avoid-ai-writing/` |
