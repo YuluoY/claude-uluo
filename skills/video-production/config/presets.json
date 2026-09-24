@@ -1,0 +1,60 @@
+{
+  "presets": {
+    "landscape-1080p": {
+      "description": "横屏 1920×1080：B 站、YouTube、西瓜视频等",
+      "config": {
+        "video": { "width": 1920, "height": 1080, "safeArea": { "top": 0, "bottom": 0, "left": 0, "right": 0 } },
+        "captions": { "maxCharsPerLine": 16, "style": { "fontSize": 54, "bottomPct": 7 } },
+        "cover": { "aspect": "16:9" }
+      }
+    },
+    "landscape-720p": {
+      "description": "横屏 1280×720：体积小，适合快速草稿",
+      "config": {
+        "video": { "width": 1280, "height": 720, "safeArea": { "top": 0, "bottom": 0, "left": 0, "right": 0 } },
+        "captions": { "maxCharsPerLine": 16, "style": { "fontSize": 36, "strokeWidth": 4, "bottomPct": 7 } },
+        "cover": { "aspect": "16:9" }
+      }
+    },
+    "landscape-1440p": {
+      "description": "横屏 2560×1440：录屏/代码讲解需要更清晰的文字",
+      "config": {
+        "video": { "width": 2560, "height": 1440, "safeArea": { "top": 0, "bottom": 0, "left": 0, "right": 0 } },
+        "captions": { "maxCharsPerLine": 16, "style": { "fontSize": 72, "strokeWidth": 8, "bottomPct": 7 } },
+        "cover": { "aspect": "16:9" }
+      }
+    },
+    "landscape-4k": {
+      "description": "横屏 3840×2160",
+      "config": {
+        "video": { "width": 3840, "height": 2160, "safeArea": { "top": 0, "bottom": 0, "left": 0, "right": 0 } },
+        "captions": { "maxCharsPerLine": 16, "style": { "fontSize": 108, "strokeWidth": 12, "bottomPct": 7 } },
+        "cover": { "aspect": "16:9" }
+      }
+    },
+    "portrait-1080x1920": {
+      "description": "竖屏 1080×1920：抖音、快手、视频号、YouTube Shorts。安全区为经验值，按平台实际界面微调",
+      "config": {
+        "video": { "width": 1080, "height": 1920, "safeArea": { "top": 8, "bottom": 16, "left": 4, "right": 12 } },
+        "captions": { "maxCharsPerLine": 12, "style": { "fontSize": 64, "strokeWidth": 7, "bottomPct": 6, "maxWidthPct": 84 } },
+        "cover": { "aspect": "9:16" }
+      }
+    },
+    "portrait-3x4": {
+      "description": "竖版 1080×1440：小红书图文视频",
+      "config": {
+        "video": { "width": 1080, "height": 1440, "safeArea": { "top": 4, "bottom": 8, "left": 4, "right": 4 } },
+        "captions": { "maxCharsPerLine": 13, "style": { "fontSize": 56, "strokeWidth": 6, "bottomPct": 6, "maxWidthPct": 88 } },
+        "cover": { "aspect": "3:4" }
+      }
+    },
+    "square-1080": {
+      "description": "方形 1080×1080：信息流、朋友圈",
+      "config": {
+        "video": { "width": 1080, "height": 1080, "safeArea": { "top": 0, "bottom": 0, "left": 0, "right": 0 } },
+        "captions": { "maxCharsPerLine": 13, "style": { "fontSize": 52, "strokeWidth": 6, "bottomPct": 7, "maxWidthPct": 88 } },
+        "cover": { "aspect": "1:1" }
+      }
+    }
+  }
+}

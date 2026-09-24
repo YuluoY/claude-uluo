@@ -1,0 +1,127 @@
+{
+  "mode": "produce",
+  "preset": "landscape-1080p",
+  "title": "",
+  "language": "zh-CN",
+  "genre": "concept-explainer",
+  "style": "midnight",
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "crf": null,
+    "videoBitrate": null,
+    "x264Preset": null,
+    "pixelFormat": "yuv420p",
+    "proresProfile": "hq",
+    "imageFormat": "jpeg",
+    "jpegQuality": 92,
+    "safeArea": { "top": 0, "bottom": 0, "left": 0, "right": 0 }
+  },
+  "audio": {
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitrate": "192k",
+    "gainDb": 0,
+    "loudness": { "enabled": true, "targetLufs": -16, "truePeakDb": -1.5, "lra": 11 },
+    "bgm": {
+      "file": null,
+      "volumeDb": -24,
+      "duck": true,
+      "duckRatio": 6,
+      "fadeInSec": 1.5,
+      "fadeOutSec": 2.5,
+      "loop": true
+    }
+  },
+  "voice": {
+    "engine": "edge-tts",
+    "voice": "zh-CN-YunxiNeural",
+    "rate": "+0%",
+    "volume": "+0%",
+    "pitch": "+0Hz",
+    "fallbackEngine": "say",
+    "sayVoice": "Tingting",
+    "retries": 3,
+    "timeoutSec": 60,
+    "pronunciations": {},
+    "externalDir": "audio/external",
+    "align": "auto"
+  },
+  "pacing": {
+    "leadInSec": 0.4,
+    "tailSec": 1.2,
+    "sentencePauseSec": 0.3,
+    "shotPauseSec": 0.6,
+    "headPadSec": 0.05,
+    "tailPadSec": 0.2,
+    "visualLeadSec": 0.2
+  },
+  "captions": {
+    "enabled": true,
+    "render": "burn",
+    "maxCharsPerLine": 16,
+    "maxLines": 1,
+    "minChars": 4,
+    "minDurationSec": 0.7,
+    "gapSec": 0.06,
+    "lingerSec": 0.25,
+    "punctuation": "subtitle",
+    "style": {
+      "fontFamily": ["PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "sans-serif"],
+      "fontSize": 54,
+      "fontWeight": 700,
+      "color": "#FFFFFF",
+      "strokeColor": "#000000",
+      "strokeWidth": 6,
+      "shadow": true,
+      "background": null,
+      "bottomPct": 7,
+      "maxWidthPct": 86,
+      "lineHeight": 1.3,
+      "highlightWords": false,
+      "highlightColor": "#FFD54A"
+    }
+  },
+  "transition": { "type": "cut", "durationSec": 0.35 },
+  "overlays": {
+    "watermark": {
+      "enabled": false,
+      "text": "",
+      "image": null,
+      "position": "top-right",
+      "opacity": 0.6,
+      "size": 28
+    },
+    "progressBar": {
+      "enabled": false,
+      "position": "top",
+      "height": 6,
+      "showChapters": true
+    }
+  },
+  "fonts": [],
+  "cover": { "enabled": "auto", "aspect": "16:9" },
+  "render": {
+    "concurrency": null,
+    "outputName": "final",
+    "preview": { "scale": 0.5, "maxSeconds": 30 }
+  },
+  "footage": {
+    "source": null,
+    "copySource": true,
+    "asr": {
+      "model": "small",
+      "language": "zh",
+      "initialPrompt": "以下是普通话的句子，使用简体中文和标点。",
+      "boostBelowMeanDb": -40,
+      "boostDb": 20
+    }
+  },
+  "cleanup": {
+    "removeNodeModules": true,
+    "removeWorkDir": true,
+    "removePreview": false
+  }
+}

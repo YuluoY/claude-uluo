@@ -1,0 +1,280 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "video-production/video.config.schema.json",
+  "title": "video-production 项目配置（video.config.json）",
+  "description": "合并顺序：技能 defaults.json → 用户级默认（~/.config/video-production/defaults.json 或 $VP_USER_DEFAULTS）→ preset → 项目 video.config.json。对象逐层合并，数组与标量整体替换。校验针对合并后的结果。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "preset", "title", "language", "genre", "style", "video", "audio", "voice", "pacing", "captions", "transition", "overlays", "fonts", "cover", "render", "footage", "cleanup"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "mode": {
+      "description": "produce：从口播/分镜制作新视频；footage：给已有视频转写并烧字幕",
+      "enum": ["produce", "footage"]
+    },
+    "preset": {
+      "description": "平台预设名，见 config/presets.json；只覆盖画幅、安全区、字幕尺寸这类平台相关字段",
+      "type": "string",
+      "minLength": 1
+    },
+    "title": { "description": "视频标题，用于口播正文标题与进度条", "type": "string" },
+    "language": { "description": "BCP 47 语言标签，如 zh-CN、en-US", "type": "string", "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$" },
+    "genre": { "description": "主类型包名（genres/<name>），决定讲解结构与可用组件", "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "style": { "description": "视觉风格包名（styles/<name> 或项目内 styles/<name>）", "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "fps", "codec", "crf", "videoBitrate", "x264Preset", "pixelFormat", "proresProfile", "imageFormat", "jpegQuality", "safeArea"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 16, "maximum": 7680 },
+        "height": { "type": "integer", "minimum": 16, "maximum": 7680 },
+        "fps": { "type": "integer", "minimum": 1, "maximum": 120 },
+        "codec": { "description": "h264/h265 → mp4，vp9 → webm，prores → mov", "enum": ["h264", "h265", "vp9", "prores"] },
+        "crf": { "description": "null 用编码器默认（h264 为 18）；与 videoBitrate 互斥", "type": ["integer", "null"], "minimum": 0, "maximum": 63 },
+        "videoBitrate": { "description": "如 \"8M\"、\"6000k\"；与 crf 互斥", "type": ["string", "null"], "pattern": "^[0-9]+(\\.[0-9]+)?[kKmM]$" },
+        "x264Preset": { "description": "仅 h264 可设", "enum": [null, "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow"] },
+        "pixelFormat": { "description": "prores 时忽略；yuv420p10le 仅 h265/vp9", "enum": ["yuv420p", "yuv444p", "yuv420p10le"] },
+        "proresProfile": { "enum": ["4444-xq", "4444", "hq", "standard", "light", "proxy"] },
+        "imageFormat": { "description": "逐帧截图格式：jpeg 快，png 无损但慢", "enum": ["jpeg", "png"] },
+        "jpegQuality": { "type": "integer", "minimum": 1, "maximum": 100 },
+        "safeArea": {
+          "description": "平台界面遮挡区，按画面百分比（top/bottom 相对高度，left/right 相对宽度）。场景布局与字幕都会避开",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["top", "bottom", "left", "right"],
+          "properties": {
+            "top": { "type": "number", "minimum": 0, "maximum": 40 },
+            "bottom": { "type": "number", "minimum": 0, "maximum": 40 },
+            "left": { "type": "number", "minimum": 0, "maximum": 40 },
+            "right": { "type": "number", "minimum": 0, "maximum": 40 }
+          }
+        }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sampleRate", "channels", "bitrate", "gainDb", "loudness", "bgm"],
+      "properties": {
+        "sampleRate": { "enum": [44100, 48000] },
+        "channels": { "enum": [1, 2] },
+        "bitrate": { "type": "string", "pattern": "^[0-9]+[kK]$" },
+        "gainDb": { "description": "整体增益（dB），在响度标准化之前施加；footage 模式口播太小时调高", "type": "number", "minimum": -30, "maximum": 40 },
+        "loudness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "targetLufs", "truePeakDb", "lra"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "targetLufs": { "type": "number", "minimum": -40, "maximum": -5 },
+            "truePeakDb": { "type": "number", "minimum": -9, "maximum": 0 },
+            "lra": { "type": "number", "minimum": 1, "maximum": 20 }
+          }
+        },
+        "bgm": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["file", "volumeDb", "duck", "duckRatio", "fadeInSec", "fadeOutSec", "loop"],
+          "properties": {
+            "file": { "description": "相对项目根目录的音频路径，null 为不加 BGM", "type": ["string", "null"], "minLength": 1 },
+            "volumeDb": { "type": "number", "minimum": -60, "maximum": 0 },
+            "duck": { "description": "有口播时自动压低 BGM（sidechain）", "type": "boolean" },
+            "duckRatio": { "type": "number", "minimum": 1, "maximum": 20 },
+            "fadeInSec": { "type": "number", "minimum": 0, "maximum": 30 },
+            "fadeOutSec": { "type": "number", "minimum": 0, "maximum": 30 },
+            "loop": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "voice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["engine", "voice", "rate", "volume", "pitch", "fallbackEngine", "sayVoice", "retries", "timeoutSec", "pronunciations", "externalDir", "align"],
+      "properties": {
+        "engine": { "description": "edge-tts：默认免费；external：模型/用户已生成的逐句音频；say：macOS 系统语音", "enum": ["edge-tts", "external", "say"] },
+        "voice": { "description": "edge-tts 音色，如 zh-CN-YunxiNeural、zh-CN-XiaoxiaoNeural", "type": "string", "minLength": 1 },
+        "rate": { "description": "语速，edge-tts 格式 +10% / -5%", "type": "string", "pattern": "^[+-][0-9]+%$" },
+        "volume": { "type": "string", "pattern": "^[+-][0-9]+%$" },
+        "pitch": { "type": "string", "pattern": "^[+-][0-9]+Hz$" },
+        "fallbackEngine": { "description": "edge-tts 多次重试仍失败时的降级引擎", "enum": ["say", null] },
+        "sayVoice": { "description": "macOS say 的音色名（中文如 Tingting）", "type": "string", "minLength": 1 },
+        "retries": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "timeoutSec": { "type": "integer", "minimum": 5, "maximum": 600 },
+        "pronunciations": {
+          "description": "显示文本 → 朗读文本的替换表（字幕照原文显示，TTS 按替换后读）。长键优先",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "externalDir": { "description": "engine=external 时逐句音频目录（相对项目根），文件名 <句子id>.(wav|mp3|m4a|aiff|flac)", "type": "string", "minLength": 1 },
+        "align": { "description": "无词级时间戳的引擎（external/say）如何得到字幕时间：auto=装了 whisper 就对齐，否则按字数估算", "enum": ["auto", "whisper", "estimate"] }
+      }
+    },
+    "pacing": {
+      "description": "节奏：句间停顿、镜头切换停顿、片头片尾留白",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["leadInSec", "tailSec", "sentencePauseSec", "shotPauseSec", "headPadSec", "tailPadSec", "visualLeadSec"],
+      "properties": {
+        "leadInSec": { "type": "number", "minimum": 0, "maximum": 10 },
+        "tailSec": { "type": "number", "minimum": 0, "maximum": 30 },
+        "sentencePauseSec": { "type": "number", "minimum": 0, "maximum": 5 },
+        "shotPauseSec": { "type": "number", "minimum": 0, "maximum": 5 },
+        "headPadSec": { "description": "每句裁掉前导静音后保留的头部余量", "type": "number", "minimum": 0, "maximum": 1 },
+        "tailPadSec": { "description": "每句裁掉尾部静音后保留的尾部余量", "type": "number", "minimum": 0, "maximum": 1 },
+        "visualLeadSec": { "description": "画面比口播提前多久切到下一镜", "type": "number", "minimum": 0, "maximum": 2 }
+      }
+    },
+    "captions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "render", "maxCharsPerLine", "maxLines", "minChars", "minDurationSec", "gapSec", "lingerSec", "punctuation", "style"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "render": { "description": "burn：画进画面；soft：只封装字幕轨；both：两者都要", "enum": ["burn", "soft", "both"] },
+        "maxCharsPerLine": { "description": "每行最大宽度，按汉字计（西文字母/数字按半个字）", "type": "number", "minimum": 4, "maximum": 60 },
+        "maxLines": { "enum": [1, 2] },
+        "minChars": { "description": "短于此宽度的字幕块尽量与相邻块合并", "type": "number", "minimum": 0, "maximum": 20 },
+        "minDurationSec": { "type": "number", "minimum": 0, "maximum": 5 },
+        "gapSec": { "description": "相邻两条字幕之间的最小空隙", "type": "number", "minimum": 0, "maximum": 1 },
+        "lingerSec": { "description": "一句话最后一块字幕在说完后多停留的时间", "type": "number", "minimum": 0, "maximum": 2 },
+        "punctuation": { "description": "keep：保留原标点；trim：去掉块尾的逗号句号等；subtitle：trim 且块内中文逗号句号换成全角空格", "enum": ["keep", "trim", "subtitle"] },
+        "style": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fontFamily", "fontSize", "fontWeight", "color", "strokeColor", "strokeWidth", "shadow", "background", "bottomPct", "maxWidthPct", "lineHeight", "highlightWords", "highlightColor"],
+          "properties": {
+            "fontFamily": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+            "fontSize": { "description": "像素（按成片分辨率）", "type": "number", "minimum": 8, "maximum": 400 },
+            "fontWeight": { "type": "integer", "minimum": 100, "maximum": 900 },
+            "color": { "type": "string", "minLength": 1 },
+            "strokeColor": { "type": "string", "minLength": 1 },
+            "strokeWidth": { "description": "描边宽度（像素），0 为不描边", "type": "number", "minimum": 0, "maximum": 40 },
+            "shadow": { "type": "boolean" },
+            "background": { "description": "底栏颜色，null 为无底栏（默认）", "type": ["string", "null"], "minLength": 1 },
+            "bottomPct": { "description": "字幕底边距画面底边的距离（百分比，另加 safeArea.bottom）", "type": "number", "minimum": 0, "maximum": 60 },
+            "maxWidthPct": { "type": "number", "minimum": 20, "maximum": 100 },
+            "lineHeight": { "type": "number", "minimum": 1, "maximum": 2.5 },
+            "highlightWords": { "description": "逐词高亮当前正在读的词（仅 produce 模式）", "type": "boolean" },
+            "highlightColor": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "transition": {
+      "description": "镜头切换：新镜头盖在旧镜头上进入，旧镜头在转场结束前一直保留（防闪）",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "durationSec"],
+      "properties": {
+        "type": { "enum": ["cut", "fade", "slide", "wipe"] },
+        "durationSec": { "type": "number", "minimum": 0, "maximum": 3 }
+      }
+    },
+    "overlays": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["watermark", "progressBar"],
+      "properties": {
+        "watermark": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "text", "image", "position", "opacity", "size"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "text": { "type": "string" },
+            "image": { "description": "相对 public/ 的图片路径", "type": ["string", "null"], "minLength": 1 },
+            "position": { "enum": ["top-left", "top-right", "bottom-left", "bottom-right"] },
+            "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+            "size": { "description": "文字字号或图片高度（像素）", "type": "number", "minimum": 4, "maximum": 400 }
+          }
+        },
+        "progressBar": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "position", "height", "showChapters"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "position": { "enum": ["top", "bottom"] },
+            "height": { "type": "number", "minimum": 1, "maximum": 60 },
+            "showChapters": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "fonts": {
+      "description": "需要随项目加载的本地字体文件（放在 public/ 下）。Linux 渲染中文必须提供",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["family", "file"],
+        "properties": {
+          "family": { "type": "string", "minLength": 1 },
+          "file": { "description": "相对 public/ 的路径", "type": "string", "minLength": 1 },
+          "weight": { "type": "string", "pattern": "^[1-9]00( [1-9]00)?$" },
+          "style": { "enum": ["normal", "italic"] }
+        }
+      }
+    },
+    "cover": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "aspect"],
+      "properties": {
+        "enabled": { "description": "auto：模型有生图能力才做封面；false：不做；true：必须做（无生图能力时报告无法完成）", "enum": ["auto", true, false] },
+        "aspect": { "type": "string", "pattern": "^[0-9]+:[0-9]+$" }
+      }
+    },
+    "render": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["concurrency", "outputName", "preview"],
+      "properties": {
+        "concurrency": { "description": "并行渲染标签页数，null 由 Remotion 决定", "type": ["integer", "null"], "minimum": 1, "maximum": 64 },
+        "outputName": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+        "preview": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scale", "maxSeconds"],
+          "properties": {
+            "scale": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+            "maxSeconds": { "description": "预览只渲染前 N 秒，null 为全片", "type": ["number", "null"], "exclusiveMinimum": 0 }
+          }
+        }
+      }
+    },
+    "footage": {
+      "description": "mode=footage 专用",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "copySource", "asr"],
+      "properties": {
+        "source": { "description": "源视频路径（相对项目根或绝对路径）", "type": ["string", "null"], "minLength": 1 },
+        "copySource": { "description": "init 时把源视频复制进项目 footage/ 目录", "type": "boolean" },
+        "asr": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["model", "language", "initialPrompt", "boostBelowMeanDb", "boostDb"],
+          "properties": {
+            "model": { "description": "whisper 模型名：tiny/base/small/medium/large-v3 等", "type": "string", "minLength": 1 },
+            "language": { "type": "string", "minLength": 1 },
+            "initialPrompt": { "description": "引导 whisper 输出简体与标点", "type": "string" },
+            "boostBelowMeanDb": { "description": "识别前探测平均音量，低于此值另存一份抬高音量的音频专供识别", "type": "number", "minimum": -90, "maximum": 0 },
+            "boostDb": { "type": "number", "minimum": 0, "maximum": 40 }
+          }
+        }
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["removeNodeModules", "removeWorkDir", "removePreview"],
+      "properties": {
+        "removeNodeModules": { "type": "boolean" },
+        "removeWorkDir": { "description": "删除 renders/.work 中间文件", "type": "boolean" },
+        "removePreview": { "type": "boolean" }
+      }
+    }
+  }
+}
