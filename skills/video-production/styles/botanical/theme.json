@@ -1,0 +1,156 @@
+{
+  "name": "botanical",
+  "description": "暗夜植物：近黑底、暖金与粉色柔光、衬线标题，适合故事、人文、品牌与情绪化内容",
+  "credit": "改编自 frontend-slides 风格预设「Dark Botanical」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+  "dark": true,
+  "colors": {
+    "bg": "#0F0F0F",
+    "surface": "#1A1918",
+    "surfaceAlt": "#232120",
+    "border": "#34302D",
+    "text": "#E8E4DF",
+    "textMuted": "#A8A29B",
+    "accent": "#D4A574",
+    "accent2": "#E8B4B8",
+    "onAccent": "#0F0F0F",
+    "success": "#9CC5A1",
+    "warning": "#E6C27A",
+    "danger": "#E07A7A"
+  },
+  "background": {
+    "type": "radial",
+    "colors": [
+      "#0F0F0F",
+      "#1D1A17"
+    ]
+  },
+  "decor": {
+    "motif": "orbs",
+    "grain": 0.06,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "Cormorant Variable",
+      "Noto Serif SC Variable",
+      "Songti SC",
+      "SimSun",
+      "serif"
+    ],
+    "body": [
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 600,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource-variable/cormorant": "5.3.0",
+      "@fontsource-variable/noto-serif-sc": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/cormorant/index.css",
+      "@fontsource-variable/noto-serif-sc/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Cormorant Variable",
+        "weights": [
+          600
+        ]
+      },
+      {
+        "family": "Noto Serif SC Variable",
+        "weights": [
+          600
+        ]
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ]
+      }
+    ]
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.16,
+    "headingTracking": 0
+  },
+  "radius": 22,
+  "space": 28,
+  "card": {
+    "style": "outline",
+    "shadow": "none"
+  },
+  "title": {
+    "style": "plain",
+    "case": "none"
+  },
+  "motion": {
+    "easing": [
+      0.22,
+      1,
+      0.36,
+      1
+    ],
+    "durationSec": 0.8,
+    "staggerSec": 0.12
+  },
+  "code": {
+    "theme": "vitesse-dark",
+    "background": "#141312",
+    "lineHighlight": "rgba(212, 165, 116, 0.16)",
+    "lineNumber": "#6D6760"
+  },
+  "viz": {
+    "node": "#232120",
+    "nodeText": "#E8E4DF",
+    "edge": "#6D6760",
+    "marks": {
+      "active": "#D4A574",
+      "compare": "#E6C27A",
+      "done": "#9CC5A1",
+      "visited": "#6D6760",
+      "path": "#E8B4B8",
+      "swap": "#E07A7A",
+      "found": "#B7A6E0",
+      "muted": "#1A1918"
+    }
+  }
+}

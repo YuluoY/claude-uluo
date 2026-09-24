@@ -75,7 +75,7 @@
     {
       "name": "video-production",
       "source": "./skills/video-production",
-      "description": "口播稿 → 视频项目——React/Remotion 逐帧画面 + edge-tts 词级配音 + ffmpeg 混音与验收，声画字共用一条时间轴；一份 JSON 配置全部参数，算法讲解等类型与风格可扩展；也能给已有视频转写、校对并加字幕"
+      "description": "口播稿 → 视频项目——React/Remotion 逐帧画面（PPT 级排版、10 套风格、版面自动检测、章节条）+ edge-tts 词级配音 + ffmpeg 混音与验收，声画字共用一条时间轴；一份 JSON 配置全部参数，算法讲解等类型与风格可扩展；也能给已有视频转写、校对并加字幕"
     }
   ]
 }

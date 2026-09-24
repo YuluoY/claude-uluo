@@ -2,115 +2,616 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "video-production/style.schema.json",
   "title": "视觉风格（styles/<name>/theme.json）",
-  "description": "风格只管“长什么样”：颜色、背景、字体、字号、圆角间距、动效曲线、代码与可视化配色。字号和间距以画面短边 1080 像素为基准，渲染时按实际画幅等比缩放。",
+  "description": "风格只管“长什么样”：颜色、背景与装饰、页眉、字体（npm 字体包，随项目安装）、字号、卡片与标题样式、动效、代码与可视化配色。字号和间距以画面短边 1080 像素为基准，渲染时按实际画幅等比缩放；位置一律由版面几何计算，风格里不写坐标。",
   "type": "object",
   "additionalProperties": false,
-  "required": ["name", "description", "dark", "colors", "background", "fonts", "type", "radius", "space", "motion", "code", "viz"],
+  "required": [
+    "name",
+    "description",
+    "dark",
+    "colors",
+    "background",
+    "decor",
+    "chrome",
+    "fonts",
+    "type",
+    "radius",
+    "space",
+    "card",
+    "title",
+    "motion",
+    "code",
+    "viz"
+  ],
   "properties": {
-    "$schema": { "type": "string" },
-    "name": { "description": "与目录名一致", "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
-    "description": { "description": "一句话说明适合什么内容", "type": "string", "minLength": 1 },
-    "dark": { "type": "boolean" },
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "description": "与目录名一致",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "description": {
+      "description": "一句话说明适合什么内容",
+      "type": "string",
+      "minLength": 1
+    },
+    "credit": {
+      "description": "出处（改编自哪个开源预设及其授权）",
+      "type": "string"
+    },
+    "dark": {
+      "type": "boolean"
+    },
     "colors": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["bg", "surface", "surfaceAlt", "border", "text", "textMuted", "accent", "accent2", "success", "warning", "danger"],
+      "required": [
+        "bg",
+        "surface",
+        "surfaceAlt",
+        "border",
+        "text",
+        "textMuted",
+        "accent",
+        "accent2",
+        "onAccent",
+        "success",
+        "warning",
+        "danger"
+      ],
       "properties": {
-        "bg": { "description": "画面底色（#RRGGBB，动效里会做透明度混合）", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "surface": { "description": "卡片、面板底色", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "surfaceAlt": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "border": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "text": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "textMuted": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "accent": { "description": "主强调色：当前焦点、高亮", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "accent2": { "description": "第二强调色：对比项", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "success": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "warning": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "danger": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+        "bg": {
+          "description": "画面底色",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "surface": {
+          "description": "卡片、面板底色",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "surfaceAlt": {
+          "description": "次级面板底色",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "border": {
+          "description": "分隔线、描边",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "text": {
+          "description": "正文",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "textMuted": {
+          "description": "次要文字（对底色的对比度须 ≥ 4.5）",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "accent": {
+          "description": "主强调色：焦点、高亮",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "accent2": {
+          "description": "第二强调色：对比项",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "onAccent": {
+          "description": "强调色底上的文字颜色",
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "success": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "warning": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "danger": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        }
       }
     },
     "background": {
-      "description": "场景背景：solid 纯色 / gradient 径向渐变 / grid 网格 / dots 点阵；colors[0] 为底色，colors[1] 为渐变或纹理色",
+      "description": "背景：solid 纯色 / linear 线性渐变 / radial 径向 / mesh 多点柔光 / split 左侧色带 / grid 网格 / dots 点阵",
       "type": "object",
       "additionalProperties": false,
-      "required": ["type", "colors"],
+      "required": [
+        "type",
+        "colors"
+      ],
       "properties": {
-        "type": { "enum": ["solid", "gradient", "grid", "dots"] },
-        "colors": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" } },
-        "opacity": { "description": "纹理透明度", "type": "number", "minimum": 0, "maximum": 1 }
+        "type": {
+          "enum": [
+            "solid",
+            "linear",
+            "radial",
+            "mesh",
+            "split",
+            "grid",
+            "dots"
+          ]
+        },
+        "colors": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          }
+        },
+        "angle": {
+          "description": "linear 的角度",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 360
+        },
+        "opacity": {
+          "description": "纹理、柔光的不透明度",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "split": {
+          "description": "split：色带占画面宽度的比例",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.5
+        }
+      }
+    },
+    "decor": {
+      "description": "装饰：只出现在边距、角落或极低不透明度，不影响正文",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "motif",
+        "grain",
+        "accentBar",
+        "sectionNumber",
+        "frame"
+      ],
+      "properties": {
+        "motif": {
+          "description": "orbs 柔光球 / circles 同心圆 / lines 顶部双线 / brackets 四角括号 / bars 强调色块 / halftone 网点 / tabs 右侧色签 / glow-grid 底部发光网格 / blocks 几何块",
+          "enum": [
+            "none",
+            "orbs",
+            "circles",
+            "lines",
+            "brackets",
+            "bars",
+            "halftone",
+            "tabs",
+            "glow-grid",
+            "blocks"
+          ]
+        },
+        "grain": {
+          "description": "颗粒噪点不透明度，0 为关闭",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.3
+        },
+        "accentBar": {
+          "enum": [
+            "none",
+            "left",
+            "top"
+          ]
+        },
+        "sectionNumber": {
+          "description": "背景里淡淡的大号页码",
+          "type": "boolean"
+        },
+        "frame": {
+          "description": "内容区外的细边框",
+          "type": "boolean"
+        }
+      }
+    },
+    "chrome": {
+      "description": "页眉：章节名（左）与页码（右），占用内容区上方一条",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "chapter",
+        "pageNumber"
+      ],
+      "properties": {
+        "header": {
+          "type": "boolean"
+        },
+        "chapter": {
+          "type": "boolean"
+        },
+        "pageNumber": {
+          "type": "boolean"
+        }
       }
     },
     "fonts": {
-      "description": "字体回退列表。Linux 渲染中文需要在 video.config.json 的 fonts 里提供字体文件，并把它的 family 放在列表前面",
+      "description": "字体栈：西文字体在前、中文字体在后（浏览器按字形回退）。字体来自 npm 字体包（fontsource，OFL），vp.py 会把 packages 写进项目依赖、生成 imports 并按 faces 预加载",
       "type": "object",
       "additionalProperties": false,
-      "required": ["heading", "body", "mono"],
+      "required": [
+        "heading",
+        "body",
+        "mono",
+        "headingWeight",
+        "bodyWeight",
+        "packages",
+        "imports",
+        "faces"
+      ],
       "properties": {
-        "heading": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
-        "body": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
-        "mono": { "description": "等宽字体：代码面板与代码变形动画按字符宽度排版，必须是等宽字体", "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+        "heading": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "body": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "mono": {
+          "description": "等宽字体：代码面板按字符宽度排版",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "headingWeight": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 900
+        },
+        "bodyWeight": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 900
+        },
+        "packages": {
+          "description": "npm 字体包 → 版本",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          }
+        },
+        "imports": {
+          "description": "要引入的 CSS（包名/文件）",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^@?[a-z0-9@/._-]+\\.css$"
+          }
+        },
+        "faces": {
+          "description": "渲染前要加载完的字体族与字重",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "family",
+              "weights"
+            ],
+            "properties": {
+              "family": {
+                "type": "string",
+                "minLength": 1
+              },
+              "weights": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 900
+                }
+              },
+              "style": {
+                "enum": [
+                  "normal",
+                  "italic"
+                ]
+              }
+            }
+          }
+        }
       }
     },
     "type": {
-      "description": "字号（像素，短边 1080 基准）",
+      "description": "字号（像素，短边 1080 基准）与行高",
       "type": "object",
       "additionalProperties": false,
-      "required": ["display", "h1", "h2", "h3", "body", "small", "code"],
+      "required": [
+        "display",
+        "h1",
+        "h2",
+        "h3",
+        "body",
+        "small",
+        "code",
+        "lineHeight",
+        "headingLineHeight",
+        "headingTracking"
+      ],
       "properties": {
-        "display": { "type": "number", "minimum": 8, "maximum": 400 },
-        "h1": { "type": "number", "minimum": 8, "maximum": 400 },
-        "h2": { "type": "number", "minimum": 8, "maximum": 400 },
-        "h3": { "type": "number", "minimum": 8, "maximum": 400 },
-        "body": { "type": "number", "minimum": 8, "maximum": 400 },
-        "small": { "type": "number", "minimum": 8, "maximum": 400 },
-        "code": { "type": "number", "minimum": 8, "maximum": 400 }
+        "display": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 400
+        },
+        "h1": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 400
+        },
+        "h2": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 400
+        },
+        "h3": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 400
+        },
+        "body": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 400
+        },
+        "small": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 400
+        },
+        "code": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 400
+        },
+        "lineHeight": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 2.2
+        },
+        "headingLineHeight": {
+          "type": "number",
+          "minimum": 0.9,
+          "maximum": 1.8
+        },
+        "headingTracking": {
+          "description": "标题字距（em）",
+          "type": "number",
+          "minimum": -0.1,
+          "maximum": 0.3
+        }
       }
     },
-    "radius": { "type": "number", "minimum": 0, "maximum": 200 },
-    "space": { "description": "基础间距", "type": "number", "minimum": 0, "maximum": 200 },
+    "radius": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 200
+    },
+    "space": {
+      "description": "基础间距（栅格槽宽）",
+      "type": "number",
+      "minimum": 4,
+      "maximum": 200
+    },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "style",
+        "shadow"
+      ],
+      "properties": {
+        "style": {
+          "description": "flat 平面 / outline 描边 / elevated 投影 / glass 毛玻璃 / filled 次级底色",
+          "enum": [
+            "flat",
+            "outline",
+            "elevated",
+            "glass",
+            "filled"
+          ]
+        },
+        "shadow": {
+          "description": "CSS box-shadow，elevated / glass 使用",
+          "type": "string"
+        }
+      }
+    },
+    "title": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "style",
+        "case"
+      ],
+      "properties": {
+        "style": {
+          "description": "plain / underline 下划短线 / bar 左侧竖条 / kicker",
+          "enum": [
+            "plain",
+            "underline",
+            "bar",
+            "kicker"
+          ]
+        },
+        "case": {
+          "description": "upper：西文标题转大写",
+          "enum": [
+            "none",
+            "upper"
+          ]
+        }
+      }
+    },
     "motion": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["easing", "durationSec", "staggerSec"],
+      "required": [
+        "easing",
+        "durationSec",
+        "staggerSec"
+      ],
       "properties": {
-        "easing": { "description": "cubic-bezier 四个控制点", "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number", "minimum": -2, "maximum": 3 } },
-        "durationSec": { "description": "元素进入/变化的默认时长", "type": "number", "minimum": 0.05, "maximum": 5 },
-        "staggerSec": { "description": "多个元素依次出现的间隔", "type": "number", "minimum": 0, "maximum": 2 }
+        "easing": {
+          "description": "cubic-bezier 四个控制点",
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 3
+          }
+        },
+        "durationSec": {
+          "type": "number",
+          "minimum": 0.05,
+          "maximum": 5
+        },
+        "staggerSec": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        }
       }
     },
     "code": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["theme", "background", "lineHighlight", "lineNumber"],
+      "required": [
+        "theme",
+        "background",
+        "lineHighlight",
+        "lineNumber"
+      ],
       "properties": {
-        "theme": { "description": "shiki 代码配色（模板内置这几种）", "enum": ["github-dark", "github-light", "one-dark-pro", "vitesse-dark", "vitesse-light", "min-light", "min-dark", "nord", "dracula"] },
-        "background": { "type": "string", "minLength": 1 },
-        "lineHighlight": { "description": "当前执行行的底色", "type": "string", "minLength": 1 },
-        "lineNumber": { "type": "string", "minLength": 1 }
+        "theme": {
+          "description": "shiki 代码配色（模板内置这几种）",
+          "enum": [
+            "github-dark",
+            "github-light",
+            "one-dark-pro",
+            "vitesse-dark",
+            "vitesse-light",
+            "min-light",
+            "min-dark",
+            "nord",
+            "dracula"
+          ]
+        },
+        "background": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lineHighlight": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lineNumber": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "viz": {
-      "description": "数据结构可视化配色；marks 是步骤里给元素打的语义标记",
       "type": "object",
       "additionalProperties": false,
-      "required": ["node", "nodeText", "edge", "marks"],
+      "required": [
+        "node",
+        "nodeText",
+        "edge",
+        "marks"
+      ],
       "properties": {
-        "node": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "nodeText": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-        "edge": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "node": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "nodeText": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "edge": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
         "marks": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["active", "compare", "done", "visited", "path", "swap", "found", "muted"],
+          "required": [
+            "active",
+            "compare",
+            "done",
+            "visited",
+            "path",
+            "swap",
+            "found",
+            "muted"
+          ],
           "properties": {
-            "active": { "description": "正在处理", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-            "compare": { "description": "正在比较", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-            "done": { "description": "已确定/已完成", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-            "visited": { "description": "访问过", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-            "path": { "description": "结果路径", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-            "swap": { "description": "交换/修改", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-            "found": { "description": "命中/找到", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
-            "muted": { "description": "暂不相关（压暗）", "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+            "active": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "compare": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "done": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "visited": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "path": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "swap": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "found": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            },
+            "muted": {
+              "type": "string",
+              "pattern": "^#[0-9A-Fa-f]{6}$"
+            }
           }
         }
       }

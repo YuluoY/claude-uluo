@@ -3,4 +3,4 @@
 入口是 scripts/vp.py，本包的模块各管一段，互相只通过数据（dict / dataclass）交接。
 """
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"

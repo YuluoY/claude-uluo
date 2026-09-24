@@ -81,13 +81,13 @@ def install(project: Project, name: str, *, force: bool = False) -> bool:
             shutil.rmtree(dst)
         shutil.copytree(src, dst)
         changed = True
-    if _merge_dependencies(project, meta["dependencies"]):
+    if merge_dependencies(project, meta["dependencies"]):
         changed = True
     write_genre_index(project)
     return changed
 
 
-def _merge_dependencies(project: Project, deps: dict) -> bool:
+def merge_dependencies(project: Project, deps: dict) -> bool:
     if not deps:
         return False
     pkg_path = project.root / "package.json"

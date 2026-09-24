@@ -5,9 +5,6 @@ import { Cover, type CoverProps } from './compositions/Cover';
 import { Main, type MainProps } from './compositions/Main';
 import { Stills, type StillsProps } from './compositions/Stills';
 import { captions, settings, timeline } from './engine/data';
-import { loadFonts } from './engine/fonts';
-
-loadFonts();
 
 export const RemotionRoot: React.FC = () => {
   const fp = settings.footage;

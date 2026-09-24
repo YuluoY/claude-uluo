@@ -79,11 +79,11 @@
     "lingerSec": 0.25,
     "punctuation": "subtitle",
     "style": {
-      "fontFamily": ["PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "sans-serif"],
+      "fontFamily": null,
       "fontSize": 54,
       "fontWeight": 700,
-      "color": "#FFFFFF",
-      "strokeColor": "#000000",
+      "color": "auto",
+      "strokeColor": "auto",
       "strokeWidth": 6,
       "shadow": true,
       "background": null,
@@ -91,13 +91,14 @@
       "maxWidthPct": 86,
       "lineHeight": 1.3,
       "highlightWords": false,
-      "highlightColor": "#FFD54A"
+      "highlightColor": "auto"
     }
   },
   "transition": { "type": "cut", "durationSec": 0.35 },
   "overlays": {
     "watermark": { "enabled": false, "text": "", "image": null, "position": "top-right", "opacity": 0.6, "size": 28 },
-    "progressBar": { "enabled": false, "position": "top", "height": 6, "showChapters": true }
+    "progressBar": { "enabled": false, "position": "top", "height": 6, "showChapters": true },
+    "chapterBar": { "enabled": false, "position": "top", "style": "filled", "widths": "equal", "showProgress": true, "height": 56 }
   },
   "fonts": [],
   "cover": { "enabled": "auto", "aspect": "16:9" },

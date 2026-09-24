@@ -89,11 +89,13 @@ export default defineTrace((t) => {
 | `vars` | `true` 显示全部变量 / 字符串数组只显示这些 / `false` 不显示 |
 | `note` | 是否显示步骤说明，默认 true |
 | `codeTitle` | 代码面板顶部文件名，如 `insertion_sort.py` |
-| `codeFontSize` | 代码字号（短边 1080 基准） |
+| `codeFontSize` | 代码最大字号（短边 1080 基准）；实际字号按面板宽高自动缩到最长一行（含行尾注释的最长取值）放得下 |
 | `dimInactive` | 压暗非当前行 |
 | `annotate` | 行尾显示变量值：`{"变量名": 行号}` |
 
 步骤推进完全由 storyboard 决定：镜头里句子的 `steps` 与提示点的 `step`。镜头开始前、第一步之前显示该镜头的第一步。
+
+版面：代码面板、数据结构、变量面板、说明条各占一块算好的矩形；变量面板与说明条的高度取整个 trace 里最大的一步，切步骤时版面不跳。
 
 ### CodeBuild
 
@@ -104,7 +106,7 @@ export default defineTrace((t) => {
 | `versions` | 代码版本数组（至少 1 个） |
 | `lang` | 语言（typescript / python / java / cpp / go / rust …，不认识的按纯文本） |
 | `at` | 第 2、3…个版本出现的提示点 id；不给就在第 2、3…句开始时出现 |
-| `title` / `codeTitle` / `fontSize` | 标题、文件名、字号 |
+| `title` / `codeTitle` / `fontSize` | 标题、文件名、最大字号（实际按所有版本里最宽最长的一版自动算） |
 
 ## 示例
 

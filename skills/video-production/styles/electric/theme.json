@@ -1,0 +1,154 @@
+{
+  "name": "electric",
+  "description": "电光蓝：白底 + 左侧电光蓝色带、描边卡片、利落无衬线，适合产品、教程、干货清单",
+  "credit": "改编自 frontend-slides 风格预设「Electric Studio」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+  "dark": false,
+  "colors": {
+    "bg": "#FFFFFF",
+    "surface": "#F5F7FF",
+    "surfaceAlt": "#E9EDFF",
+    "border": "#D3DAF7",
+    "text": "#0A0A0A",
+    "textMuted": "#4A5068",
+    "accent": "#4361EE",
+    "accent2": "#FF6B35",
+    "onAccent": "#FFFFFF",
+    "success": "#1B998B",
+    "warning": "#E09F3E",
+    "danger": "#E63946"
+  },
+  "background": {
+    "type": "split",
+    "colors": [
+      "#FFFFFF",
+      "#4361EE"
+    ],
+    "split": 0.035
+  },
+  "decor": {
+    "motif": "none",
+    "grain": 0,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "Manrope Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "body": [
+      "Manrope Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 800,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource-variable/manrope": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/manrope/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Manrope Variable",
+        "weights": [
+          400,
+          500,
+          700,
+          800
+        ]
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700,
+          800
+        ]
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ]
+      }
+    ]
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.16,
+    "headingTracking": -0.01
+  },
+  "radius": 12,
+  "space": 28,
+  "card": {
+    "style": "outline",
+    "shadow": "none"
+  },
+  "title": {
+    "style": "bar",
+    "case": "none"
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "code": {
+    "theme": "github-light",
+    "background": "#F7F8FD",
+    "lineHighlight": "rgba(67, 97, 238, 0.12)",
+    "lineNumber": "#98A0B8"
+  },
+  "viz": {
+    "node": "#FFFFFF",
+    "nodeText": "#0A0A0A",
+    "edge": "#98A0B8",
+    "marks": {
+      "active": "#4361EE",
+      "compare": "#E09F3E",
+      "done": "#1B998B",
+      "visited": "#B8C0DA",
+      "path": "#FF6B35",
+      "swap": "#E63946",
+      "found": "#7209B7",
+      "muted": "#EEF1FB"
+    }
+  }
+}

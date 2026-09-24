@@ -1,10 +1,28 @@
-// 算法讲解主场景：左边（竖屏在上）代码逐行高亮，右边（竖屏在下）数据结构随同一份 trace 变化，
+// 算法讲解主场景：一侧（竖屏在上）代码逐行高亮，另一侧（竖屏在下）数据结构随同一份 trace 变化，
 // 下方变量面板与步骤说明。步骤推进由 storyboard 里句子的 steps / 提示点的 step 决定，和口播同步。
+// 所有区域按内容区算好矩形：代码面板自动字号，变量面板和说明条的高度取整个 trace 里最大的，切步骤时版面不跳。
 import React from 'react';
-import { CodePanel, fontStack, Stage, useContentBox, useTheme, useUnit, useVideoConfig } from './deps';
+import {
+  Box,
+  bodyStyle,
+  CodePanel,
+  codePanelHeight,
+  fitCodeFontSize,
+  SceneTitle,
+  Slide,
+  splitH,
+  stackV,
+  TextBlock,
+  useRevealProgress,
+  useSlide,
+  useTextFitGroup,
+  useTitleLayout,
+  withAlpha,
+} from './deps';
+import type { Rect } from './deps';
 import type { SceneProps } from '../../engine';
 import { useTrace } from './useTrace';
-import { VarsPanel } from './VarsPanel';
+import { VarsPanel, varsMetrics } from './VarsPanel';
 import { VizPanel } from './VizPanel';
 import type { VizState } from './viz-types';
 
@@ -21,6 +39,7 @@ export type AlgoSceneProps = {
   note?: boolean;
   /** 代码面板顶部的文件名 */
   codeTitle?: string;
+  /** 代码最大字号（短边 1080 基准）；实际字号会自动缩到放得下 */
   codeFontSize?: number;
   /** 压暗非当前行 */
   dimInactive?: boolean;
@@ -28,136 +47,160 @@ export type AlgoSceneProps = {
   annotate?: Record<string, number>;
 };
 
-export const AlgoScene: React.FC<SceneProps<AlgoSceneProps>> = ({ props }) => {
-  const theme = useTheme();
-  const unit = useUnit();
-  const { width, height } = useVideoConfig();
+const Body: React.FC<{ props: AlgoSceneProps }> = ({ props }) => {
+  const { frame, theme, unit } = useSlide();
   const tv = useTrace(props.trace);
-  const box = useContentBox(72);
+  const t = useTitleLayout(props.title, undefined, { max: theme.type.h3 * 1.1, maxLines: 1 });
+  const body = t.body;
+  const g = frame.gutter;
+  const layout = props.layout && props.layout !== 'auto' ? props.layout : frame.aspect === 'portrait' ? 'code-top' : 'code-left';
+  const steps = tv.trace.steps;
+  const showCode = layout !== 'viz-only';
+  const showViz = layout !== 'code-only';
+  const hasNotes = props.note !== false && steps.some((s) => s.note);
+  const only = Array.isArray(props.vars) ? props.vars : undefined;
+  const showVars = props.vars !== false && steps.some((s) => s.vars && Object.keys(s.vars).length > 0);
 
-  const layout = props.layout && props.layout !== 'auto' ? props.layout : width >= height ? 'code-left' : 'code-top';
-  const gap = theme.space * unit;
-  const titleH = props.title ? theme.type.h3 * unit * 1.6 : 0;
-  const hasNotes = props.note !== false && tv.trace.steps.some((s) => s.note);
-  const noteH = hasNotes ? theme.type.body * unit * 1.9 : 0;
-  const showVars = props.vars !== false && tv.trace.steps.some((s) => s.vars && Object.keys(s.vars).length > 0);
-  const varsH = showVars ? theme.type.small * unit * 2.8 : 0;
-  const availH = box.height - titleH;
-  const extras = (noteH ? noteH + gap : 0) + (varsH ? varsH + gap : 0);
+  // 行尾注释：取整个 trace 里最长的一版参与字号计算，保证每一步都放得下
+  const annotationsAt = (k: number): Record<number, string> => {
+    const out: Record<number, string> = {};
+    for (const [name, line] of Object.entries(props.annotate ?? {})) {
+      const v = steps[k].vars?.[name];
+      if (v !== undefined) {
+        out[line] = `${name} = ${typeof v === 'string' ? v : JSON.stringify(v)}`;
+      }
+    }
+    return out;
+  };
+  const widestAnn: Record<number, string> = {};
+  steps.forEach((_, k) => {
+    for (const [line, text] of Object.entries(annotationsAt(k))) {
+      const n = Number(line);
+      if (!widestAnn[n] || text.length > widestAnn[n].length) {
+        widestAnn[n] = text;
+      }
+    }
+  });
 
-  let codeW = 0;
-  let codeH = 0;
-  let vizW = 0;
-  let vizH = 0;
-  let direction: 'row' | 'row-reverse' | 'column' = 'row';
-  if (layout === 'code-left' || layout === 'code-right') {
-    codeW = (box.width - gap) * 0.5;
-    codeH = availH;
-    vizW = box.width - gap - codeW;
-    vizH = availH - extras;
-    direction = layout === 'code-left' ? 'row' : 'row-reverse';
-  } else if (layout === 'code-top') {
-    codeW = box.width;
-    codeH = (availH - extras - gap) * 0.45;
-    vizW = box.width;
-    vizH = availH - extras - gap - codeH;
-    direction = 'column';
-  } else if (layout === 'code-only') {
-    codeW = box.width;
-    codeH = availH - extras;
-    direction = 'column';
+  // 区域划分
+  const side = layout === 'code-left' || layout === 'code-right';
+  const [c0, c1] = side ? splitH(body, [1, 1], g * 1.2) : [body, body];
+  const codeCol = side ? (layout === 'code-left' ? c0 : c1) : body;
+  const infoCol = side ? (layout === 'code-left' ? c1 : c0) : body;
+  const vm = varsMetrics(
+    steps.map((s) => s.vars),
+    only,
+    infoCol.w,
+    theme,
+    unit,
+  );
+  const varsH = showVars ? vm.height : 0;
+  const bs = bodyStyle(theme);
+  const noteBar = 6 * unit;
+  const notePad = 18 * unit;
+  const notes = hasNotes ? steps.map((s) => s.note ?? '') : [];
+  const noteFits = useTextFitGroup(
+    notes.map((text) => ({ text, width: infoCol.w - noteBar - 2 * notePad, height: body.h * 0.2, maxLines: 3 })),
+    { style: bs, max: theme.type.body * unit, min: theme.type.small * unit * 0.85 },
+  );
+  const noteH = hasNotes ? Math.max(...noteFits.map((f) => f.height)) + 2 * notePad : 0;
+
+  // CodePanel 的字号以短边 1080 为基准（frame.unit），竖屏的放大系数折进最大字号里
+  const codeMax = props.codeFontSize ?? theme.type.code * frame.typeScale;
+  const codeFs = (w: number, h: number) =>
+    fitCodeFontSize({ code: tv.trace.code, lang: tv.trace.lang, theme, unit: frame.unit, width: w, height: h, max: codeMax, title: Boolean(props.codeTitle), annotations: widestAnn });
+  const codeNatural = (w: number, h: number) => codePanelHeight({ code: tv.trace.code, fontSize: codeFs(w, h), unit: frame.unit, title: Boolean(props.codeTitle) });
+
+  let codeRect: Rect | null = null;
+  let vizRect: Rect | null = null;
+  let varsRect: Rect | null = null;
+  let noteRect: Rect | null = null;
+  const extras = (h: number) => (h > 0 ? [h] : []);
+  if (side) {
+    codeRect = { ...codeCol, h: Math.min(codeCol.h, codeNatural(codeCol.w, codeCol.h)) };
+    const parts = stackV(infoCol, ['fill', ...extras(varsH), ...extras(noteH)], g);
+    vizRect = parts[0];
+    varsRect = varsH ? parts[1] : null;
+    noteRect = noteH ? parts[parts.length - 1] : null;
   } else {
-    vizW = box.width;
-    vizH = availH - extras;
-    direction = 'column';
+    const rest = body.h - (varsH ? varsH + g : 0) - (noteH ? noteH + g : 0);
+    const codeH = !showCode ? 0 : showViz ? Math.min(codeNatural(body.w, rest * 0.5), rest * 0.5) : Math.min(codeNatural(body.w, rest), rest);
+    const sizes: Array<number | 'fill'> = [];
+    if (showCode) {
+      sizes.push(showViz ? codeH : 'fill');
+    }
+    if (showViz) {
+      sizes.push('fill');
+    }
+    const parts = stackV(body, [...sizes, ...extras(varsH), ...extras(noteH)], g);
+    let i = 0;
+    if (showCode) {
+      codeRect = parts[i++];
+      if (!showViz) {
+        codeRect = { ...codeRect, h: Math.min(codeRect.h, codeNatural(codeRect.w, codeRect.h)) };
+      }
+    }
+    if (showViz) {
+      vizRect = parts[i++];
+    }
+    varsRect = varsH ? parts[i++] : null;
+    noteRect = noteH ? parts[i++] : null;
   }
 
   const viz = (tv.step.viz ?? {}) as Record<string, VizState>;
   const prevViz = (tv.prev?.viz ?? {}) as Record<string, VizState>;
   const keys = (props.viz ?? Object.keys(viz)).filter((k) => k in viz);
-  const each = keys.length ? (vizH - gap * (keys.length - 1)) / keys.length : 0;
+  const vizCells = vizRect && keys.length ? stackV(vizRect, keys.map(() => 'fill' as const), g) : [];
 
   // 说明沿用最近一条：只在关键步骤写 note，中间步骤不会把说明清空（避免文字一闪一闪）
-  let noteText = '';
+  let noteIdx = -1;
   for (let k = tv.index; k >= 0; k--) {
-    const n = tv.trace.steps[k].note;
-    if (n) {
-      noteText = n;
+    if (steps[k].note) {
+      noteIdx = k;
       break;
     }
   }
-
-  const annotations: Record<number, string> = {};
-  for (const [name, line] of Object.entries(props.annotate ?? {})) {
-    const v = tv.step.vars?.[name];
-    if (v !== undefined) {
-      annotations[line] = `${name} = ${typeof v === 'string' ? v : JSON.stringify(v)}`;
-    }
-  }
-
-  const code =
-    layout === 'viz-only' ? null : (
-      <CodePanel
-        code={tv.trace.code}
-        lang={tv.trace.lang}
-        activeLines={tv.step.lines}
-        prevActiveLines={tv.prev?.lines ?? null}
-        progress={tv.progress}
-        height={codeH}
-        fontSize={props.codeFontSize}
-        dimInactive={props.dimInactive}
-        annotations={annotations}
-        title={props.codeTitle}
-        style={{ width: codeW, flex: 'none' }}
-      />
-    );
-
-  const vizColumn =
-    layout === 'code-only' ? null : (
-      <div style={{ width: vizW, display: 'flex', flexDirection: 'column', gap, flex: 'none' }}>
-        {keys.map((k) => (
-          <VizPanel key={k} state={viz[k]} prev={prevViz[k] ?? null} progress={tv.progress} width={vizW} height={each} />
-        ))}
-      </div>
-    );
+  const [pt, pc, pv] = useRevealProgress([0, 3, 6]);
 
   return (
-    <Stage padding={72}>
-      {props.title ? (
-        <div style={{ height: titleH, fontFamily: fontStack(theme.fonts.heading), fontSize: theme.type.h3 * unit, fontWeight: 700, color: theme.colors.text }}>
-          {props.title}
-        </div>
+    <>
+      <SceneTitle layout={t} text={props.title} reveal={pt} />
+      {codeRect ? (
+        <Box rect={codeRect} name="code" reveal={pc}>
+          <CodePanel
+            code={tv.trace.code}
+            lang={tv.trace.lang}
+            width={codeRect.w}
+            height={codeRect.h}
+            activeLines={tv.step.lines}
+            prevActiveLines={tv.prev?.lines ?? null}
+            progress={tv.progress}
+            fontSize={codeMax}
+            dimInactive={props.dimInactive}
+            annotations={annotationsAt(tv.index)}
+            title={props.codeTitle}
+          />
+        </Box>
       ) : null}
-      <div style={{ display: 'flex', flexDirection: direction, gap, height: availH }}>
-        {code}
-        <div style={{ display: 'flex', flexDirection: 'column', gap, flex: 1, minWidth: 0 }}>
-          {vizColumn}
-          {showVars ? (
-            <VarsPanel
-              vars={tv.step.vars}
-              prevVars={tv.prev?.vars}
-              progress={tv.progress}
-              only={Array.isArray(props.vars) ? props.vars : undefined}
-              style={{ minHeight: varsH, boxSizing: 'border-box' }}
-            />
+      {keys.map((k, i) => (
+        <Box key={k} rect={vizCells[i]} name={`viz-${k}`} reveal={pv}>
+          <VizPanel state={viz[k]} prev={prevViz[k] ?? null} progress={tv.progress} width={vizCells[i].w} height={vizCells[i].h} />
+        </Box>
+      ))}
+      {varsRect ? <VarsPanel rect={varsRect} metrics={vm} vars={tv.step.vars} prevVars={tv.prev?.vars} progress={tv.progress} only={only} theme={theme} unit={unit} /> : null}
+      {noteRect ? (
+        <Box rect={noteRect} name="note" style={{ borderLeft: `${noteBar}px solid ${theme.colors.accent}`, backgroundColor: withAlpha(theme.colors.accent, theme.dark ? 0.1 : 0.06), boxSizing: 'border-box' }}>
+          {noteIdx >= 0 ? (
+            <TextBlock fit={noteFits[noteIdx]} text={notes[noteIdx]} style={bs} rect={{ x: notePad, y: notePad, w: noteRect.w - noteBar - 2 * notePad, h: noteFits[noteIdx].height }} color={theme.colors.text} />
           ) : null}
-          {hasNotes ? (
-            <div
-              style={{
-                minHeight: noteH,
-                display: 'flex',
-                alignItems: 'center',
-                paddingLeft: 20 * unit,
-                borderLeft: `${6 * unit}px solid ${theme.colors.accent}`,
-                fontSize: theme.type.body * unit,
-                color: theme.colors.text,
-              }}
-            >
-              {noteText}
-            </div>
-          ) : null}
-        </div>
-      </div>
-    </Stage>
+        </Box>
+      ) : null}
+    </>
   );
 };
+
+export const AlgoScene: React.FC<SceneProps<AlgoSceneProps>> = ({ props }) => (
+  <Slide>
+    <Body props={props} />
+  </Slide>
+);

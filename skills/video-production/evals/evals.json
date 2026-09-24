@@ -73,6 +73,21 @@
         "有生图能力时生成的背景图不含文字，标题由 vp.py cover 排版",
         "没有生图能力时跳过封面并在 brief.md 记录，没有伪造封面图"
       ]
+    },
+    {
+      "id": 6,
+      "name": "slide-quality-layout-chapters",
+      "prompt": "做一个 3:4 的小红书科普视频讲 HTTP 缓存，画面要像精致的 PPT，别用单调的蓝底；视频上方要有分段格子能看到讲到哪一部分了。",
+      "expected_output": "preset=portrait-3x4；按内容挑 3 个风格用 vp.py stills 给用户选；开启 overlays.chapterBar（position top）并给镜头写 chapter；版面检测零问题后出片",
+      "files": [],
+      "assertions": [
+        "preset 为 portrait-3x4",
+        "用 vp.py stills --styles 给出 3 个不同风格的静帧供选择，最终 style 写进 video.config.json",
+        "video.config.json 里 overlays.chapterBar.enabled 为 true、position 为 top；storyboard 的镜头写了 chapter，章节数适合画幅宽度",
+        "使用了多种版式（如 Section、CardGrid、Compare、StatGrid / BarChart），而不是整片都是 BulletList",
+        "vp.py stills / vp.py layout 报出的版面问题都已修复（qa/layout.json 的 issues 为空），没有用 --skip-layout",
+        "成片验收报告没有错误"
+      ]
     }
   ]
 }

@@ -97,7 +97,7 @@ Invoke in Claude Code: `/diagram-compiler`
 | html-blueprint | HTML-first component design protocol — data-* annotated renderable drafts |
 | uluo-spec-driven | Spec-Driven design engine — design docs (strategy/domain/component) + refinement flow (spec/plan/tasks) + records |
 | uluo-web-standards | Web engineering standards — eslint/stylelint/tsc + DDD architecture + soft rules |
-| video-production | Script → video project — Remotion frame-by-frame scenes + edge-tts word-level narration + ffmpeg mixing & QA; extensible genres (e.g. algorithm walkthroughs); subtitles for existing footage |
+| video-production | Script → video project — Remotion frame-by-frame scenes (slide-quality layout, 10 styles, automatic layout audit, chapter bar) + edge-tts word-level narration + ffmpeg mixing & QA; extensible genres (e.g. algorithm walkthroughs); subtitles for existing footage |
 
 **Curated**
 

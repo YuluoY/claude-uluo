@@ -108,13 +108,15 @@ def initial_generated(cfg: dict, themes: dict[str, dict]) -> dict[str, object]:
                      "title": cfg["title"], "audio": None, "chapters": [], "shots": []},
         "captions": {"blocks": []},
         "traces": {},
-        "settings": rm.settings_payload(cfg, cfg["style"], themes),
+        "settings": rm.settings_payload(cfg, cfg["style"], themes, glyphs=rm.collect_glyphs(cfg["title"])),
     }
 
 
 def write_initial_generated(project: Project, cfg: dict) -> None:
-    for name, data in initial_generated(cfg, styles_mod.load_all(project)).items():
+    themes = styles_mod.load_all(project)
+    for name, data in initial_generated(cfg, themes).items():
         rm.write_generated(project, name, data)
+    rm.write_fonts(project, [themes[cfg["style"]]])
 
 
 # ---------- 状态 ----------
@@ -185,7 +187,7 @@ def cleanup(project: Project, *, dry_run: bool = False) -> list[tuple[str, int]]
     if c["removeNodeModules"]:
         targets.append(project.node_modules)
     if c["removeWorkDir"]:
-        targets += [project.work_dir, project.seq_dir, project.vp_dir / "tmp"]
+        targets += [project.work_dir, project.seq_dir, project.root / "out", project.vp_dir / "tmp"]
         targets += list(project.vp_dir.glob("props-*.json")) if project.vp_dir.is_dir() else []
         targets += list(project.asr_dir.glob("*.wav")) if project.asr_dir.is_dir() else []
         targets += [project.renders_dir / "stills" / "styles"]

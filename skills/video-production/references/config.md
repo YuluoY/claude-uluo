@@ -104,11 +104,11 @@
 | `captions.gapSec` | number（≥0，≤1） | 0.06 | 相邻两条字幕之间的最小空隙 |
 | `captions.lingerSec` | number（≥0，≤2） | 0.25 | 一句话最后一块字幕在说完后多停留的时间 |
 | `captions.punctuation` | "keep" / "trim" / "subtitle" | "subtitle" | keep：保留原标点；trim：去掉块尾的逗号句号等；subtitle：trim 且块内中文逗号句号换成全角空格 |
-| `captions.style.fontFamily` | array | ["PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "… | 字体回退列表；Linux 需在 fonts 里提供中文字体并放在最前 |
+| `captions.style.fontFamily` | array 或 null | null | 字体回退列表；null（默认）用风格的正文字体（随项目打包，任何系统渲染一致） |
 | `captions.style.fontSize` | number（≥8，≤400） | 54 | 像素（按成片分辨率） |
 | `captions.style.fontWeight` | integer（≥100，≤900） | 700 | 字重 100–900 |
-| `captions.style.color` | string | "#FFFFFF" | 文字颜色 |
-| `captions.style.strokeColor` | string | "#000000" | 描边颜色 |
+| `captions.style.color` | string | "auto" | 文字颜色；auto 按风格（深色风格白字，浅色风格用风格正文色） |
+| `captions.style.strokeColor` | string | "auto" | 描边颜色；auto 按风格（深色风格黑描边，浅色风格用背景色描边） |
 | `captions.style.strokeWidth` | number（≥0，≤40） | 6 | 描边宽度（像素），0 为不描边 |
 | `captions.style.shadow` | boolean | true | 是否加投影 |
 | `captions.style.background` | string 或 null | null | 底栏颜色，null 为无底栏（默认） |
@@ -116,7 +116,7 @@
 | `captions.style.maxWidthPct` | number（≥20，≤100） | 86 | 字幕最大宽度（占画面宽度的百分比） |
 | `captions.style.lineHeight` | number（≥1，≤2.5） | 1.3 | 行高倍数 |
 | `captions.style.highlightWords` | boolean | false | 逐词高亮当前正在读的词（仅 produce 模式） |
-| `captions.style.highlightColor` | string | "#FFD54A" | highlightWords 开启时当前词的颜色 |
+| `captions.style.highlightColor` | string | "auto" | highlightWords 开启时当前词的颜色；auto 用风格强调色 |
 | `transition` | 对象 |  | 镜头切换：新镜头盖在旧镜头上进入，旧镜头在转场结束前一直保留（防闪） |
 | `transition.type` | "cut" / "fade" / "slide" / "wipe" | "cut" | 默认转场：cut 硬切 / fade 淡入 / slide 滑入 / wipe 擦除（都是新镜头盖在旧镜头上进入） |
 | `transition.durationSec` | number（≥0，≤3） | 0.35 | 转场时长 |
@@ -126,10 +126,18 @@
 | `overlays.watermark.position` | "top-left" / "top-right" / "bottom-left" / "bottom-right" | "top-right" | 水印位置（自动避开安全区） |
 | `overlays.watermark.opacity` | number（≥0，≤1） | 0.6 | 水印不透明度 |
 | `overlays.watermark.size` | number（≥4，≤400） | 28 | 文字字号或图片高度（像素） |
+| `overlays.progressBar` | 对象 |  | 细进度条：贴着安全区上沿或下沿的一条线（按章节分段）；需要带章节名的格子请用 chapterBar |
 | `overlays.progressBar.enabled` | boolean | false | 是否显示进度条 |
 | `overlays.progressBar.position` | "top" / "bottom" | "top" | 进度条在顶部还是底部 |
 | `overlays.progressBar.height` | number（≥1，≤60） | 6 | 进度条粗细（像素，短边 1080 基准） |
 | `overlays.progressBar.showChapters` | boolean | true | 按 storyboard 的 chapter 分段并显示当前章节名 |
+| `overlays.chapterBar` | 对象 |  | 章节条：画面上方或下方的一排格子，每格一个章节（storyboard 镜头的 chapter），当前章节高亮并显示本章播放进度。开启后内容区与字幕带自动让开。footage 模式忽略 |
+| `overlays.chapterBar.enabled` | boolean | false | 是否显示章节条 |
+| `overlays.chapterBar.position` | "top" / "bottom" | "top" | 贴着安全区上沿还是下沿（下沿时字幕整体上移） |
+| `overlays.chapterBar.style` | "filled" / "outline" / "underline" | "filled" | filled 实色格（当前章节强调色）/ outline 描边格 / underline 文字 + 下划进度线 |
+| `overlays.chapterBar.widths` | "equal" / "duration" | "equal" | equal 等宽 / duration 按章节时长分宽（每格至少为平均宽度的 45%） |
+| `overlays.chapterBar.showProgress` | boolean | true | 在当前章节格子里显示本章播放进度 |
+| `overlays.chapterBar.height` | number（≥24，≤160） | 56 | 格子高度（像素，短边 1080 基准） |
 | `fonts` | array | [] | 需要随项目加载的本地字体文件（放在 public/ 下）。Linux 渲染中文必须提供 |
 | `cover.enabled` | "auto" / true / false | "auto" | auto：模型有生图能力才做封面；false：不做；true：必须做（无生图能力时报告无法完成） |
 | `cover.aspect` | string（格式 `^[0-9]+:[0-9]+$`） | "16:9" | 封面宽高比，如 16:9、9:16、3:4；短边固定 1080 像素 |

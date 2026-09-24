@@ -1,0 +1,162 @@
+{
+  "name": "neon",
+  "description": "霓虹赛博：深海军蓝、青色与洋红辉光、底部发光网格，适合科技前沿、游戏、未来感话题",
+  "credit": "改编自 frontend-slides 风格预设「Neon Cyber」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+  "dark": true,
+  "colors": {
+    "bg": "#0A0F1C",
+    "surface": "#121A2E",
+    "surfaceAlt": "#18223B",
+    "border": "#27345A",
+    "text": "#E6F7FF",
+    "textMuted": "#9FB3CC",
+    "accent": "#00FFCC",
+    "accent2": "#FF4DC4",
+    "onAccent": "#0A0F1C",
+    "success": "#00FFCC",
+    "warning": "#FFD166",
+    "danger": "#FF4D6D"
+  },
+  "background": {
+    "type": "mesh",
+    "colors": [
+      "#0A0F1C",
+      "#0A5C63",
+      "#6B1C74"
+    ],
+    "opacity": 0.45
+  },
+  "decor": {
+    "motif": "glow-grid",
+    "grain": 0.04,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "Syne Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "body": [
+      "Inter Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 800,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource-variable/syne": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/inter": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/syne/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/inter/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Syne Variable",
+        "weights": [
+          800
+        ]
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700,
+          800
+        ]
+      },
+      {
+        "family": "Inter Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ]
+      }
+    ]
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.16,
+    "headingTracking": -0.01
+  },
+  "radius": 14,
+  "space": 28,
+  "card": {
+    "style": "glass",
+    "shadow": "0 0 32px rgba(0, 255, 204, 0.12)"
+  },
+  "title": {
+    "style": "bar",
+    "case": "upper"
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "code": {
+    "theme": "dracula",
+    "background": "#0C1222",
+    "lineHighlight": "rgba(0, 255, 204, 0.14)",
+    "lineNumber": "#4F5F80"
+  },
+  "viz": {
+    "node": "#18223B",
+    "nodeText": "#E6F7FF",
+    "edge": "#4F5F80",
+    "marks": {
+      "active": "#00FFCC",
+      "compare": "#FFD166",
+      "done": "#7CFF6B",
+      "visited": "#4F5F80",
+      "path": "#FF4DC4",
+      "swap": "#FF4D6D",
+      "found": "#8C7CFF",
+      "muted": "#121A2E"
+    }
+  }
+}

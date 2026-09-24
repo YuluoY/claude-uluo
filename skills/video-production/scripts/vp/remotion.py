@@ -215,7 +215,7 @@ def write_generated(project: Project, name: str, data) -> bool:
     return True
 
 
-def settings_payload(cfg: dict, theme_name: str, themes: dict[str, dict], *, footage: Optional[dict] = None) -> dict:
+def settings_payload(cfg: dict, theme_name: str, themes: dict[str, dict], *, footage: Optional[dict] = None, glyphs: str = "") -> dict:
     c = cfg["captions"]
     burn = c["enabled"] and c["render"] in ("burn", "both")
     w, h = cfg["video"]["width"], cfg["video"]["height"]
@@ -239,9 +239,56 @@ def settings_payload(cfg: dict, theme_name: str, themes: dict[str, dict], *, foo
         "themes": themes,
         "cover": {"width": cover_w, "height": cover_h},
         "footage": footage,
+        "glyphs": glyphs,
     }
 
 
 def read_generated(project: Project, name: str) -> Optional[dict]:
     path = project.generated_dir / f"{name}.json"
     return load_json(path) if path.is_file() else None
+
+
+# ---------- 字体与字形 ----------
+
+# 组件里写死的界面文字，字形也要预加载
+UI_TEXT = "来源：例（空）栈（顶在上）队列（队首在左）术语目录第行、…—·/“” 0123456789 CHAPTER VS"
+
+
+def collect_glyphs(*payloads) -> str:
+    """把 JSON 数据里出现的所有字符收集起来（去重排序），字体按它加载 unicode-range 分片。"""
+    chars: set[str] = set(UI_TEXT)
+
+    def walk(v) -> None:
+        if isinstance(v, str):
+            chars.update(v)
+        elif isinstance(v, dict):
+            for k, x in v.items():
+                walk(x)
+        elif isinstance(v, list):
+            for x in v:
+                walk(x)
+
+    for p in payloads:
+        walk(p)
+    return "".join(sorted(ch for ch in chars if ch.isprintable() or ch == " "))
+
+
+def write_fonts(project: Project, themes: list[dict]) -> bool:
+    """按风格写 src/generated/fonts.ts，并把字体包合并进 package.json。返回依赖是否有变化。"""
+    from .genres import merge_dependencies
+    from .styles import font_requirements
+
+    req = font_requirements(themes)
+    lines = [
+        "// 由 vp.py 生成：当前风格用到的字体包（npm，OFL 授权）。改风格后运行 vp.py build 重新生成，不要手改。",
+        *[f"import '{imp}';" for imp in req["imports"]],
+        "",
+        "export const FONT_FACES: Array<{ family: string; weights: number[]; style?: string }> = [",
+        *[f"  {{ family: {json.dumps(f['family'])}, weights: {json.dumps(f['weights'])}, style: {json.dumps(f['style'])} }}," for f in req["faces"]],
+        "];",
+    ]
+    text = "\n".join(lines) + "\n"
+    path = project.generated_dir / "fonts.ts"
+    if not path.is_file() or path.read_text(encoding="utf-8") != text:
+        write_text(path, text)
+    return merge_dependencies(project, req["packages"])

@@ -24,7 +24,7 @@ cp -r ../../skills/video-production/genres/algorithm/examples/algo/insertion-sor
 cp ../../skills/video-production/genres/algorithm/examples/storyboard.example.json storyboard.json
 $VP check                   # 校验 + 生成 script.md
 $VP build                   # 配音 → 时间轴 → 混音 → 字幕
-$VP stills --styles midnight,paper
+$VP stills --styles midnight,paper,swiss   # 三套风格的静帧 + 版面检测
 $VP render --preview        # 预览
 $VP render                  # 成片 + 验收
 $VP cleanup
@@ -39,9 +39,9 @@ video-production/
 ├── SKILL.md                  编排：入口、流程、检查点、硬规则
 ├── config/                   video.config 的 schema、默认值、平台预设；storyboard 的 schema
 ├── scripts/vp.py + vp/       管线：配音、时间轴、字幕、混音、渲染、验收、项目管理
-├── template/                 Remotion 项目模板（引擎、字幕、转场、叠加层、代码组件）
+├── template/                 Remotion 项目模板（版面引擎、自动字号、版面检测、字幕、章节条、转场、代码组件）
 ├── genres/                   讲解类型包：_template / algorithm / concept-explainer
-├── styles/                   视觉风格：midnight / paper + style.schema.json
+├── styles/                   10 套视觉风格（midnight、paper、swiss、bold-signal …）+ style.schema.json
 └── references/               流程、分镜、讲解方法、场景、字幕、音频、配置、排错
 ```
 
@@ -52,5 +52,7 @@ Python 3.9+、Node.js 18+、pnpm（或 npm）、ffmpeg；Python 包 `edge-tts`�
 ## 授权
 
 本技能以 MIT 发布。渲染依赖的 [Remotion](https://www.remotion.dev) 使用自己的授权：个人、员工不超过 3 人的营利组织、非营利组织可以免费使用（包括商用）；超过这个规模的营利组织需要购买 Company License（见 [remotion.pro](https://www.remotion.pro/license)）。团队使用前请自行确认。
+
+内置风格中有 8 套改编自 [frontend-slides](https://github.com/zarazhangrui/frontend-slides) 的风格预设（MIT，© zarazhangrui）；字体来自 Fontsource 的 npm 包（SIL OFL 1.1），随视频项目安装。详见 `styles/README.md`。
 
 edge-tts 是非官方客户端，调用微软 Edge 的朗读服务，免费但没有稳定性保障；本技能会缓存每一句配音，并提供 `say`（macOS）兜底、外部音频和不配音几种替代方式。

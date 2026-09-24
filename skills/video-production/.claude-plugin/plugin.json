@@ -1,7 +1,7 @@
 {
   "name": "video-production",
-  "version": "2.0.0",
-  "description": "口播稿 → 视频项目：React/Remotion 逐帧画面 + edge-tts 词级配音 + ffmpeg 混音验收，声画字共用一条时间轴；一份 JSON 配置全部参数，算法讲解等类型可扩展，也能给已有视频加字幕",
+  "version": "2.1.0",
+  "description": "口播稿 → 视频项目：React/Remotion 逐帧画面（PPT 级排版、10 套风格、版面自动检测、章节条）+ edge-tts 词级配音 + ffmpeg 混音验收，声画字共用一条时间轴；一份 JSON 配置全部参数，算法讲解等类型可扩展，也能给已有视频加字幕",
   "author": { "name": "claude-uluo" },
   "keywords": ["video", "remotion", "tts", "edge-tts", "subtitles", "explainer", "algorithm", "视频", "字幕", "讲解视频"],
   "license": "MIT",

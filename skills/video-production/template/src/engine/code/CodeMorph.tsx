@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { useCurrentFrame, useVideoConfig } from 'remotion';
 import { ease } from '../motion';
 import { fontStack, useTheme, useUnit } from '../theme';
+import { fitCodeFontSize } from './CodePanel';
 import { columns, highlighter, langOrText } from './highlighter';
 
 type Placed = { key: string; content: string; color?: string; fontStyle?: number; line: number; col: number };
@@ -39,14 +40,19 @@ export type CodeMorphProps = {
   switchFrames: number[];
   /** 每次过渡的时长（秒），缺省为主题动效时长的 1.4 倍 */
   durationSec?: number;
+  /** 最大字号（短边 1080 基准） */
   fontSize?: number;
+  /** 面板宽高（像素）：给了就按所有版本里最宽最长的那一版自动算字号 */
+  width?: number;
+  height?: number;
   title?: string;
   style?: React.CSSProperties;
 };
 
 const LINE_HEIGHT = 1.6;
+const TITLE = 1.9;
 
-export const CodeMorph: React.FC<CodeMorphProps> = ({ versions, lang, switchFrames, durationSec, fontSize, title, style }) => {
+export const CodeMorph: React.FC<CodeMorphProps> = ({ versions, lang, switchFrames, durationSec, fontSize, width, height, title, style }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const theme = useTheme();
@@ -71,7 +77,14 @@ export const CodeMorph: React.FC<CodeMorphProps> = ({ versions, lang, switchFram
     return { first: layout(keyed[0]), pairs: out, fg: keyed[0].fg ?? theme.colors.text };
   }, [versions, lang, themeName, theme.colors.text]);
 
-  const fs = (fontSize ?? theme.type.code) * unit;
+  const fs =
+    width !== undefined
+      ? Math.min(
+          ...versions.map((v) =>
+            fitCodeFontSize({ code: v, lang, theme, unit, width, height: height !== undefined ? height : undefined, max: fontSize, lineNumbers: false, title: Boolean(title) }),
+          ),
+        )
+      : (fontSize ?? theme.type.code) * unit;
   const lh = fs * LINE_HEIGHT;
   const dur = Math.max(1, Math.round((durationSec ?? theme.motion.durationSec * 1.4) * fps));
 
@@ -121,17 +134,26 @@ export const CodeMorph: React.FC<CodeMorphProps> = ({ versions, lang, switchFram
         borderRadius: theme.radius * unit,
         border: `${Math.max(1, unit)}px solid ${theme.colors.border}`,
         overflow: 'hidden',
+        width,
+        height,
+        boxSizing: 'border-box',
         ...style,
       }}
     >
       {title ? (
         <div
           style={{
-            padding: `${fs * 0.5}px ${pad}px`,
+            height: fs * TITLE,
+            display: 'flex',
+            alignItems: 'center',
+            paddingLeft: pad,
+            boxSizing: 'border-box',
             fontFamily: fontStack(theme.fonts.mono),
             fontSize: fs * 0.8,
             color: theme.colors.textMuted,
             borderBottom: `${Math.max(1, unit)}px solid ${theme.colors.border}`,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
           }}
         >
           {title}

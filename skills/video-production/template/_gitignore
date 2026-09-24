@@ -1,6 +1,7 @@
 node_modules/
 renders/_work/
 renders/_seq/
+out/
 .vp/tmp/
 .vp/props-*.json
 *.tmp.wav

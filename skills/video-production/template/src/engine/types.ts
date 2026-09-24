@@ -96,7 +96,8 @@ export type CaptionBlock = {
 export type CaptionsData = { blocks: CaptionBlock[] };
 
 export type CaptionStyle = {
-  fontFamily: string[];
+  /** null 时用风格的正文字体 */
+  fontFamily: string[] | null;
   fontSize: number;
   fontWeight: number;
   color: string;
@@ -118,6 +119,8 @@ export type MarkName = 'active' | 'compare' | 'done' | 'visited' | 'path' | 'swa
 export type Theme = {
   name: string;
   description: string;
+  /** 出处说明（改编自哪个开源预设） */
+  credit?: string;
   dark: boolean;
   colors: {
     bg: string;
@@ -128,16 +131,56 @@ export type Theme = {
     textMuted: string;
     accent: string;
     accent2: string;
+    /** 强调色底上的文字颜色 */
+    onAccent: string;
     success: string;
     warning: string;
     danger: string;
   };
-  background: { type: 'solid' | 'gradient' | 'grid' | 'dots'; colors: string[]; opacity?: number };
-  fonts: { heading: string[]; body: string[]; mono: string[] };
+  background: {
+    type: 'solid' | 'linear' | 'radial' | 'mesh' | 'split' | 'grid' | 'dots';
+    colors: string[];
+    angle?: number;
+    opacity?: number;
+    /** split：第一种颜色占画面宽度的比例 */
+    split?: number;
+  };
+  decor: {
+    motif: 'none' | 'orbs' | 'circles' | 'lines' | 'brackets' | 'bars' | 'halftone' | 'tabs' | 'glow-grid' | 'blocks';
+    grain: number;
+    accentBar: 'none' | 'left' | 'top';
+    sectionNumber: boolean;
+    frame: boolean;
+  };
+  chrome: { header: boolean; chapter: boolean; pageNumber: boolean };
+  fonts: {
+    heading: string[];
+    body: string[];
+    mono: string[];
+    headingWeight: number;
+    bodyWeight: number;
+    packages: Record<string, string>;
+    imports: string[];
+    faces: Array<{ family: string; weights: number[]; style?: string }>;
+  };
   /** 字号（像素），以短边 1080 为基准，按实际画幅等比缩放 */
-  type: { display: number; h1: number; h2: number; h3: number; body: number; small: number; code: number };
+  type: {
+    display: number;
+    h1: number;
+    h2: number;
+    h3: number;
+    body: number;
+    small: number;
+    code: number;
+    lineHeight: number;
+    headingLineHeight: number;
+    /** 标题字距（em） */
+    headingTracking: number;
+  };
   radius: number;
   space: number;
+  card: { style: 'flat' | 'outline' | 'elevated' | 'glass' | 'filled'; shadow: string };
+  title: { style: 'plain' | 'underline' | 'bar' | 'kicker'; case: 'none' | 'upper' };
   motion: { easing: [number, number, number, number]; durationSec: number; staggerSec: number };
   code: { theme: string; background: string; lineHighlight: string; lineNumber: string };
   viz: { node: string; nodeText: string; edge: string; marks: Record<MarkName, string> };
@@ -154,12 +197,22 @@ export type Settings = {
   overlays: {
     watermark: { enabled: boolean; text: string; image: string | null; position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'; opacity: number; size: number };
     progressBar: { enabled: boolean; position: 'top' | 'bottom'; height: number; showChapters: boolean };
+    chapterBar: {
+      enabled: boolean;
+      position: 'top' | 'bottom';
+      style: 'filled' | 'outline' | 'underline';
+      widths: 'equal' | 'duration';
+      showProgress: boolean;
+      height: number;
+    };
   };
   fonts: FontSpec[];
   styleName: string;
   themes: Record<string, Theme>;
   cover: { width: number; height: number };
   footage: null | { width: number; height: number; fps: number; scale: number; durationSec: number };
+  /** 本片用到的全部字符（字体按它加载对应的 unicode-range 分片） */
+  glyphs: string;
 };
 
 /** 算法 trace 的一步（由 src/algo/<id>/trace.ts 记录） */
