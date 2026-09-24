@@ -1,0 +1,161 @@
+{
+  "name": "swiss",
+  "description": "瑞士国际主义：纯白底、黑色粗体、信号红强调、可见网格与几何块，适合观点、数据、结构化讲解",
+  "credit": "改编自 frontend-slides 风格预设「Swiss Modern」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+  "dark": false,
+  "colors": {
+    "bg": "#FFFFFF",
+    "surface": "#F4F4F4",
+    "surfaceAlt": "#EBEBEB",
+    "border": "#D6D6D6",
+    "text": "#111111",
+    "textMuted": "#4D4D4D",
+    "accent": "#FF3300",
+    "accent2": "#111111",
+    "onAccent": "#FFFFFF",
+    "success": "#1F8A4C",
+    "warning": "#C77700",
+    "danger": "#D0021B"
+  },
+  "background": {
+    "type": "grid",
+    "colors": [
+      "#FFFFFF",
+      "#E9E9E9"
+    ],
+    "opacity": 1
+  },
+  "decor": {
+    "motif": "blocks",
+    "grain": 0,
+    "accentBar": "none",
+    "sectionNumber": true,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "Archivo Black",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "body": [
+      "Inter Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 900,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource/archivo-black": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/inter": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource/archivo-black/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/inter/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Archivo Black",
+        "weights": [
+          400
+        ]
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700,
+          900
+        ]
+      },
+      {
+        "family": "Inter Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ]
+      }
+    ]
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.16,
+    "headingTracking": -0.02
+  },
+  "radius": 0,
+  "space": 28,
+  "card": {
+    "style": "outline",
+    "shadow": "none"
+  },
+  "title": {
+    "style": "bar",
+    "case": "upper"
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "code": {
+    "theme": "github-light",
+    "background": "#F7F7F7",
+    "lineHighlight": "rgba(255, 51, 0, 0.12)",
+    "lineNumber": "#9A9A9A"
+  },
+  "viz": {
+    "node": "#FFFFFF",
+    "nodeText": "#111111",
+    "edge": "#8C8C8C",
+    "marks": {
+      "active": "#111111",
+      "compare": "#FF3300",
+      "done": "#1F8A4C",
+      "visited": "#B3B3B3",
+      "path": "#FF3300",
+      "swap": "#D0021B",
+      "found": "#0047FF",
+      "muted": "#EFEFEF"
+    }
+  }
+}

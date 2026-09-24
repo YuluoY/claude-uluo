@@ -101,7 +101,7 @@ claude plugin uninstall diagram-compiler@claude-uluo
 | uluo-skill-creator | 规范化 skill 创建器——软约束 md + 硬约束 scripts 分工，内置评测基准 |
 | uluo-web-standards | Web 工程规范——eslint/stylelint/tsc + DDD 架构 + 软规则 |
 | ui-component-creator | UI 组件创建器——支持原子层/业务层双层组件，Vue/React/Web Component 按需加载 |
-| video-production | 口播稿 → 视频项目——Remotion 逐帧画面 + edge-tts 词级配音 + ffmpeg 混音验收，算法讲解等类型可扩展，也能给已有视频加字幕 |
+| video-production | 口播稿 → 视频项目——Remotion 逐帧画面（PPT 级排版、10 套风格、版面自动检测、章节条）+ edge-tts 词级配音 + ffmpeg 混音验收，算法讲解等类型可扩展，也能给已有视频加字幕 |
 
 **收录**
 

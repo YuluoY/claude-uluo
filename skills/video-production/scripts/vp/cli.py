@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import sys
 from pathlib import Path
 from typing import Optional
@@ -125,7 +126,23 @@ def cmd_setup(args) -> int:
     return 0
 
 
+def _prepare_styles(project: Project, cfg: dict, style_names: list[str]) -> None:
+    """对比风格前：确认风格已进 settings（要先 build），并把这些风格的字体一起写进 fonts.ts。"""
+    from . import remotion as rm
+    from . import styles as st
+
+    settings = rm.read_generated(project, "settings") or {}
+    avail = set((settings.get("themes") or {}).keys())
+    bad = [s for s in style_names if s not in avail]
+    if bad:
+        raise VPError(f"没有这些风格：{', '.join(bad)}（可选：{', '.join(sorted(avail))}；新加的风格要先 build）")
+    themes = st.load_all(project)
+    names = list(dict.fromkeys([cfg["style"], *style_names]))
+    rm.write_fonts(project, [themes[n] for n in names])
+
+
 def cmd_stills(args) -> int:
+    from . import layoutaudit as la
     from . import remotion as rm
     from .pipeline import stills_frames
 
@@ -133,7 +150,6 @@ def cmd_stills(args) -> int:
     cfg = _cfg(project)
     if cfg["mode"] != "produce":
         raise VPError("stills 只用于 produce 模式")
-    rm.ensure_node_modules(project, _log)
     frames = stills_frames(project)
     if args.shots:
         want = set(args.shots.split(","))
@@ -142,17 +158,17 @@ def cmd_stills(args) -> int:
             raise VPError(f"没有这些镜头：{', '.join(sorted(unknown))}")
         frames = [f for f in frames if f[0] in want]
     style_names = args.styles.split(",") if args.styles else [cfg["style"]]
-    settings = rm.read_generated(project, "settings") or {}
-    avail = set((settings.get("themes") or {}).keys())
-    bad = [s for s in style_names if s not in avail]
-    if bad:
-        raise VPError(f"没有这些风格：{', '.join(bad)}（可选：{', '.join(sorted(avail))}；新加的风格要先 build）")
+    _prepare_styles(project, cfg, style_names)
+    rm.ensure_node_modules(project, _log)
     produced: dict[str, list[str]] = {}
+    layout: dict[str, list[dict]] = {}
+    ids = [f"{sid}@still" for sid, _ in frames]
     for style in style_names:
         sub = "styles/" + style if args.styles else "current"
         out_dir = project.renders_dir / "stills" / sub
+        shutil.rmtree(la.artifacts_dir(project), ignore_errors=True)
         files = rm.render_sequence(
-            project, "Stills", out_dir, props={"frames": [f for _, f in frames], "style": style},
+            project, "Stills", out_dir, props={"frames": [f for _, f in frames], "style": style, "ids": ids},
             image_format="jpeg", prefix="still", scale=args.scale, frames=(0, len(frames) - 1),
         )
         if len(files) != len(frames):
@@ -163,8 +179,34 @@ def cmd_stills(args) -> int:
             f.replace(dst)
             named.append(project.rel(dst))
         produced[style] = named
-    _emit(args, produced, "\n".join(f"{k}: {len(v)} 张 → {Path(v[0]).parent if v else ''}" for k, v in produced.items()))
+        layout[style] = la.rows_to_issues(la.collect(project, ids))
+    lines = []
+    for k, v in produced.items():
+        lines.append(f"{k}: {len(v)} 张 → {Path(v[0]).parent if v else ''}；版面{'无问题' if not layout[k] else f'有 {len(layout[k])} 处问题'}")
+        lines += [f"  x {la.describe(it)}（镜头 {it['shot']}）" for it in layout[k][:8]]
+        if len(layout[k]) > 8:
+            lines.append(f"  … 另有 {len(layout[k]) - 8} 处")
+    _emit(args, {"stills": produced, "layout": layout}, "\n".join(lines))
     return 0
+
+
+def cmd_layout(args) -> int:
+    from . import layoutaudit as la
+
+    project = _project(args)
+    cfg = _cfg(project)
+    if cfg["mode"] != "produce":
+        raise VPError("layout 只用于 produce 模式（footage 只有字幕层）")
+    if args.style:
+        _prepare_styles(project, cfg, [args.style])
+    r = la.run(project, style=args.style, log=_log)
+    verdict = "通过" if r["ok"] else f"{len(r['issues'])} 处问题（见 qa/layout.md）"
+    human = f"版面检测：{r['frames']} 帧，{verdict}"
+    lines = la.summary_lines(r)
+    if lines:
+        human += "\n" + "\n".join(f"  x {x}" for x in lines)
+    _emit(args, r, human)
+    return 0 if r["ok"] else 1
 
 
 def _parse_frames(text: Optional[str]) -> Optional[tuple[int, int]]:
@@ -203,6 +245,16 @@ def cmd_render(args) -> int:
         if not tl or not tl.get("shots"):
             raise VPError("时间轴为空，先运行 vp.py build")
         rm.ensure_node_modules(project, _log)
+        if not args.preview and not args.skip_layout:
+            from . import layoutaudit as la
+
+            _log("版面检测（每个镜头的中点与最后一帧）…")
+            lr = la.run(project, log=_log)
+            if not lr["ok"]:
+                raise VPError(
+                    f"版面检测发现 {len(lr['issues'])} 处压盖/越界/溢出，先修好再渲染成片（详见 qa/layout.md；确认是误报可加 --skip-layout 跳过，验收报告里仍会列出）：\n  "
+                    + "\n  ".join(la.summary_lines(lr))
+                )
         frames = _parse_frames(args.frames)
         if args.preview and frames is None and cfg["render"]["preview"]["maxSeconds"]:
             last = min(tl["durationInFrames"], int(cfg["render"]["preview"]["maxSeconds"] * tl["fps"])) - 1
@@ -394,7 +446,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.set_defaults(func=cmd_setup)
 
     s = sub.add_parser("stills", help="每个镜头渲染一张静帧（可对比多个风格）")
-    s.add_argument("--styles", help="逗号分隔的风格名，如 midnight,paper,chalk")
+    s.add_argument("--styles", help="逗号分隔的风格名，如 midnight,paper,swiss")
     s.add_argument("--shots", help="只渲染这些镜头")
     s.add_argument("--scale", type=float, default=0.5)
     s.set_defaults(func=cmd_stills)
@@ -404,7 +456,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--frames", help="只渲染这些帧，如 0-299")
     s.add_argument("--no-build", action="store_true")
     s.add_argument("--skip-qa", action="store_true")
+    s.add_argument("--skip-layout", action="store_true", help="成片前不做版面检测")
     s.set_defaults(func=cmd_render)
+
+    s = sub.add_parser("layout", help="版面检测：实际渲染关键帧，找出压盖、越界、溢出、放不下的文字")
+    s.add_argument("--style", help="用另一个风格检测（不写 qa/layout.json）")
+    s.set_defaults(func=cmd_layout)
 
     s = sub.add_parser("qa", help="验收成片")
     s.add_argument("video", nargs="?")

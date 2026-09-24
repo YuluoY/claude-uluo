@@ -80,6 +80,22 @@ def _sentence_checks(project: Project, cfg: dict, timeline: dict, errors: list[s
             errors.append(f"字幕 {b['id']}（{b['startFrame']}–{b['endFrame']} 帧）落在句子 {b['sentenceId']} 的口播（{r[0]}–{r[1]} 帧）之外")
 
 
+def _layout_checks(project: Project, errors: list[str], warnings: list[str]) -> None:
+    """版面检测结果（vp.py layout / render 前自动做）并入验收：有问题算错误，结果过期或没做算警告。"""
+    from . import layoutaudit as la
+
+    path = project.qa_dir / "layout.json"
+    if not path.is_file():
+        warnings.append("没有版面检测结果：运行 vp.py layout 检查压盖、越界与溢出")
+        return
+    r = load_json(path)
+    if r.get("signature") != la.inputs_signature(project):
+        warnings.append("版面检测结果已过期（时间轴、设置或组件在检测后改过）：重新运行 vp.py layout")
+        return
+    for it in r.get("issues", []):
+        errors.append(f"版面：镜头 {it['shot']}（第 {it['frame']} 帧）{la.describe(it)}")
+
+
 def run(project: Project, video: Optional[Path] = None, *, preview: bool = False) -> dict:
     cfg = load_project_config(project.config_path)
     errors: list[str] = []
@@ -91,6 +107,8 @@ def run(project: Project, video: Optional[Path] = None, *, preview: bool = False
         if timeline is None:
             raise VPError("缺少 timeline.json，先运行 vp.py build")
         _sentence_checks(project, cfg, timeline, errors, warnings)
+        if not preview:
+            _layout_checks(project, errors, warnings)
 
     if video is None:
         from .pipeline import output_path

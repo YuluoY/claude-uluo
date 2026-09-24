@@ -60,10 +60,13 @@ VP build
 优先用类型包里的场景；需要新画面就在 `src/scenes/` 写组件并在 `src/scenes/index.ts` 登记（写法见 scenes.md）。
 
 ```bash
-VP stills --styles midnight,paper,<第三个>     # 每个镜头一张静帧，按风格分目录
+VP stills --styles midnight,paper,swiss     # 每个镜头一张静帧，按风格分目录，同时做版面检测
+VP layout                                   # 版面检测：每个镜头的中点和最后一帧，结果在 qa/layout.md
 ```
 
-**出片前先定风格**：给用户 3 个风格方案的静帧（`renders/stills/styles/<风格>/`）。技能自带风格不够 3 个时，在项目 `styles/<名字>/theme.json` 里派生（复制一个再改颜色/字体，格式见 `styles/style.schema.json`），`VP build` 后即可用。用户选定后写进 `video.config.json` 的 `style` 与 brief。
+**出片前先定风格**：按内容挑 3 个风格（`VP styles` 列出全部，各自适合什么见 design.md），给用户看三套静帧（`renders/stills/styles/<风格>/`）。需要别的样子就在项目 `styles/<名字>/theme.json` 里派生（复制一个再改，要求见 design.md），`VP build` 后即可用。用户选定后写进 `video.config.json` 的 `style` 与 brief。
+
+**版面检测必须通过**：`VP stills` 输出里列出的压盖、越界、溢出、放不下，按报告里的镜头和槽位名去改——删减文字、减少项数、拆成两个镜头，或换更合适的场景；不要靠调小最小字号硬塞。需要章节条（视频上方或下方一排分段格子）就开 `overlays.chapterBar`，内容区和字幕会自动让开。
 
 拖动预览：`VP studio`（Remotion Studio，可以逐帧看每个镜头）。
 
@@ -78,10 +81,10 @@ VP render --preview       # 半分辨率、前 render.preview.maxSeconds 秒 →
 ### 7. 成片与验收
 
 ```bash
-VP render                 # 成片 → renders/<outputName>.<mp4|webm|mov>，随后自动验收
+VP render                 # 先做版面检测，通过后出成片 → renders/<outputName>.<mp4|webm|mov>，随后自动验收
 ```
 
-验收（`qa/report.md`）的**错误**必须修：参数不符、时长与时间轴不一致、字幕与原文不一致、口播越出镜头等。**警告**要看一眼判断是否有意为之：黑屏、长时间静止画面、响度偏差、估算的字幕时间。每个镜头中点的抽帧在 `renders/stills/final/`，逐张看一遍。
+版面检测不通过时不渲染成片（报告在 `qa/layout.md`）；确认是误报才加 `--skip-layout`。验收（`qa/report.md`）的**错误**必须修：参数不符、时长与时间轴不一致、字幕与原文不一致、口播越出镜头、版面压盖越界等。**警告**要看一眼判断是否有意为之：黑屏、长时间静止画面、响度偏差、估算的字幕时间。每个镜头中点的抽帧在 `renders/stills/final/`，逐张看一遍。
 
 ### 8. 封面（有生图能力才做）
 

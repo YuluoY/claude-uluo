@@ -1,0 +1,141 @@
+{
+  "name": "terminal",
+  "description": "终端绿：GitHub 暗色底、等宽标题、终端绿强调、四角括号，适合编程、算法、命令行教程",
+  "credit": "改编自 frontend-slides 风格预设「Terminal Green」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+  "dark": true,
+  "colors": {
+    "bg": "#0D1117",
+    "surface": "#161B22",
+    "surfaceAlt": "#1C2230",
+    "border": "#30363D",
+    "text": "#E6EDF3",
+    "textMuted": "#9EA7B3",
+    "accent": "#39D353",
+    "accent2": "#58A6FF",
+    "onAccent": "#0D1117",
+    "success": "#39D353",
+    "warning": "#D29922",
+    "danger": "#F85149"
+  },
+  "background": {
+    "type": "grid",
+    "colors": [
+      "#0D1117",
+      "#1B2230"
+    ],
+    "opacity": 0.9
+  },
+  "decor": {
+    "motif": "brackets",
+    "grain": 0.03,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "JetBrains Mono Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "body": [
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 700,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ]
+      }
+    ]
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.16,
+    "headingTracking": -0.01
+  },
+  "radius": 6,
+  "space": 28,
+  "card": {
+    "style": "outline",
+    "shadow": "none"
+  },
+  "title": {
+    "style": "plain",
+    "case": "none"
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "code": {
+    "theme": "github-dark",
+    "background": "#0A0E14",
+    "lineHighlight": "rgba(57, 211, 83, 0.14)",
+    "lineNumber": "#5B6572"
+  },
+  "viz": {
+    "node": "#1C2230",
+    "nodeText": "#E6EDF3",
+    "edge": "#5B6572",
+    "marks": {
+      "active": "#58A6FF",
+      "compare": "#D29922",
+      "done": "#39D353",
+      "visited": "#5B6572",
+      "path": "#BC8CFF",
+      "swap": "#F85149",
+      "found": "#39C5CF",
+      "muted": "#161B22"
+    }
+  }
+}

@@ -3,15 +3,21 @@
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { CaptionLayer } from '../engine/Captions';
-import { captions, settings } from '../engine/data';
+import { captions, getTheme, settings } from '../engine/data';
+import { FontGate } from '../engine/fonts';
+import { ThemeProvider } from '../engine/theme';
 
 export const CaptionCards: React.FC = () => {
   const i = useCurrentFrame();
   const block = captions.blocks[i] ?? null;
   const scale = settings.footage?.scale ?? 1;
   return (
-    <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
-      <CaptionLayer block={block} style={settings.captions.style} scale={scale} />
-    </AbsoluteFill>
+    <ThemeProvider theme={getTheme()}>
+      <AbsoluteFill style={{ backgroundColor: 'transparent' }}>
+        <FontGate>
+          <CaptionLayer block={block} style={settings.captions.style} scale={scale} />
+        </FontGate>
+      </AbsoluteFill>
+    </ThemeProvider>
   );
 };

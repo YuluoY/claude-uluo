@@ -1,0 +1,155 @@
+{
+  "name": "editorial",
+  "description": "复古杂志：奶油纸、双线页眉、衬线大标题、胭脂红强调，适合评论、历史、深度解读",
+  "credit": "改编自 frontend-slides 风格预设「Vintage Editorial / Paper & Ink」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+  "dark": false,
+  "colors": {
+    "bg": "#F5F3EE",
+    "surface": "#FBFAF7",
+    "surfaceAlt": "#ECE7DD",
+    "border": "#D9D1C3",
+    "text": "#1A1A1A",
+    "textMuted": "#555555",
+    "accent": "#C41E3A",
+    "accent2": "#1F4E79",
+    "onAccent": "#FFFFFF",
+    "success": "#2E7D32",
+    "warning": "#A86B00",
+    "danger": "#B71C1C"
+  },
+  "background": {
+    "type": "solid",
+    "colors": [
+      "#F5F3EE"
+    ]
+  },
+  "decor": {
+    "motif": "lines",
+    "grain": 0.05,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "Fraunces Variable",
+      "Noto Serif SC Variable",
+      "Songti SC",
+      "SimSun",
+      "serif"
+    ],
+    "body": [
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 800,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource-variable/fraunces": "5.3.0",
+      "@fontsource-variable/noto-serif-sc": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/fraunces/index.css",
+      "@fontsource-variable/noto-serif-sc/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Fraunces Variable",
+        "weights": [
+          800
+        ]
+      },
+      {
+        "family": "Noto Serif SC Variable",
+        "weights": [
+          800
+        ]
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ]
+      }
+    ]
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.16,
+    "headingTracking": -0.01
+  },
+  "radius": 4,
+  "space": 28,
+  "card": {
+    "style": "flat",
+    "shadow": "none"
+  },
+  "title": {
+    "style": "underline",
+    "case": "none"
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "code": {
+    "theme": "min-light",
+    "background": "#FAF8F3",
+    "lineHighlight": "rgba(196, 30, 58, 0.10)",
+    "lineNumber": "#A39E94"
+  },
+  "viz": {
+    "node": "#FBFAF7",
+    "nodeText": "#1A1A1A",
+    "edge": "#A39E94",
+    "marks": {
+      "active": "#1F4E79",
+      "compare": "#A86B00",
+      "done": "#2E7D32",
+      "visited": "#A39E94",
+      "path": "#C41E3A",
+      "swap": "#B71C1C",
+      "found": "#6A1B9A",
+      "muted": "#ECE7DD"
+    }
+  }
+}

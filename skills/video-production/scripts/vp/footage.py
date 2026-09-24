@@ -173,11 +173,14 @@ def build(project: Project, *, log=log_default) -> dict:
 
     scale = min(info.width / cfg["video"]["width"], info.height / cfg["video"]["height"])
     footage_info = {"width": info.width, "height": info.height, "fps": fps, "scale": round(scale, 6), "durationSec": info.duration}
-    rm.write_generated(project, "settings", rm.settings_payload(cfg, cfg["style"], themes, footage=footage_info))
-    rm.write_generated(project, "captions", {"blocks": [
+    gen_captions = {"blocks": [
         {"id": b["id"], "startFrame": b["startFrame"], "endFrame": b["endFrame"], "lines": b["lines"]} for b in blocks
-    ]})
+    ]}
+    glyphs = rm.collect_glyphs(gen_captions)
+    rm.write_generated(project, "settings", rm.settings_payload(cfg, cfg["style"], themes, footage=footage_info, glyphs=glyphs))
+    rm.write_generated(project, "captions", gen_captions)
     rm.write_generated(project, "timeline", _empty_timeline(cfg, info))
+    rm.write_fonts(project, [themes[cfg["style"]]])
     return {"durationSec": round(info.duration, 2), "segments": len(kept), "captions": len(blocks), "timing": timing,
             "source": {"width": info.width, "height": info.height, "fps": round(fps, 3)}}
 

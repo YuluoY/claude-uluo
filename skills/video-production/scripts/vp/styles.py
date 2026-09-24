@@ -50,3 +50,30 @@ def resolve(name: str, project: Optional[Project] = None) -> dict:
 
 def load_all(project: Optional[Project] = None) -> dict[str, dict]:
     return {name: load_theme(path) for name, path in available(project).items()}
+
+
+def font_requirements(themes: list[dict]) -> dict:
+    """几套风格合起来需要的字体包、CSS 引入与要预加载的字体。"""
+    packages: dict[str, str] = {}
+    imports: list[str] = []
+    faces: dict[tuple[str, str], set[int]] = {}
+    for t in themes:
+        f = t["fonts"]
+        for pkg, ver in f["packages"].items():
+            if pkg in packages and packages[pkg] != ver:
+                raise VPError(f"字体包 {pkg} 在不同风格里版本不一致：{packages[pkg]} / {ver}")
+            packages[pkg] = ver
+        for imp in f["imports"]:
+            pkg_of = "/".join(imp.split("/")[:2]) if imp.startswith("@") else imp.split("/")[0]
+            if pkg_of not in f["packages"]:
+                raise VPError(f"风格 {t['name']}：{imp} 所属的包 {pkg_of} 没有写在 fonts.packages 里")
+            if imp not in imports:
+                imports.append(imp)
+        for face in f["faces"]:
+            key = (face["family"], face.get("style", "normal"))
+            faces.setdefault(key, set()).update(face["weights"])
+    return {
+        "packages": packages,
+        "imports": imports,
+        "faces": [{"family": fam, "weights": sorted(w), "style": st} for (fam, st), w in faces.items()],
+    }

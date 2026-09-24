@@ -21,6 +21,7 @@ from . import tts as tts_mod
 from .config import load_project_config
 from .errors import VPError
 from .jsonutil import load_json, write_json, write_text
+from .layoutcheck import layout_errors
 from .media import duration_of
 from .paths import Project, resolve_in_project
 from .storyboard import Storyboard, check_traces, load_storyboard, render_script_md, scene_component_warnings
@@ -43,6 +44,20 @@ def load_state(project: Project) -> dict:
 
 def save_state(project: Project, state: dict) -> None:
     write_json(project.state_path, state)
+
+
+def chapter_titles(sb: Storyboard) -> list[str]:
+    """章节条上的分段（没写 chapter 的镜头归到前一章），与 ChapterBar.tsx 的分段规则一致。"""
+    first = next((sh.chapter for sh in sb.shots if sh.chapter), None)
+    if first is None:
+        return []
+    out: list[str] = []
+    cur = first
+    for sh in sb.shots:
+        cur = sh.chapter or cur
+        if not out or out[-1] != cur:
+            out.append(cur)
+    return out
 
 
 def join_sentences(texts: list[str], language: str) -> str:
@@ -87,6 +102,11 @@ def check(project: Project, *, log=log_default) -> dict:
     ensure_project_assets(project, cfg)
     sb = load_storyboard(project, cfg)
     warnings = scene_component_warnings(project, sb)
+    themes = styles_mod.load_all(project)
+    lerrs, lwarns = layout_errors(cfg, themes[cfg["style"]], chapters=chapter_titles(sb))
+    if lerrs:
+        raise VPError("版面预检不通过：\n  - " + "\n  - ".join(lerrs))
+    warnings += lwarns
     if cfg["audio"]["bgm"]["file"]:
         p = resolve_in_project(project, cfg["audio"]["bgm"]["file"], what="audio.bgm.file")
         if not p.is_file():
@@ -114,6 +134,10 @@ def build(project: Project, *, force_tts: bool = False, force_traces: bool = Fal
     themes = ensure_project_assets(project, cfg)
     sb = load_storyboard(project, cfg)
     warnings = scene_component_warnings(project, sb)
+    lerrs, lwarns = layout_errors(cfg, themes[cfg["style"]], chapters=chapter_titles(sb))
+    if lerrs:
+        raise VPError("版面预检不通过：\n  - " + "\n  - ".join(lerrs))
+    warnings += lwarns
     state = load_state(project)
     rerun: list[str] = []
 
@@ -181,12 +205,16 @@ def build(project: Project, *, force_tts: bool = False, force_traces: bool = Fal
     write_text(project.transcript_md, md)
     write_text(project.transcript_txt, txt)
 
-    rm.write_generated(project, "timeline", compact)
-    rm.write_generated(project, "captions", {"blocks": [
+    gen_captions = {"blocks": [
         {"id": b["id"], "startFrame": b["startFrame"], "endFrame": b["endFrame"], "lines": b["lines"]} for b in blocks
-    ]})
-    rm.write_generated(project, "settings", rm.settings_payload(cfg, cfg["style"], themes))
+    ]}
+    rm.write_generated(project, "timeline", compact)
+    rm.write_generated(project, "captions", gen_captions)
     rm.write_generated(project, "traces", traces)
+    glyphs = rm.collect_glyphs(compact, gen_captions, traces, cfg["title"], cfg["overlays"]["watermark"]["text"])
+    rm.write_generated(project, "settings", rm.settings_payload(cfg, cfg["style"], themes, glyphs=glyphs))
+    if rm.write_fonts(project, [themes[cfg["style"]]]):
+        rerun.append("字体依赖（渲染前自动安装）")
 
     save_state(project, state)
     timing_counts: dict[str, int] = {}

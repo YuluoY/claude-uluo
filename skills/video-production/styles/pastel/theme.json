@@ -1,0 +1,152 @@
+{
+  "name": "pastel",
+  "description": "粉彩几何：雾蓝底、白色大圆角卡片、右侧彩色色签，适合轻松科普、生活方式、儿童教育",
+  "credit": "改编自 frontend-slides 风格预设「Pastel Geometry」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+  "dark": false,
+  "colors": {
+    "bg": "#C8D9E6",
+    "surface": "#FAF9F7",
+    "surfaceAlt": "#EEF3F7",
+    "border": "#B6C8D6",
+    "text": "#1F2A37",
+    "textMuted": "#3E4C5E",
+    "accent": "#7C6AAD",
+    "accent2": "#5A7C6A",
+    "onAccent": "#FFFFFF",
+    "success": "#4E8A6E",
+    "warning": "#B8860B",
+    "danger": "#C0504D"
+  },
+  "background": {
+    "type": "solid",
+    "colors": [
+      "#C8D9E6"
+    ]
+  },
+  "decor": {
+    "motif": "tabs",
+    "grain": 0,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "Plus Jakarta Sans Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "body": [
+      "Plus Jakarta Sans Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 800,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource-variable/plus-jakarta-sans": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/plus-jakarta-sans/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Plus Jakarta Sans Variable",
+        "weights": [
+          400,
+          500,
+          700,
+          800
+        ]
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700,
+          800
+        ]
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ]
+      }
+    ]
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.16,
+    "headingTracking": -0.01
+  },
+  "radius": 26,
+  "space": 28,
+  "card": {
+    "style": "elevated",
+    "shadow": "0 14px 36px rgba(31, 42, 55, 0.12)"
+  },
+  "title": {
+    "style": "plain",
+    "case": "none"
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "code": {
+    "theme": "vitesse-light",
+    "background": "#FFFFFF",
+    "lineHighlight": "rgba(124, 106, 173, 0.14)",
+    "lineNumber": "#9AA8B8"
+  },
+  "viz": {
+    "node": "#FAF9F7",
+    "nodeText": "#1F2A37",
+    "edge": "#8FA3B6",
+    "marks": {
+      "active": "#7C6AAD",
+      "compare": "#B8860B",
+      "done": "#4E8A6E",
+      "visited": "#9AA8B8",
+      "path": "#D06B9C",
+      "swap": "#C0504D",
+      "found": "#3F7CAC",
+      "muted": "#E8EEF3"
+    }
+  }
+}

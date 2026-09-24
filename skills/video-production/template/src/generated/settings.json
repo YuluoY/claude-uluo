@@ -17,18 +17,11 @@
     "burn": true,
     "maxLines": 1,
     "style": {
-      "fontFamily": [
-        "PingFang SC",
-        "Hiragino Sans GB",
-        "Noto Sans CJK SC",
-        "Source Han Sans SC",
-        "Microsoft YaHei",
-        "sans-serif"
-      ],
+      "fontFamily": null,
       "fontSize": 54,
       "fontWeight": 700,
-      "color": "#FFFFFF",
-      "strokeColor": "#000000",
+      "color": "auto",
+      "strokeColor": "auto",
       "strokeWidth": 6,
       "shadow": true,
       "background": null,
@@ -36,7 +29,7 @@
       "maxWidthPct": 86,
       "lineHeight": 1.3,
       "highlightWords": false,
-      "highlightColor": "#FFD54A"
+      "highlightColor": "auto"
     }
   },
   "overlays": {
@@ -53,72 +46,767 @@
       "position": "top",
       "height": 6,
       "showChapters": true
+    },
+    "chapterBar": {
+      "enabled": false,
+      "position": "top",
+      "style": "filled",
+      "widths": "equal",
+      "showProgress": true,
+      "height": 56
     }
   },
   "fonts": [],
   "styleName": "midnight",
   "themes": {
-    "midnight": {
-      "name": "midnight",
-      "description": "深色：深蓝底、高对比、青色强调，适合技术讲解、算法与代码",
+    "bold-signal": {
+      "name": "bold-signal",
+      "description": "强信号：炭黑斜向渐变、橙色色块、超粗标题与大号页码，适合观点输出、开场、强节奏内容",
+      "credit": "改编自 frontend-slides 风格预设「Bold Signal」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
       "dark": true,
       "colors": {
-        "bg": "#0F172A",
-        "surface": "#1E293B",
-        "surfaceAlt": "#273449",
-        "border": "#334155",
-        "text": "#E2E8F0",
-        "textMuted": "#94A3B8",
-        "accent": "#38BDF8",
-        "accent2": "#F472B6",
-        "success": "#4ADE80",
-        "warning": "#FBBF24",
-        "danger": "#F87171"
+        "bg": "#1A1A1A",
+        "surface": "#262626",
+        "surfaceAlt": "#303030",
+        "border": "#3D3D3D",
+        "text": "#F5F5F5",
+        "textMuted": "#B0B0B0",
+        "accent": "#FF5722",
+        "accent2": "#FFC107",
+        "onAccent": "#1A1A1A",
+        "success": "#66BB6A",
+        "warning": "#FFC107",
+        "danger": "#FF5252"
       },
       "background": {
-        "type": "gradient",
+        "type": "linear",
         "colors": [
-          "#0F172A",
-          "#1B2A4A"
-        ]
+          "#1A1A1A",
+          "#2D2D2D"
+        ],
+        "angle": 135
+      },
+      "decor": {
+        "motif": "bars",
+        "grain": 0.05,
+        "accentBar": "none",
+        "sectionNumber": true,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
       },
       "fonts": {
         "heading": [
+          "Archivo Black",
+          "Noto Sans SC Variable",
           "PingFang SC",
-          "Hiragino Sans GB",
-          "Noto Sans CJK SC",
-          "Source Han Sans SC",
           "Microsoft YaHei",
           "sans-serif"
         ],
         "body": [
+          "Space Grotesk Variable",
+          "Noto Sans SC Variable",
           "PingFang SC",
-          "Hiragino Sans GB",
-          "Noto Sans CJK SC",
-          "Source Han Sans SC",
           "Microsoft YaHei",
           "sans-serif"
         ],
         "mono": [
-          "JetBrains Mono",
-          "SF Mono",
+          "JetBrains Mono Variable",
           "Menlo",
           "Consolas",
-          "DejaVu Sans Mono",
           "monospace"
+        ],
+        "headingWeight": 900,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource/archivo-black": "5.3.0",
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/space-grotesk": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource/archivo-black/index.css",
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/space-grotesk/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Archivo Black",
+            "weights": [
+              400
+            ]
+          },
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700,
+              900
+            ]
+          },
+          {
+            "family": "Space Grotesk Variable",
+            "weights": [
+              400,
+              500,
+              700
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
         ]
       },
       "type": {
-        "display": 112,
-        "h1": 84,
+        "display": 124,
+        "h1": 86,
         "h2": 62,
-        "h3": 46,
-        "body": 38,
-        "small": 28,
-        "code": 30
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": -0.015
+      },
+      "radius": 6,
+      "space": 28,
+      "card": {
+        "style": "filled",
+        "shadow": "none"
+      },
+      "title": {
+        "style": "bar",
+        "case": "upper"
+      },
+      "motion": {
+        "easing": [
+          0.16,
+          1,
+          0.3,
+          1
+        ],
+        "durationSec": 0.6,
+        "staggerSec": 0.08
+      },
+      "code": {
+        "theme": "one-dark-pro",
+        "background": "#141414",
+        "lineHighlight": "rgba(255, 87, 34, 0.18)",
+        "lineNumber": "#6B6B6B"
+      },
+      "viz": {
+        "node": "#303030",
+        "nodeText": "#F5F5F5",
+        "edge": "#6B6B6B",
+        "marks": {
+          "active": "#FF5722",
+          "compare": "#FFC107",
+          "done": "#66BB6A",
+          "visited": "#6B6B6B",
+          "path": "#FF8A65",
+          "swap": "#FF5252",
+          "found": "#40C4FF",
+          "muted": "#262626"
+        }
+      }
+    },
+    "botanical": {
+      "name": "botanical",
+      "description": "暗夜植物：近黑底、暖金与粉色柔光、衬线标题，适合故事、人文、品牌与情绪化内容",
+      "credit": "改编自 frontend-slides 风格预设「Dark Botanical」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+      "dark": true,
+      "colors": {
+        "bg": "#0F0F0F",
+        "surface": "#1A1918",
+        "surfaceAlt": "#232120",
+        "border": "#34302D",
+        "text": "#E8E4DF",
+        "textMuted": "#A8A29B",
+        "accent": "#D4A574",
+        "accent2": "#E8B4B8",
+        "onAccent": "#0F0F0F",
+        "success": "#9CC5A1",
+        "warning": "#E6C27A",
+        "danger": "#E07A7A"
+      },
+      "background": {
+        "type": "radial",
+        "colors": [
+          "#0F0F0F",
+          "#1D1A17"
+        ]
+      },
+      "decor": {
+        "motif": "orbs",
+        "grain": 0.06,
+        "accentBar": "none",
+        "sectionNumber": false,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
+      },
+      "fonts": {
+        "heading": [
+          "Cormorant Variable",
+          "Noto Serif SC Variable",
+          "Songti SC",
+          "SimSun",
+          "serif"
+        ],
+        "body": [
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "mono": [
+          "JetBrains Mono Variable",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
+        "headingWeight": 600,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource-variable/cormorant": "5.3.0",
+          "@fontsource-variable/noto-serif-sc": "5.3.0",
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource-variable/cormorant/index.css",
+          "@fontsource-variable/noto-serif-sc/index.css",
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Cormorant Variable",
+            "weights": [
+              600
+            ]
+          },
+          {
+            "family": "Noto Serif SC Variable",
+            "weights": [
+              600
+            ]
+          },
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
+        ]
+      },
+      "type": {
+        "display": 124,
+        "h1": 86,
+        "h2": 62,
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": 0
+      },
+      "radius": 22,
+      "space": 28,
+      "card": {
+        "style": "outline",
+        "shadow": "none"
+      },
+      "title": {
+        "style": "plain",
+        "case": "none"
+      },
+      "motion": {
+        "easing": [
+          0.22,
+          1,
+          0.36,
+          1
+        ],
+        "durationSec": 0.8,
+        "staggerSec": 0.12
+      },
+      "code": {
+        "theme": "vitesse-dark",
+        "background": "#141312",
+        "lineHighlight": "rgba(212, 165, 116, 0.16)",
+        "lineNumber": "#6D6760"
+      },
+      "viz": {
+        "node": "#232120",
+        "nodeText": "#E8E4DF",
+        "edge": "#6D6760",
+        "marks": {
+          "active": "#D4A574",
+          "compare": "#E6C27A",
+          "done": "#9CC5A1",
+          "visited": "#6D6760",
+          "path": "#E8B4B8",
+          "swap": "#E07A7A",
+          "found": "#B7A6E0",
+          "muted": "#1A1918"
+        }
+      }
+    },
+    "editorial": {
+      "name": "editorial",
+      "description": "复古杂志：奶油纸、双线页眉、衬线大标题、胭脂红强调，适合评论、历史、深度解读",
+      "credit": "改编自 frontend-slides 风格预设「Vintage Editorial / Paper & Ink」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+      "dark": false,
+      "colors": {
+        "bg": "#F5F3EE",
+        "surface": "#FBFAF7",
+        "surfaceAlt": "#ECE7DD",
+        "border": "#D9D1C3",
+        "text": "#1A1A1A",
+        "textMuted": "#555555",
+        "accent": "#C41E3A",
+        "accent2": "#1F4E79",
+        "onAccent": "#FFFFFF",
+        "success": "#2E7D32",
+        "warning": "#A86B00",
+        "danger": "#B71C1C"
+      },
+      "background": {
+        "type": "solid",
+        "colors": [
+          "#F5F3EE"
+        ]
+      },
+      "decor": {
+        "motif": "lines",
+        "grain": 0.05,
+        "accentBar": "none",
+        "sectionNumber": false,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
+      },
+      "fonts": {
+        "heading": [
+          "Fraunces Variable",
+          "Noto Serif SC Variable",
+          "Songti SC",
+          "SimSun",
+          "serif"
+        ],
+        "body": [
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "mono": [
+          "JetBrains Mono Variable",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
+        "headingWeight": 800,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource-variable/fraunces": "5.3.0",
+          "@fontsource-variable/noto-serif-sc": "5.3.0",
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource-variable/fraunces/index.css",
+          "@fontsource-variable/noto-serif-sc/index.css",
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Fraunces Variable",
+            "weights": [
+              800
+            ]
+          },
+          {
+            "family": "Noto Serif SC Variable",
+            "weights": [
+              800
+            ]
+          },
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
+        ]
+      },
+      "type": {
+        "display": 124,
+        "h1": 86,
+        "h2": 62,
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": -0.01
+      },
+      "radius": 4,
+      "space": 28,
+      "card": {
+        "style": "flat",
+        "shadow": "none"
+      },
+      "title": {
+        "style": "underline",
+        "case": "none"
+      },
+      "motion": {
+        "easing": [
+          0.16,
+          1,
+          0.3,
+          1
+        ],
+        "durationSec": 0.6,
+        "staggerSec": 0.08
+      },
+      "code": {
+        "theme": "min-light",
+        "background": "#FAF8F3",
+        "lineHighlight": "rgba(196, 30, 58, 0.10)",
+        "lineNumber": "#A39E94"
+      },
+      "viz": {
+        "node": "#FBFAF7",
+        "nodeText": "#1A1A1A",
+        "edge": "#A39E94",
+        "marks": {
+          "active": "#1F4E79",
+          "compare": "#A86B00",
+          "done": "#2E7D32",
+          "visited": "#A39E94",
+          "path": "#C41E3A",
+          "swap": "#B71C1C",
+          "found": "#6A1B9A",
+          "muted": "#ECE7DD"
+        }
+      }
+    },
+    "electric": {
+      "name": "electric",
+      "description": "电光蓝：白底 + 左侧电光蓝色带、描边卡片、利落无衬线，适合产品、教程、干货清单",
+      "credit": "改编自 frontend-slides 风格预设「Electric Studio」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+      "dark": false,
+      "colors": {
+        "bg": "#FFFFFF",
+        "surface": "#F5F7FF",
+        "surfaceAlt": "#E9EDFF",
+        "border": "#D3DAF7",
+        "text": "#0A0A0A",
+        "textMuted": "#4A5068",
+        "accent": "#4361EE",
+        "accent2": "#FF6B35",
+        "onAccent": "#FFFFFF",
+        "success": "#1B998B",
+        "warning": "#E09F3E",
+        "danger": "#E63946"
+      },
+      "background": {
+        "type": "split",
+        "colors": [
+          "#FFFFFF",
+          "#4361EE"
+        ],
+        "split": 0.035
+      },
+      "decor": {
+        "motif": "none",
+        "grain": 0,
+        "accentBar": "none",
+        "sectionNumber": false,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
+      },
+      "fonts": {
+        "heading": [
+          "Manrope Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "body": [
+          "Manrope Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "mono": [
+          "JetBrains Mono Variable",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
+        "headingWeight": 800,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource-variable/manrope": "5.3.0",
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource-variable/manrope/index.css",
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Manrope Variable",
+            "weights": [
+              400,
+              500,
+              700,
+              800
+            ]
+          },
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700,
+              800
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
+        ]
+      },
+      "type": {
+        "display": 124,
+        "h1": 86,
+        "h2": 62,
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": -0.01
+      },
+      "radius": 12,
+      "space": 28,
+      "card": {
+        "style": "outline",
+        "shadow": "none"
+      },
+      "title": {
+        "style": "bar",
+        "case": "none"
+      },
+      "motion": {
+        "easing": [
+          0.16,
+          1,
+          0.3,
+          1
+        ],
+        "durationSec": 0.6,
+        "staggerSec": 0.08
+      },
+      "code": {
+        "theme": "github-light",
+        "background": "#F7F8FD",
+        "lineHighlight": "rgba(67, 97, 238, 0.12)",
+        "lineNumber": "#98A0B8"
+      },
+      "viz": {
+        "node": "#FFFFFF",
+        "nodeText": "#0A0A0A",
+        "edge": "#98A0B8",
+        "marks": {
+          "active": "#4361EE",
+          "compare": "#E09F3E",
+          "done": "#1B998B",
+          "visited": "#B8C0DA",
+          "path": "#FF6B35",
+          "swap": "#E63946",
+          "found": "#7209B7",
+          "muted": "#EEF1FB"
+        }
+      }
+    },
+    "midnight": {
+      "name": "midnight",
+      "description": "深色科技：深靛蓝柔光背景、毛玻璃卡片、冷蓝强调，适合技术讲解、产品介绍",
+      "dark": true,
+      "colors": {
+        "bg": "#0B1020",
+        "surface": "#161E38",
+        "surfaceAlt": "#1E2848",
+        "border": "#2E3A63",
+        "text": "#EEF2FF",
+        "textMuted": "#A3AECF",
+        "accent": "#7AB0FF",
+        "accent2": "#F5A3C7",
+        "onAccent": "#0B1020",
+        "success": "#5EE3A1",
+        "warning": "#F7C66B",
+        "danger": "#FF7A85"
+      },
+      "background": {
+        "type": "mesh",
+        "colors": [
+          "#0B1020",
+          "#2B3A8C",
+          "#7A3E9D"
+        ],
+        "opacity": 0.55
+      },
+      "decor": {
+        "motif": "orbs",
+        "grain": 0.05,
+        "accentBar": "none",
+        "sectionNumber": true,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
+      },
+      "fonts": {
+        "heading": [
+          "Inter Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "body": [
+          "Inter Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "mono": [
+          "JetBrains Mono Variable",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
+        "headingWeight": 800,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource-variable/inter": "5.3.0",
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource-variable/inter/index.css",
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Inter Variable",
+            "weights": [
+              400,
+              500,
+              700,
+              800
+            ]
+          },
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700,
+              800
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
+        ]
+      },
+      "type": {
+        "display": 124,
+        "h1": 86,
+        "h2": 62,
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": -0.01
       },
       "radius": 18,
       "space": 28,
+      "card": {
+        "style": "glass",
+        "shadow": "0 18px 48px rgba(0, 0, 0, 0.35)"
+      },
+      "title": {
+        "style": "underline",
+        "case": "none"
+      },
       "motion": {
         "easing": [
           0.16,
@@ -131,39 +819,202 @@
       },
       "code": {
         "theme": "github-dark",
-        "background": "#0B1222",
-        "lineHighlight": "rgba(56, 189, 248, 0.18)",
-        "lineNumber": "#475569"
+        "background": "#0D1328",
+        "lineHighlight": "rgba(122, 176, 255, 0.18)",
+        "lineNumber": "#56607F"
       },
       "viz": {
-        "node": "#1E293B",
-        "nodeText": "#E2E8F0",
-        "edge": "#475569",
+        "node": "#1E2848",
+        "nodeText": "#EEF2FF",
+        "edge": "#56607F",
         "marks": {
-          "active": "#38BDF8",
-          "compare": "#FBBF24",
-          "done": "#4ADE80",
-          "visited": "#64748B",
-          "path": "#F472B6",
-          "swap": "#F87171",
-          "found": "#A78BFA",
-          "muted": "#1A2436"
+          "active": "#7AB0FF",
+          "compare": "#F7C66B",
+          "done": "#5EE3A1",
+          "visited": "#56607F",
+          "path": "#F5A3C7",
+          "swap": "#FF7A85",
+          "found": "#B79CFF",
+          "muted": "#161E38"
+        }
+      }
+    },
+    "neon": {
+      "name": "neon",
+      "description": "霓虹赛博：深海军蓝、青色与洋红辉光、底部发光网格，适合科技前沿、游戏、未来感话题",
+      "credit": "改编自 frontend-slides 风格预设「Neon Cyber」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+      "dark": true,
+      "colors": {
+        "bg": "#0A0F1C",
+        "surface": "#121A2E",
+        "surfaceAlt": "#18223B",
+        "border": "#27345A",
+        "text": "#E6F7FF",
+        "textMuted": "#9FB3CC",
+        "accent": "#00FFCC",
+        "accent2": "#FF4DC4",
+        "onAccent": "#0A0F1C",
+        "success": "#00FFCC",
+        "warning": "#FFD166",
+        "danger": "#FF4D6D"
+      },
+      "background": {
+        "type": "mesh",
+        "colors": [
+          "#0A0F1C",
+          "#0A5C63",
+          "#6B1C74"
+        ],
+        "opacity": 0.45
+      },
+      "decor": {
+        "motif": "glow-grid",
+        "grain": 0.04,
+        "accentBar": "none",
+        "sectionNumber": false,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
+      },
+      "fonts": {
+        "heading": [
+          "Syne Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "body": [
+          "Inter Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "mono": [
+          "JetBrains Mono Variable",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
+        "headingWeight": 800,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource-variable/syne": "5.3.0",
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/inter": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource-variable/syne/index.css",
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/inter/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Syne Variable",
+            "weights": [
+              800
+            ]
+          },
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700,
+              800
+            ]
+          },
+          {
+            "family": "Inter Variable",
+            "weights": [
+              400,
+              500,
+              700
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
+        ]
+      },
+      "type": {
+        "display": 124,
+        "h1": 86,
+        "h2": 62,
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": -0.01
+      },
+      "radius": 14,
+      "space": 28,
+      "card": {
+        "style": "glass",
+        "shadow": "0 0 32px rgba(0, 255, 204, 0.12)"
+      },
+      "title": {
+        "style": "bar",
+        "case": "upper"
+      },
+      "motion": {
+        "easing": [
+          0.16,
+          1,
+          0.3,
+          1
+        ],
+        "durationSec": 0.6,
+        "staggerSec": 0.08
+      },
+      "code": {
+        "theme": "dracula",
+        "background": "#0C1222",
+        "lineHighlight": "rgba(0, 255, 204, 0.14)",
+        "lineNumber": "#4F5F80"
+      },
+      "viz": {
+        "node": "#18223B",
+        "nodeText": "#E6F7FF",
+        "edge": "#4F5F80",
+        "marks": {
+          "active": "#00FFCC",
+          "compare": "#FFD166",
+          "done": "#7CFF6B",
+          "visited": "#4F5F80",
+          "path": "#FF4DC4",
+          "swap": "#FF4D6D",
+          "found": "#8C7CFF",
+          "muted": "#121A2E"
         }
       }
     },
     "paper": {
       "name": "paper",
-      "description": "浅色：米白纸面、墨色文字、朱红强调，适合概念讲解、人文与科普",
+      "description": "暖纸编辑：米白纸面、宋体标题、朱红强调，适合科普、人文、概念讲解",
       "dark": false,
       "colors": {
-        "bg": "#F7F4EC",
-        "surface": "#FFFFFF",
-        "surfaceAlt": "#EFE9DC",
-        "border": "#D9D0BE",
+        "bg": "#F6F1E7",
+        "surface": "#FFFDF8",
+        "surfaceAlt": "#EFE8DA",
+        "border": "#DCD2BF",
         "text": "#1F2328",
-        "textMuted": "#5E6570",
+        "textMuted": "#555B64",
         "accent": "#C8442B",
         "accent2": "#2B6CB0",
+        "onAccent": "#FFFFFF",
         "success": "#2F855A",
         "warning": "#B7791F",
         "danger": "#C53030"
@@ -171,60 +1022,122 @@
       "background": {
         "type": "dots",
         "colors": [
-          "#F7F4EC",
-          "#CFC6B2"
+          "#F6F1E7",
+          "#CFC4AE"
         ],
-        "opacity": 0.55
+        "opacity": 0.6
+      },
+      "decor": {
+        "motif": "circles",
+        "grain": 0.04,
+        "accentBar": "none",
+        "sectionNumber": false,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
       },
       "fonts": {
         "heading": [
+          "Fraunces Variable",
+          "Noto Serif SC Variable",
           "Songti SC",
-          "Noto Serif CJK SC",
-          "Source Han Serif SC",
-          "STSong",
+          "SimSun",
           "serif"
         ],
         "body": [
+          "Noto Sans SC Variable",
           "PingFang SC",
-          "Hiragino Sans GB",
-          "Noto Sans CJK SC",
-          "Source Han Sans SC",
           "Microsoft YaHei",
           "sans-serif"
         ],
         "mono": [
-          "JetBrains Mono",
-          "SF Mono",
+          "JetBrains Mono Variable",
           "Menlo",
           "Consolas",
-          "DejaVu Sans Mono",
           "monospace"
+        ],
+        "headingWeight": 700,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource-variable/fraunces": "5.3.0",
+          "@fontsource-variable/noto-serif-sc": "5.3.0",
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource-variable/fraunces/index.css",
+          "@fontsource-variable/noto-serif-sc/index.css",
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Fraunces Variable",
+            "weights": [
+              700
+            ]
+          },
+          {
+            "family": "Noto Serif SC Variable",
+            "weights": [
+              700
+            ]
+          },
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
         ]
       },
       "type": {
-        "display": 112,
-        "h1": 84,
+        "display": 124,
+        "h1": 86,
         "h2": 62,
-        "h3": 46,
-        "body": 38,
-        "small": 28,
-        "code": 30
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": -0.01
       },
-      "radius": 12,
+      "radius": 14,
       "space": 28,
+      "card": {
+        "style": "elevated",
+        "shadow": "0 10px 30px rgba(60, 45, 20, 0.10)"
+      },
+      "title": {
+        "style": "underline",
+        "case": "none"
+      },
       "motion": {
         "easing": [
-          0.22,
+          0.16,
           1,
-          0.36,
+          0.3,
           1
         ],
-        "durationSec": 0.7,
-        "staggerSec": 0.1
+        "durationSec": 0.6,
+        "staggerSec": 0.08
       },
       "code": {
         "theme": "github-light",
-        "background": "#FBFAF6",
+        "background": "#FBF8F1",
         "lineHighlight": "rgba(200, 68, 43, 0.12)",
         "lineNumber": "#A0A7B0"
       },
@@ -240,7 +1153,461 @@
           "path": "#C8442B",
           "swap": "#C53030",
           "found": "#6B46C1",
-          "muted": "#E6E0D2"
+          "muted": "#ECE5D6"
+        }
+      }
+    },
+    "pastel": {
+      "name": "pastel",
+      "description": "粉彩几何：雾蓝底、白色大圆角卡片、右侧彩色色签，适合轻松科普、生活方式、儿童教育",
+      "credit": "改编自 frontend-slides 风格预设「Pastel Geometry」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+      "dark": false,
+      "colors": {
+        "bg": "#C8D9E6",
+        "surface": "#FAF9F7",
+        "surfaceAlt": "#EEF3F7",
+        "border": "#B6C8D6",
+        "text": "#1F2A37",
+        "textMuted": "#3E4C5E",
+        "accent": "#7C6AAD",
+        "accent2": "#5A7C6A",
+        "onAccent": "#FFFFFF",
+        "success": "#4E8A6E",
+        "warning": "#B8860B",
+        "danger": "#C0504D"
+      },
+      "background": {
+        "type": "solid",
+        "colors": [
+          "#C8D9E6"
+        ]
+      },
+      "decor": {
+        "motif": "tabs",
+        "grain": 0,
+        "accentBar": "none",
+        "sectionNumber": false,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
+      },
+      "fonts": {
+        "heading": [
+          "Plus Jakarta Sans Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "body": [
+          "Plus Jakarta Sans Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "mono": [
+          "JetBrains Mono Variable",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
+        "headingWeight": 800,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource-variable/plus-jakarta-sans": "5.3.0",
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource-variable/plus-jakarta-sans/index.css",
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Plus Jakarta Sans Variable",
+            "weights": [
+              400,
+              500,
+              700,
+              800
+            ]
+          },
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700,
+              800
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
+        ]
+      },
+      "type": {
+        "display": 124,
+        "h1": 86,
+        "h2": 62,
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": -0.01
+      },
+      "radius": 26,
+      "space": 28,
+      "card": {
+        "style": "elevated",
+        "shadow": "0 14px 36px rgba(31, 42, 55, 0.12)"
+      },
+      "title": {
+        "style": "plain",
+        "case": "none"
+      },
+      "motion": {
+        "easing": [
+          0.16,
+          1,
+          0.3,
+          1
+        ],
+        "durationSec": 0.6,
+        "staggerSec": 0.08
+      },
+      "code": {
+        "theme": "vitesse-light",
+        "background": "#FFFFFF",
+        "lineHighlight": "rgba(124, 106, 173, 0.14)",
+        "lineNumber": "#9AA8B8"
+      },
+      "viz": {
+        "node": "#FAF9F7",
+        "nodeText": "#1F2A37",
+        "edge": "#8FA3B6",
+        "marks": {
+          "active": "#7C6AAD",
+          "compare": "#B8860B",
+          "done": "#4E8A6E",
+          "visited": "#9AA8B8",
+          "path": "#D06B9C",
+          "swap": "#C0504D",
+          "found": "#3F7CAC",
+          "muted": "#E8EEF3"
+        }
+      }
+    },
+    "swiss": {
+      "name": "swiss",
+      "description": "瑞士国际主义：纯白底、黑色粗体、信号红强调、可见网格与几何块，适合观点、数据、结构化讲解",
+      "credit": "改编自 frontend-slides 风格预设「Swiss Modern」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+      "dark": false,
+      "colors": {
+        "bg": "#FFFFFF",
+        "surface": "#F4F4F4",
+        "surfaceAlt": "#EBEBEB",
+        "border": "#D6D6D6",
+        "text": "#111111",
+        "textMuted": "#4D4D4D",
+        "accent": "#FF3300",
+        "accent2": "#111111",
+        "onAccent": "#FFFFFF",
+        "success": "#1F8A4C",
+        "warning": "#C77700",
+        "danger": "#D0021B"
+      },
+      "background": {
+        "type": "grid",
+        "colors": [
+          "#FFFFFF",
+          "#E9E9E9"
+        ],
+        "opacity": 1
+      },
+      "decor": {
+        "motif": "blocks",
+        "grain": 0,
+        "accentBar": "none",
+        "sectionNumber": true,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
+      },
+      "fonts": {
+        "heading": [
+          "Archivo Black",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "body": [
+          "Inter Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "mono": [
+          "JetBrains Mono Variable",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
+        "headingWeight": 900,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource/archivo-black": "5.3.0",
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/inter": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource/archivo-black/index.css",
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/inter/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Archivo Black",
+            "weights": [
+              400
+            ]
+          },
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700,
+              900
+            ]
+          },
+          {
+            "family": "Inter Variable",
+            "weights": [
+              400,
+              500,
+              700
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
+        ]
+      },
+      "type": {
+        "display": 124,
+        "h1": 86,
+        "h2": 62,
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": -0.02
+      },
+      "radius": 0,
+      "space": 28,
+      "card": {
+        "style": "outline",
+        "shadow": "none"
+      },
+      "title": {
+        "style": "bar",
+        "case": "upper"
+      },
+      "motion": {
+        "easing": [
+          0.16,
+          1,
+          0.3,
+          1
+        ],
+        "durationSec": 0.6,
+        "staggerSec": 0.08
+      },
+      "code": {
+        "theme": "github-light",
+        "background": "#F7F7F7",
+        "lineHighlight": "rgba(255, 51, 0, 0.12)",
+        "lineNumber": "#9A9A9A"
+      },
+      "viz": {
+        "node": "#FFFFFF",
+        "nodeText": "#111111",
+        "edge": "#8C8C8C",
+        "marks": {
+          "active": "#111111",
+          "compare": "#FF3300",
+          "done": "#1F8A4C",
+          "visited": "#B3B3B3",
+          "path": "#FF3300",
+          "swap": "#D0021B",
+          "found": "#0047FF",
+          "muted": "#EFEFEF"
+        }
+      }
+    },
+    "terminal": {
+      "name": "terminal",
+      "description": "终端绿：GitHub 暗色底、等宽标题、终端绿强调、四角括号，适合编程、算法、命令行教程",
+      "credit": "改编自 frontend-slides 风格预设「Terminal Green」（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）",
+      "dark": true,
+      "colors": {
+        "bg": "#0D1117",
+        "surface": "#161B22",
+        "surfaceAlt": "#1C2230",
+        "border": "#30363D",
+        "text": "#E6EDF3",
+        "textMuted": "#9EA7B3",
+        "accent": "#39D353",
+        "accent2": "#58A6FF",
+        "onAccent": "#0D1117",
+        "success": "#39D353",
+        "warning": "#D29922",
+        "danger": "#F85149"
+      },
+      "background": {
+        "type": "grid",
+        "colors": [
+          "#0D1117",
+          "#1B2230"
+        ],
+        "opacity": 0.9
+      },
+      "decor": {
+        "motif": "brackets",
+        "grain": 0.03,
+        "accentBar": "none",
+        "sectionNumber": false,
+        "frame": false
+      },
+      "chrome": {
+        "header": true,
+        "chapter": true,
+        "pageNumber": true
+      },
+      "fonts": {
+        "heading": [
+          "JetBrains Mono Variable",
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "body": [
+          "Noto Sans SC Variable",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "sans-serif"
+        ],
+        "mono": [
+          "JetBrains Mono Variable",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ],
+        "headingWeight": 700,
+        "bodyWeight": 400,
+        "packages": {
+          "@fontsource-variable/noto-sans-sc": "5.3.0",
+          "@fontsource-variable/jetbrains-mono": "5.3.0"
+        },
+        "imports": [
+          "@fontsource-variable/noto-sans-sc/index.css",
+          "@fontsource-variable/jetbrains-mono/index.css"
+        ],
+        "faces": [
+          {
+            "family": "Noto Sans SC Variable",
+            "weights": [
+              400,
+              500,
+              700
+            ]
+          },
+          {
+            "family": "JetBrains Mono Variable",
+            "weights": [
+              400,
+              700
+            ]
+          }
+        ]
+      },
+      "type": {
+        "display": 124,
+        "h1": 86,
+        "h2": 62,
+        "h3": 44,
+        "body": 36,
+        "small": 26,
+        "code": 28,
+        "lineHeight": 1.45,
+        "headingLineHeight": 1.16,
+        "headingTracking": -0.01
+      },
+      "radius": 6,
+      "space": 28,
+      "card": {
+        "style": "outline",
+        "shadow": "none"
+      },
+      "title": {
+        "style": "plain",
+        "case": "none"
+      },
+      "motion": {
+        "easing": [
+          0.16,
+          1,
+          0.3,
+          1
+        ],
+        "durationSec": 0.6,
+        "staggerSec": 0.08
+      },
+      "code": {
+        "theme": "github-dark",
+        "background": "#0A0E14",
+        "lineHighlight": "rgba(57, 211, 83, 0.14)",
+        "lineNumber": "#5B6572"
+      },
+      "viz": {
+        "node": "#1C2230",
+        "nodeText": "#E6EDF3",
+        "edge": "#5B6572",
+        "marks": {
+          "active": "#58A6FF",
+          "compare": "#D29922",
+          "done": "#39D353",
+          "visited": "#5B6572",
+          "path": "#BC8CFF",
+          "swap": "#F85149",
+          "found": "#39C5CF",
+          "muted": "#161B22"
         }
       }
     }
@@ -249,5 +1616,6 @@
     "width": 1920,
     "height": 1080
   },
-  "footage": null
+  "footage": null,
+  "glyphs": " /0123456789·—…上例列在左来栈源空队顶首（）："
 }

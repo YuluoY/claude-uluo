@@ -24,7 +24,8 @@
 | `YourScene` | `title`、… | 画什么、随口播怎么变 |
 
 组件写法遵守 references/scenes.md：所有动画由帧号计算（不用 CSS 动画、`Math.random`、`Date`），
-包在 `Stage` 里（不透明背景、避开安全区和字幕），时刻从 `useCueFrame` / `useRevealFrames` 取，不按秒数写死。
+最外层是 `Slide`，每块内容放进从内容区算出的 `Box` / `Card` 矩形，文字用 `useTextFit` 算字号（references/design.md），
+时刻从 `useCueFrame` / `useRevealFrames` 取，不按秒数写死。写完用 `vp.py stills` 看静帧并过版面检测。
 
 ## 示例
 

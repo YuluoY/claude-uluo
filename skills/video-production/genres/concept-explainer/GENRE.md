@@ -18,17 +18,25 @@
 
 | 要表达的关系 | 画面形式 | 场景 |
 |---|---|---|
-| 抛出问题、点题 | 标题 / 一句大字 | `TitleCard` / `Statement` |
+| 片头、结尾 | 标题卡 | `TitleCard` |
+| 全片结构 | 目录（缺省列出全部章节） | `Agenda` |
+| 进入新的一部分 | 章节页（大号序号 + 章节标题） | `Section` |
+| 抛出问题、要记住的结论 | 一句大字，关键词随口播变色 | `Statement` |
 | 并列的几点 | 要点逐条出现 | `BulletList` |
+| 并列的几类、几个方面 | 卡片网格 | `CardGrid` |
 | 先后、因果、流程 | 步骤框 + 箭头 | `FlowSteps` |
-| 两者差异 | 左右对比 | `Compare` |
+| 两者差异 | 左右对比 + 结论条 | `Compare` |
 | 一个概念是什么 | 术语 → 释义 → 例子 | `Definition` |
-| 多少、大小（必须有出处） | 大数字 / 柱状图 | `BigNumber` / `BarChart` |
+| 一个关键数字（必须有出处） | 大数字计数 | `BigNumber` |
+| 几个关键数字（必须有出处） | 数据卡片 | `StatGrid` |
+| 多少、大小的比较（必须有出处） | 柱状图 | `BarChart` |
 | 随时间的变化 | 时间线 | `EventLine` |
+| 配图讲解 | 一侧图片、一侧文字 | `ImageText` |
 | 图中的局部 | 图片推近 + 标注 | `ImageFocus` |
-| 一段代码 | 代码高亮随口播移动 | `CodeSnippet` |
+| 一段代码 | 代码高亮随口播移动 + 说明卡 | `CodeSnippet` |
 | 原话 | 引用 | `Quote` |
-| 要记住的结论 | 大字，关键词变色 | `Statement` |
+
+所有场景都按版面几何算位置和字号（references/design.md）：换画幅、换风格不用改分镜；文字太多放不下时版面检测会指出是哪个镜头的哪一块，按提示删减文字或拆镜头。
 
 没有合适的就在项目 `src/scenes/` 里写新场景（见 references/scenes.md）。同一种新画面在两个以上视频里用到，就值得提炼成类型包组件。
 
@@ -40,21 +48,26 @@
 
 ## 场景参数
 
-所有“逐个出现”的元素都一样：第 k 项在 `at[k]` 提示点出现；没给 `at` 就在镜头第 k 句开始念时出现。
+所有“逐个出现”的元素都一样：第 k 项在 `at[k]` 提示点出现；没给 `at` 就在镜头第 k 句开始念时出现。文字长度建议：标题 ≤ 16 字，要点 / 卡片说明 ≤ 30 字，Statement ≤ 40 字——更长也能排下，但字号会变小。
 
 | 场景 | 参数 |
 |---|---|
 | `TitleCard` | `title`（必填）、`subtitle`、`kicker`（标题上方小字）、`align`：center / left |
-| `Statement` | `text`（必填）、`emphasis`：要变色的词数组、`at`：变色的提示点、`align` |
-| `BulletList` | `items`（必填）、`title`、`at`、`numbered` |
-| `FlowSteps` | `steps`：`[{label, detail?}]`（必填）、`title`、`at`、`direction`：auto / row / column |
-| `Compare` | `left` / `right`：`{title, points[]}`（必填）、`title`、`at`（第 k 行两边一起出现）、`verdict`：结论、`verdictAt` |
-| `Definition` | `term`、`definition`（必填）、`example`、`at`：术语 / 释义 / 例子依次出现的提示点 |
-| `BigNumber` | `value`、`label`、`source`（必填）、`decimals`、`prefix`、`suffix`、`at`：开始数数的提示点 |
-| `BarChart` | `data`：`[{label, value}]`、`source`（必填）、`title`、`unit`、`highlight`：高亮哪一项的 label、`at` |
-| `EventLine` | `events`：`[{date, label}]`（必填）、`title`、`at` |
-| `ImageFocus` | `file`（相对 public/，必填）、`fit`、`focus`：`[{x, y, w, h, at?, label?}]`（0–1 相对坐标，依次推近） |
-| `CodeSnippet` | `code`、`lang`（必填）、`title`、`codeTitle`、`highlights`：`[{lines: [行号], at?}]`、`dimInactive` |
+| `Agenda` | `title`（缺省“目录”）、`items`（缺省为全片章节）、`highlight`：高亮第几项（从 1 开始）、`columns`：1 / 2 |
+| `Section` | `title`（必填）、`subtitle`、`number`（缺省按章节顺序自动编号 01、02…）、`label`（缺省 CHAPTER 01） |
+| `Statement` | `text`（必填）、`emphasis`：要变色的词数组、`at`：变色的提示点、`align`、`kicker` |
+| `BulletList` | `items`（必填）、`title`、`at`、`numbered`、`columns`：1 / 2（缺省自动：横屏 6 项以上或一栏放不下时分两栏） |
+| `CardGrid` | `cards`：`[{title, text?, tag?}]`（必填，2–8 张）、`title`、`at`、`columns`（最多几列）、`numbered`（缺省显示序号，`tag` 替换序号） |
+| `FlowSteps` | `steps`：`[{label, detail?}]`（必填）、`title`、`at`、`direction`：auto / row / column / grid（auto 按放不放得下自动选） |
+| `Compare` | `left` / `right`：`{title, points[]}`（必填）、`title`、`at`（第 k 行两边一起出现）、`verdict`：结论条、`verdictAt` |
+| `Definition` | `term`、`definition`（必填）、`alias`（英文名等）、`example`、`label`（缺省“术语”）、`at`：术语 / 释义 / 例子依次出现的提示点 |
+| `BigNumber` | `value`、`label`、`source`（必填）、`decimals`、`prefix`、`suffix`、`group`（千分位，缺省 ≥ 10000 时开）、`at`：开始计数的提示点 |
+| `StatGrid` | `stats`：`[{value, label, prefix?, suffix?, decimals?, group?}]`、`source`（必填）、`title`、`at` |
+| `BarChart` | `data`：`[{label, value}]`、`source`（必填）、`title`、`unit`、`decimals`、`highlight`：高亮哪一项的 label、`at` |
+| `EventLine` | `events`：`[{date, label}]`（必填）、`title`、`at`、`direction`：auto / row / column |
+| `ImageText` | `file`（相对 public/，必填）、`title`、`kicker`、`text`：段落、`points`：要点（逐条出现）、`side`：图片在 left / right（竖屏为上 / 下）、`fit`：cover / contain、`caption`：图注、`at` |
+| `ImageFocus` | `file`（必填）、`fit`（缺省 contain）、`frame`：card（缺省，放在内容区的圆角框里）/ bleed（铺满画布）、`focus`：`[{x, y, w, h, at?, label?}]`（相对图片本身的 0–1 坐标，依次推近） |
+| `CodeSnippet` | `code`、`lang`（必填）、`title`、`codeTitle`、`highlights`：`[{lines: [行号], at?, note?}]`（note 显示在说明卡里）、`dimInactive` |
 | `Quote` | `text`（必填）、`by`、`source` |
 
 ## 示例

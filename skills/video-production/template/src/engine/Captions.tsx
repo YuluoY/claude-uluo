@@ -3,8 +3,9 @@
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion';
 import { settings } from './data';
-import { fontStack } from './theme';
-import type { CaptionBlock, CaptionPiece, CaptionStyle } from './types';
+import { captionBand } from './layout';
+import { fontStack, useTheme } from './theme';
+import type { CaptionBlock, CaptionPiece, CaptionStyle, Settings, Theme } from './types';
 
 export const findBlock = (blocks: CaptionBlock[], frame: number): CaptionBlock | null => {
   let lo = 0;
@@ -38,12 +39,30 @@ const pieceColor = (p: CaptionPiece, style: CaptionStyle, frame: number | null):
   return frame >= p.startFrame && frame < p.endFrame ? style.highlightColor : undefined;
 };
 
-export const CaptionText: React.FC<CaptionTextProps> = ({ block, style, scale, frame }) => {
+/**
+ * 颜色写 "auto" 时按风格取：深色风格白字黑描边，浅色风格深色字、背景色描边（不糊成一圈黑边）；
+ * 逐词高亮取风格强调色。footage 模式字幕压在实拍画面上，auto 一律白字黑描边。
+ */
+export const resolveCaptionStyle = (style: CaptionStyle, theme: Theme, mode: Settings['mode']): CaptionStyle & { shadowColor: string } => {
+  const dark = mode === 'footage' || theme.dark;
+  return {
+    ...style,
+    color: style.color === 'auto' ? (dark ? '#FFFFFF' : theme.colors.text) : style.color,
+    strokeColor: style.strokeColor === 'auto' ? (dark ? '#000000' : theme.colors.bg) : style.strokeColor,
+    highlightColor: style.highlightColor === 'auto' ? (mode === 'footage' ? '#FFD54A' : theme.colors.accent) : style.highlightColor,
+    shadowColor: dark ? 'rgba(0,0,0,0.55)' : 'rgba(0,0,0,0.12)',
+  };
+};
+
+export const CaptionText: React.FC<CaptionTextProps> = ({ block, style: raw, scale, frame }) => {
+  const theme = useTheme();
+  const style = resolveCaptionStyle(raw, theme, settings.mode);
   const fontSize = style.fontSize * scale;
   const stroke = style.strokeWidth * scale;
   const common: React.CSSProperties = {
     gridArea: '1 / 1',
-    fontFamily: fontStack(style.fontFamily),
+    // 没指定字幕字体时用风格的正文字体（随项目打包，任何系统上都一样）
+    fontFamily: fontStack(style.fontFamily ?? theme.fonts.body),
     fontWeight: style.fontWeight,
     fontSize,
     lineHeight: style.lineHeight,
@@ -76,7 +95,7 @@ export const CaptionText: React.FC<CaptionTextProps> = ({ block, style, scale, f
             ...common,
             color: style.strokeColor,
             WebkitTextStroke: `${stroke * 2}px ${style.strokeColor}`,
-            textShadow: style.shadow ? `0 ${fontSize * 0.06}px ${fontSize * 0.2}px rgba(0,0,0,0.55)` : undefined,
+            textShadow: style.shadow ? `0 ${fontSize * 0.06}px ${fontSize * 0.2}px ${style.shadowColor}` : undefined,
           }}
         >
           {lines('stroke')}
@@ -86,7 +105,7 @@ export const CaptionText: React.FC<CaptionTextProps> = ({ block, style, scale, f
         style={{
           ...common,
           color: style.color,
-          textShadow: stroke <= 0 && style.shadow ? `0 ${fontSize * 0.06}px ${fontSize * 0.2}px rgba(0,0,0,0.55)` : undefined,
+          textShadow: stroke <= 0 && style.shadow ? `0 ${fontSize * 0.06}px ${fontSize * 0.2}px ${style.shadowColor}` : undefined,
         }}
       >
         {lines('fill')}
@@ -104,11 +123,13 @@ type CaptionLayerProps = {
 
 /** 把一个字幕块放到画面底部（避开安全区）。scale 用于 footage 模式按源视频尺寸缩放 */
 export const CaptionLayer: React.FC<CaptionLayerProps> = ({ block, style, scale = 1, frame = null }) => {
-  const { height } = useVideoConfig();
+  const { width, height } = useVideoConfig();
   if (!block) {
     return null;
   }
-  const bottom = ((style.bottomPct + settings.video.safeArea.bottom) / 100) * height;
+  // 与版面几何的字幕带一致（章节条在底部时字幕整体上移）
+  const band = captionBand(width, height, settings);
+  const bottom = band ? height - (band.y + band.h) : ((style.bottomPct + settings.video.safeArea.bottom) / 100) * height;
   return (
     <AbsoluteFill style={{ justifyContent: 'flex-end', alignItems: 'center', pointerEvents: 'none' }}>
       <div style={{ marginBottom: bottom, maxWidth: `${style.maxWidthPct}%`, display: 'flex', justifyContent: 'center' }}>

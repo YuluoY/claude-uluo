@@ -12,6 +12,9 @@ export const ShotProvider: React.FC<{ shot: ShotData; children: React.ReactNode 
   <ShotContext.Provider value={shot}>{children}</ShotContext.Provider>
 );
 
+/** 不在镜头里（封面、字幕卡）时返回 null */
+export const useShotOptional = (): ShotData | null => useContext(ShotContext);
+
 export const useShot = (): ShotData => {
   const shot = useContext(ShotContext);
   if (!shot) {

@@ -1,31 +1,143 @@
 {
   "name": "paper",
-  "description": "浅色：米白纸面、墨色文字、朱红强调，适合概念讲解、人文与科普",
+  "description": "暖纸编辑：米白纸面、宋体标题、朱红强调，适合科普、人文、概念讲解",
   "dark": false,
   "colors": {
-    "bg": "#F7F4EC",
-    "surface": "#FFFFFF",
-    "surfaceAlt": "#EFE9DC",
-    "border": "#D9D0BE",
+    "bg": "#F6F1E7",
+    "surface": "#FFFDF8",
+    "surfaceAlt": "#EFE8DA",
+    "border": "#DCD2BF",
     "text": "#1F2328",
-    "textMuted": "#5E6570",
+    "textMuted": "#555B64",
     "accent": "#C8442B",
     "accent2": "#2B6CB0",
+    "onAccent": "#FFFFFF",
     "success": "#2F855A",
     "warning": "#B7791F",
     "danger": "#C53030"
   },
-  "background": { "type": "dots", "colors": ["#F7F4EC", "#CFC6B2"], "opacity": 0.55 },
-  "fonts": {
-    "heading": ["Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", "serif"],
-    "body": ["PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "sans-serif"],
-    "mono": ["JetBrains Mono", "SF Mono", "Menlo", "Consolas", "DejaVu Sans Mono", "monospace"]
+  "background": {
+    "type": "dots",
+    "colors": [
+      "#F6F1E7",
+      "#CFC4AE"
+    ],
+    "opacity": 0.6
   },
-  "type": { "display": 112, "h1": 84, "h2": 62, "h3": 46, "body": 38, "small": 28, "code": 30 },
-  "radius": 12,
+  "decor": {
+    "motif": "circles",
+    "grain": 0.04,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "Fraunces Variable",
+      "Noto Serif SC Variable",
+      "Songti SC",
+      "SimSun",
+      "serif"
+    ],
+    "body": [
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 700,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource-variable/fraunces": "5.3.0",
+      "@fontsource-variable/noto-serif-sc": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/fraunces/index.css",
+      "@fontsource-variable/noto-serif-sc/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Fraunces Variable",
+        "weights": [
+          700
+        ]
+      },
+      {
+        "family": "Noto Serif SC Variable",
+        "weights": [
+          700
+        ]
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ]
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ]
+      }
+    ]
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.16,
+    "headingTracking": -0.01
+  },
+  "radius": 14,
   "space": 28,
-  "motion": { "easing": [0.22, 1, 0.36, 1], "durationSec": 0.7, "staggerSec": 0.1 },
-  "code": { "theme": "github-light", "background": "#FBFAF6", "lineHighlight": "rgba(200, 68, 43, 0.12)", "lineNumber": "#A0A7B0" },
+  "card": {
+    "style": "elevated",
+    "shadow": "0 10px 30px rgba(60, 45, 20, 0.10)"
+  },
+  "title": {
+    "style": "underline",
+    "case": "none"
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "code": {
+    "theme": "github-light",
+    "background": "#FBF8F1",
+    "lineHighlight": "rgba(200, 68, 43, 0.12)",
+    "lineNumber": "#A0A7B0"
+  },
   "viz": {
     "node": "#FFFFFF",
     "nodeText": "#1F2328",
@@ -38,7 +150,7 @@
       "path": "#C8442B",
       "swap": "#C53030",
       "found": "#6B46C1",
-      "muted": "#E6E0D2"
+      "muted": "#ECE5D6"
     }
   }
 }
