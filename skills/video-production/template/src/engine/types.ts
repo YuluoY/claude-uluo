@@ -200,10 +200,40 @@ export type Settings = {
     chapterBar: {
       enabled: boolean;
       position: 'top' | 'bottom';
-      style: 'filled' | 'outline' | 'underline';
+      style: 'ruler' | 'filled' | 'outline' | 'underline';
       widths: 'equal' | 'duration';
       showProgress: boolean;
       height: number;
+      /** ruler：轨尺贴哪边（top 刻度朝下 / bottom 刻度朝上） */
+      tickPosition: 'top' | 'bottom';
+      /** ruler：大刻度长度（像素，短边 1080 基准） */
+      tickLength: number;
+      /** ruler：刻度线宽（像素，短边 1080 基准） */
+      tickWidth: number;
+      /** ruler：已播刻度颜色（auto = 主题强调色，或 #RRGGBB） */
+      tickColor: string;
+      /** ruler：未播刻度颜色（auto = 弱化文字色） */
+      tickColorIdle: string;
+      /** ruler：除章节边界外，每隔多少像素补一根大刻度；0 = 只画章节边界 */
+      tickEvery: number;
+      /** ruler：是否画贴边线 */
+      rail: boolean;
+      /** ruler：贴边线粗细（像素，短边 1080 基准） */
+      railThickness: number;
+      /** ruler：贴边线颜色（auto = 弱化文字色） */
+      railColor: string;
+      /** ruler：进度长方形色块高度（像素，短边 1080 基准） */
+      progressThickness: number;
+      /** ruler：进度色块颜色（auto = 主题强调色） */
+      progressColor: string;
+      /** ruler：轨道颜色（未播部分，auto = 弱化文字色） */
+      trackColor: string;
+      /** ruler：章节名距线的距离（像素，短边 1080 基准） */
+      labelGap: number;
+      /** ruler：章节名在区间里居中还是靠左 */
+      labelAlign: 'center' | 'start';
+      /** ruler：章节名字号（像素，短边 1080 基准）；0 = 自动 */
+      labelSize: number;
     };
   };
   fonts: FontSpec[];

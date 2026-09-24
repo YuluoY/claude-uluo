@@ -50,10 +50,25 @@
     "chapterBar": {
       "enabled": false,
       "position": "top",
-      "style": "filled",
+      "style": "ruler",
       "widths": "equal",
       "showProgress": true,
-      "height": 56
+      "height": 64,
+      "tickPosition": "top",
+      "tickLength": 22,
+      "tickWidth": 2,
+      "tickColor": "auto",
+      "tickColorIdle": "auto",
+      "tickEvery": 0,
+      "rail": true,
+      "railThickness": 2,
+      "railColor": "auto",
+      "progressThickness": 8,
+      "progressColor": "auto",
+      "trackColor": "auto",
+      "labelGap": 10,
+      "labelAlign": "center",
+      "labelSize": 0
     }
   },
   "fonts": [],

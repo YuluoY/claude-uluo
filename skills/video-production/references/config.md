@@ -131,13 +131,28 @@
 | `overlays.progressBar.position` | "top" / "bottom" | "top" | 进度条在顶部还是底部 |
 | `overlays.progressBar.height` | number（≥1，≤60） | 6 | 进度条粗细（像素，短边 1080 基准） |
 | `overlays.progressBar.showChapters` | boolean | true | 按 storyboard 的 chapter 分段并显示当前章节名 |
-| `overlays.chapterBar` | 对象 |  | 章节条：画面上方或下方的一排格子，每格一个章节（storyboard 镜头的 chapter），当前章节高亮并显示本章播放进度。开启后内容区与字幕带自动让开。footage 模式忽略 |
+| `overlays.chapterBar` | 对象 |  | 章节条：默认刻度尺（ruler，贴视频边）；也可换成画面上方或下方的一排格子。每格一个章节（storyboard 镜头的 chapter），当前章节高亮并显示播放进度。开启后内容区与字幕带自动让开。footage 模式忽略 |
 | `overlays.chapterBar.enabled` | boolean | false | 是否显示章节条 |
 | `overlays.chapterBar.position` | "top" / "bottom" | "top" | 贴着安全区上沿还是下沿（下沿时字幕整体上移） |
-| `overlays.chapterBar.style` | "filled" / "outline" / "underline" | "filled" | filled 实色格（当前章节强调色）/ outline 描边格 / underline 文字 + 下划进度线 |
+| `overlays.chapterBar.style` | "ruler" / "filled" / "outline" / "underline" | "ruler" | ruler 紧贴的刻度尺（连续轨尺 + 密排刻度 + 章节边界 + 游标，推荐）/ filled 实色格（当前章节强调色）/ outline 描边格 / underline 文字 + 下划进度线 |
 | `overlays.chapterBar.widths` | "equal" / "duration" | "equal" | equal 等宽 / duration 按章节时长分宽（每格至少为平均宽度的 45%） |
 | `overlays.chapterBar.showProgress` | boolean | true | 在当前章节格子里显示本章播放进度 |
-| `overlays.chapterBar.height` | number（≥24，≤160） | 56 | 格子高度（像素，短边 1080 基准） |
+| `overlays.chapterBar.height` | number（≥24，≤160） | 64 | 高度（像素，短边 1080 基准）；刻度尺建议 60–80 |
+| `overlays.chapterBar.tickPosition` | "top" / "bottom" | "top" | ruler：轨尺贴哪边——top 轨尺在上、刻度朝下；bottom 轨尺在下、刻度朝上（刻度永远朝开口方向） |
+| `overlays.chapterBar.tickLength` | number（≥2，≤200） | 22 | ruler：大刻度长度（像素，短边 1080 基准） |
+| `overlays.chapterBar.tickWidth` | number（≥0.5，≤20） | 2 | ruler：刻度线宽（像素，短边 1080 基准） |
+| `overlays.chapterBar.tickColor` | string | "auto" | ruler：已播刻度颜色；auto = 主题强调色，也可写 #RRGGBB |
+| `overlays.chapterBar.tickColorIdle` | string | "auto" | ruler：未播刻度颜色；auto = 弱化文字色，也可写 #RRGGBB |
+| `overlays.chapterBar.tickEvery` | number（≥0，≤400） | 0 | ruler：除章节边界外每隔多少像素补一根大刻度（0 = 只画章节边界） |
+| `overlays.chapterBar.rail` | boolean | true | ruler：是否画贴着视频边的那条线 |
+| `overlays.chapterBar.railThickness` | number（≥0.5，≤40） | 2 | ruler：贴边线粗细（像素，短边 1080 基准） |
+| `overlays.chapterBar.railColor` | string | "auto" | ruler：贴边线颜色；auto = 弱化文字色，也可写 #RRGGBB |
+| `overlays.chapterBar.progressThickness` | number（≥0，≤160） | 8 | ruler：随进度推进的长方形色块高度（像素，短边 1080 基准） |
+| `overlays.chapterBar.progressColor` | string | "auto" | ruler：进度色块颜色；auto = 主题强调色 |
+| `overlays.chapterBar.trackColor` | string | "auto" | ruler：轨道颜色（进度色块未覆盖的部分）；auto = 弱化文字色 |
+| `overlays.chapterBar.labelGap` | number（≥0，≤80） | 10 | ruler：章节名距线的距离（像素，短边 1080 基准） |
+| `overlays.chapterBar.labelAlign` | "center" / "start" | "center" | ruler：章节名在区间里居中还是靠左 |
+| `overlays.chapterBar.labelSize` | number（≥0，≤200） | 0 | ruler：章节名字号（像素，短边 1080 基准）；0 = 自动 |
 | `fonts` | array | [] | 需要随项目加载的本地字体文件（放在 public/ 下）。Linux 渲染中文必须提供 |
 | `cover.enabled` | "auto" / true / false | "auto" | auto：模型有生图能力才做封面；false：不做；true：必须做（无生图能力时报告无法完成） |
 | `cover.aspect` | string（格式 `^[0-9]+:[0-9]+$`） | "16:9" | 封面宽高比，如 16:9、9:16、3:4；短边固定 1080 像素 |

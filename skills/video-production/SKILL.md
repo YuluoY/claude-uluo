@@ -5,7 +5,7 @@ description: >-
   让没有视频生成能力的模型也能做出完整的讲解视频：前端（React/Remotion）写画面、逐帧渲染，edge-tts 免费配音并拿到词级时间，
   ffmpeg 混音、响度标准化与验收；声音、画面、字幕共用一条时间轴。一个视频就是一个项目目录，全部素材留存、可重新渲染。
   画面像精排的 PPT：10 套风格（深色科技、瑞士、杂志、终端……），位置和字号按画幅计算，渲染前自动做版面检测，不压盖、不越界；
-  可开章节条（B 站 / 抖音那样的分段格子 + 播放进度）。一份 video.config.json 配置画幅、编码、音色、语速、字幕样式、BGM、水印等全部参数，
+  可开章节条（默认「紧贴的刻度尺」，也可选 B 站 / 抖音那样的分段格子，都带播放进度）。一份 video.config.json 配置画幅、编码、音色、语速、字幕样式、BGM、水印等全部参数，
   内置 B 站横屏、抖音竖屏、小红书 3:4 等预设；讲解类型（算法逐行讲解 + 数据结构可视化、概念讲解……）与视觉风格可无限扩展。也能给已有视频转写、校对并加字幕。
   Use when the user wants to 做视频、出片、做讲解视频、算法讲解视频、科普短视频、口播视频、把文章/口播稿做成视频、
   给录屏或视频加字幕/烧字幕、生成字幕文件或口播文稿、make an explainer video, turn a script into a video,
@@ -87,7 +87,7 @@ footage 模式：`VP init <目录> --mode footage --source <视频>` → `VP asr
 | 软字幕 / 只要 SRT | `captions.render: "soft"` 或 `"both"` |
 | BGM | `audio.bgm.file`、`audio.bgm.volumeDb` |
 | 编码 | `video.codec`、`video.crf` 或 `video.videoBitrate`、`video.fps` |
-| 章节条（上方或下方的分段格子 + 播放进度） | `overlays.chapterBar.enabled: true`，`position`：top / bottom（references/design.md） |
+| 章节条（上方或下方的刻度尺 / 分段格子 + 播放进度） | `overlays.chapterBar.enabled: true`，`position`：top / bottom，`style`：ruler（默认）/ filled / outline / underline（references/design.md） |
 | 水印、细进度条 | `overlays.watermark`、`overlays.progressBar` |
 | 字幕颜色 | `captions.style.color` / `strokeColor`：缺省 `auto` 按风格（深色白字黑描边，浅色深字浅描边） |
 

@@ -8,7 +8,7 @@
 
 ```
 画布 ─┬─ 平台安全区 video.safeArea（平台界面会挡住的边）
-      ├─ 章节条 overlays.chapterBar（开启时，贴安全区上沿或下沿）
+      ├─ 章节条 overlays.chapterBar（开启时：ruler 贴视频边、左右出血；格子样式贴安全区上沿或下沿）
       └─ 页边距（按画幅比例）
            ├─ 页眉带（章节名 / 页码，风格 chrome.header 开启时）
            ├─ 内容区 content ← 场景只在这里摆内容
@@ -23,7 +23,7 @@
 
 - 字号、间距以**短边 1080 像素**为基准，乘单位 `unit`（短边 / 1080）；竖屏在手机上看、画面又高，场景里的文字和部件再整体放大 1.2 倍。
 - 字幕带高度 = 字号 × 行高 × 行数 + 描边/底栏余量；字幕底边距画面底边 `captions.style.bottomPct`%（另加安全区）。
-- 章节条高度 `overlays.chapterBar.height` × unit，离安全区边缘 14 × unit；它那一侧的页边距减半。
+- 章节条高度 `overlays.chapterBar.height` × unit。`ruler` 贴视频边、左右出血，不留缝；格子样式离安全区边缘 14 × unit。它那一侧的页边距减半。
 
 **渲染前的预检**（`vp.py check` / `build` 自动做）：内容区高度不到画面的 38%、字幕一行 `maxCharsPerLine` 个字放不下、章节太多每格放不下章节名，直接报错并给出该调哪个参数。
 
@@ -95,11 +95,21 @@
 
 ## 章节条
 
-B 站分段进度条、抖音顶部分段标签那样的效果：画面上方或下方一排格子，每格一个章节，当前章节高亮并显示本章播放进度，播完的章节标记完成。
+画面上方或下方的一条章节进度，两种形态：
+
+- **`ruler`（推荐，刻度尺）**：**线贴视频边、全出血**（左右到边，压在安全区之外的上/下边缘）；线下方是一条**随进度推进的长方形色块**（已播 = 强调色，未播 = 轨道色）；**只在章节边界画大刻度**（没有小刻度），刻度从尺下探出、朝开口方向（`tickPosition: top` 刻度朝下 / `bottom` 刻度朝上）；章节名**居中在每个区间里**、距线 `labelGap`（默认 10px）。颜色、长度、线宽、线粗、色块厚度、间距全在 `tick*` / `rail*` / `progress*` / `label*` 里调。章节之间**不留缝**（`widths` 仍决定各章占的宽度）。
+- `filled` / `outline` / `underline`：B 站 / 抖音式的一排格子，每格一个章节，当前章节高亮、播完的格子标记完成。
 
 ```json
 "overlays": {
-  "chapterBar": { "enabled": true, "position": "top", "style": "filled", "widths": "equal", "showProgress": true, "height": 56 }
+  "chapterBar": {
+    "enabled": true, "position": "top", "style": "ruler", "widths": "equal", "showProgress": true, "height": 64,
+    "tickPosition": "top", "tickLength": 22, "tickWidth": 2,
+    "tickColor": "auto", "tickColorIdle": "auto", "tickEvery": 0,
+    "rail": true, "railThickness": 2, "railColor": "auto",
+    "progressThickness": 8, "progressColor": "auto", "trackColor": "auto",
+    "labelGap": 10, "labelAlign": "center", "labelSize": 0
+  }
 }
 ```
 
@@ -107,10 +117,25 @@ B 站分段进度条、抖音顶部分段标签那样的效果：画面上方或
 |---|---|
 | `enabled` | 开关（默认关；只用于 produce 模式） |
 | `position` | `top` 贴安全区上沿；`bottom` 贴下沿，字幕整体上移让开 |
-| `style` | `filled` 色块 / `outline` 描边 / `underline` 只有下划线 |
-| `widths` | `equal` 等宽；`duration` 按章节时长（每格至少平均宽度的 45%，短章节名也放得下） |
-| `showProgress` | 当前格子里显示本章进度 |
-| `height` | 高度（像素，短边 1080 基准） |
+| `style` | `ruler` 刻度尺 / `filled` 色块 / `outline` 描边 / `underline` 只有下划线 |
+| `widths` | `equal` 等宽；`duration` 按章节时长（每章至少平均宽度的 45%，短章节名也放得下） |
+| `showProgress` | `ruler`：已播刻度 / 轨道填色 + 游标；格子：当前格显示本章进度 |
+| `height` | 高度（像素，短边 1080 基准）；刻度尺建议 60–80 |
+| `tickPosition`（ruler） | 轨尺贴哪边：`top` 刻度朝下 / `bottom` 刻度朝上（刻度永远朝开口方向） |
+| `tickLength`（ruler） | 大刻度长度（像素，短边 1080 基准） |
+| `tickWidth`（ruler） | 刻度线宽（像素，短边 1080 基准） |
+| `tickColor`（ruler） | 已播刻度颜色；`auto` = 主题强调色，也可写 `#RRGGBB` |
+| `tickColorIdle`（ruler） | 未播刻度颜色；`auto` = 弱化文字色 |
+| `tickEvery`（ruler） | 除章节边界外每隔多少像素补一根大刻度；`0` = 只画章节边界 |
+| `rail`（ruler） | 是否画贴着视频边的那条线 |
+| `railThickness`（ruler） | 贴边线粗细（像素，短边 1080 基准） |
+| `railColor`（ruler） | 贴边线颜色；`auto` = 弱化文字色 |
+| `progressThickness`（ruler） | 随进度推进的长方形色块高度（像素） |
+| `progressColor`（ruler） | 进度色块颜色；`auto` = 主题强调色 |
+| `trackColor`（ruler） | 轨道（未播部分）颜色；`auto` = 弱化文字色 |
+| `labelGap`（ruler） | 章节名距线的距离（像素，默认 10） |
+| `labelAlign`（ruler） | 章节名在区间里 `center` 居中 / `start` 靠左 |
+| `labelSize`（ruler） | 章节名字号（像素）；`0` = 自动 |
 
 - 章节来自 storyboard 里镜头的 `chapter`：没写 `chapter` 的镜头归到前一章。
 - 开了章节条，页眉不再重复章节名（只留页码），内容区、字幕带、水印都会自动让开。

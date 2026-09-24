@@ -216,17 +216,32 @@
           "description": "细进度条：贴着安全区上沿或下沿的一条线（按章节分段）；需要带章节名的格子请用 chapterBar"
         },
         "chapterBar": {
-          "description": "章节条：画面上方或下方的一排格子，每格一个章节（storyboard 镜头的 chapter），当前章节高亮并显示本章播放进度。开启后内容区与字幕带自动让开。footage 模式忽略",
+          "description": "章节条：默认刻度尺（ruler，贴视频边）；也可换成画面上方或下方的一排格子。每格一个章节（storyboard 镜头的 chapter），当前章节高亮并显示播放进度。开启后内容区与字幕带自动让开。footage 模式忽略",
           "type": "object",
           "additionalProperties": false,
-          "required": ["enabled", "position", "style", "widths", "showProgress", "height"],
+          "required": ["enabled", "position", "style", "widths", "showProgress", "height", "tickPosition", "tickLength", "tickWidth", "tickColor", "tickColorIdle", "tickEvery", "rail", "railThickness", "railColor", "progressThickness", "progressColor", "trackColor", "labelGap", "labelAlign", "labelSize"],
           "properties": {
             "enabled": { "description": "是否显示章节条", "type": "boolean" },
             "position": { "description": "贴着安全区上沿还是下沿（下沿时字幕整体上移）", "enum": ["top", "bottom"] },
-            "style": { "description": "filled 实色格（当前章节强调色）/ outline 描边格 / underline 文字 + 下划进度线", "enum": ["filled", "outline", "underline"] },
+            "style": { "description": "ruler 紧贴的刻度尺（连续轨尺 + 密排刻度 + 章节边界 + 游标，推荐）/ filled 实色格（当前章节强调色）/ outline 描边格 / underline 文字 + 下划进度线", "enum": ["ruler", "filled", "outline", "underline"] },
             "widths": { "description": "equal 等宽 / duration 按章节时长分宽（每格至少为平均宽度的 45%）", "enum": ["equal", "duration"] },
             "showProgress": { "description": "在当前章节格子里显示本章播放进度", "type": "boolean" },
-            "height": { "description": "格子高度（像素，短边 1080 基准）", "type": "number", "minimum": 24, "maximum": 160 }
+            "height": { "description": "高度（像素，短边 1080 基准）；刻度尺建议 60–80", "type": "number", "minimum": 24, "maximum": 160 },
+            "tickPosition": { "description": "ruler：轨尺贴哪边——top 轨尺在上、刻度朝下；bottom 轨尺在下、刻度朝上（刻度永远朝开口方向）", "enum": ["top", "bottom"] },
+            "tickLength": { "description": "ruler：大刻度长度（像素，短边 1080 基准）", "type": "number", "minimum": 2, "maximum": 200 },
+            "tickWidth": { "description": "ruler：刻度线宽（像素，短边 1080 基准）", "type": "number", "minimum": 0.5, "maximum": 20 },
+            "tickColor": { "description": "ruler：已播刻度颜色；auto = 主题强调色，也可写 #RRGGBB", "type": "string", "minLength": 1 },
+            "tickColorIdle": { "description": "ruler：未播刻度颜色；auto = 弱化文字色，也可写 #RRGGBB", "type": "string", "minLength": 1 },
+            "tickEvery": { "description": "ruler：除章节边界外每隔多少像素补一根大刻度（0 = 只画章节边界）", "type": "number", "minimum": 0, "maximum": 400 },
+            "rail": { "description": "ruler：是否画贴着视频边的那条线", "type": "boolean" },
+            "railThickness": { "description": "ruler：贴边线粗细（像素，短边 1080 基准）", "type": "number", "minimum": 0.5, "maximum": 40 },
+            "railColor": { "description": "ruler：贴边线颜色；auto = 弱化文字色，也可写 #RRGGBB", "type": "string", "minLength": 1 },
+            "progressThickness": { "description": "ruler：随进度推进的长方形色块高度（像素，短边 1080 基准）", "type": "number", "minimum": 0, "maximum": 160 },
+            "progressColor": { "description": "ruler：进度色块颜色；auto = 主题强调色", "type": "string", "minLength": 1 },
+            "trackColor": { "description": "ruler：轨道颜色（进度色块未覆盖的部分）；auto = 弱化文字色", "type": "string", "minLength": 1 },
+            "labelGap": { "description": "ruler：章节名距线的距离（像素，短边 1080 基准）", "type": "number", "minimum": 0, "maximum": 80 },
+            "labelAlign": { "description": "ruler：章节名在区间里居中还是靠左", "enum": ["center", "start"] },
+            "labelSize": { "description": "ruler：章节名字号（像素，短边 1080 基准）；0 = 自动", "type": "number", "minimum": 0, "maximum": 200 }
           }
         }
       }

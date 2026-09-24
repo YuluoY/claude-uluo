@@ -1,7 +1,7 @@
 // 版面几何：所有位置都从画幅、平台安全区、页眉、字幕带算出来，场景只在算好的矩形里摆东西。
 //
 //   画布 ─┬─ 平台安全区（safeArea，平台界面会挡住的边）
-//         ├─ 章节条 chapterBar（overlays.chapterBar 开启时，贴安全区上沿或下沿）
+//         ├─ 章节条 chapterBar（开启时：ruler 贴视频边、左右出血；格子样式贴安全区上沿或下沿）
 //         └─ 页边距（按画幅比例）
 //              ├─ 页眉带（章节名 / 页码，主题开启时）
 //              ├─ 内容区 content ← 场景只能在这里摆内容
@@ -29,7 +29,7 @@ export type FrameLayout = {
   /** 去掉页边距后的区域（页眉 + 内容 + 字幕带都在这里面） */
   inner: Rect;
   header: Rect | null;
-  /** 章节条（overlays.chapterBar 开启时，贴着安全区的上沿或下沿） */
+  /** 章节条（ruler 贴视频边、左右出血；格子样式贴安全区上沿或下沿） */
   chapterBar: Rect | null;
   /** 烧录字幕占用的横带（全宽，字幕块在其中水平居中） */
   captions: Rect | null;
@@ -106,11 +106,13 @@ export const computeFrameLayout = (width: number, height: number, s: Settings, t
   let innerTop = safe.y + my;
   let innerBottom = safe.y + safe.h - my;
   if (cbm) {
+    // ruler 刻度尺贴视频边、全出血：左右到边，线压在上/下边缘
+    const ruler = s.overlays.chapterBar.style === 'ruler';
     if (s.overlays.chapterBar.position === 'top') {
-      chapterBar = { x: safe.x + mx, y: safe.y + cbm.gap, w: safe.w - 2 * mx, h: cbm.h };
+      chapterBar = ruler ? { x: 0, y: 0, w: width, h: cbm.h } : { x: safe.x + mx, y: safe.y + cbm.gap, w: safe.w - 2 * mx, h: cbm.h };
       innerTop = chapterBar.y + chapterBar.h + my * 0.5;
     } else {
-      chapterBar = { x: safe.x + mx, y: safe.y + safe.h - cbm.gap - cbm.h, w: safe.w - 2 * mx, h: cbm.h };
+      chapterBar = ruler ? { x: 0, y: height - cbm.h, w: width, h: cbm.h } : { x: safe.x + mx, y: safe.y + safe.h - cbm.gap - cbm.h, w: safe.w - 2 * mx, h: cbm.h };
       innerBottom = chapterBar.y - my * 0.5;
     }
   }

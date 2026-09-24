@@ -37,11 +37,14 @@ def frame_layout(cfg: dict, theme: dict, width: Optional[int] = None, height: Op
     lift = 0.0
     if cb["enabled"] and cfg["mode"] == "produce":
         ch, gap = cb["height"] * unit, 14 * unit
+        ruler = cb.get("style") == "ruler"
         if cb["position"] == "top":
-            chapter_bar = {"x": safe["x"] + mx, "y": safe["y"] + gap, "w": safe["w"] - 2 * mx, "h": ch}
+            chapter_bar = ({"x": 0, "y": 0, "w": W, "h": ch} if ruler
+                           else {"x": safe["x"] + mx, "y": safe["y"] + gap, "w": safe["w"] - 2 * mx, "h": ch})
             inner_top = chapter_bar["y"] + ch + my * 0.5
         else:
-            chapter_bar = {"x": safe["x"] + mx, "y": safe["y"] + safe["h"] - gap - ch, "w": safe["w"] - 2 * mx, "h": ch}
+            chapter_bar = ({"x": 0, "y": H - ch, "w": W, "h": ch} if ruler
+                           else {"x": safe["x"] + mx, "y": safe["y"] + safe["h"] - gap - ch, "w": safe["w"] - 2 * mx, "h": ch})
             inner_bottom = chapter_bar["y"] - my * 0.5
             lift = ch + gap
     gutter = round(theme["space"] * unit)

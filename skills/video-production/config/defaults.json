@@ -98,7 +98,7 @@
   "overlays": {
     "watermark": { "enabled": false, "text": "", "image": null, "position": "top-right", "opacity": 0.6, "size": 28 },
     "progressBar": { "enabled": false, "position": "top", "height": 6, "showChapters": true },
-    "chapterBar": { "enabled": false, "position": "top", "style": "filled", "widths": "equal", "showProgress": true, "height": 56 }
+    "chapterBar": { "enabled": false, "position": "top", "style": "ruler", "widths": "equal", "showProgress": true, "height": 64, "tickPosition": "top", "tickLength": 22, "tickWidth": 2, "tickColor": "auto", "tickColorIdle": "auto", "tickEvery": 0, "rail": true, "railThickness": 2, "railColor": "auto", "progressThickness": 8, "progressColor": "auto", "trackColor": "auto", "labelGap": 10, "labelAlign": "center", "labelSize": 0 }
   },
   "fonts": [],
   "cover": { "enabled": "auto", "aspect": "16:9" },
