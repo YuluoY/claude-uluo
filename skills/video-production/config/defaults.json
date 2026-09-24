@@ -14,6 +14,7 @@
     "videoBitrate": null,
     "x264Preset": null,
     "pixelFormat": "yuv420p",
+    "colorSpace": "bt709",
     "proresProfile": "hq",
     "imageFormat": "jpeg",
     "jpegQuality": 92,
@@ -47,7 +48,16 @@
     "timeoutSec": 60,
     "pronunciations": {},
     "externalDir": "audio/external",
-    "align": "auto"
+    "align": "auto",
+    "readingCharsPerSec": 4.5
+  },
+  "asr": {
+    "engine": "auto",
+    "model": "small",
+    "language": "zh",
+    "initialPrompt": "以下是普通话的句子，使用简体中文和标点。",
+    "boostBelowMeanDb": -40,
+    "boostDb": 20
   },
   "pacing": {
     "leadInSec": 0.4,
@@ -86,20 +96,8 @@
   },
   "transition": { "type": "cut", "durationSec": 0.35 },
   "overlays": {
-    "watermark": {
-      "enabled": false,
-      "text": "",
-      "image": null,
-      "position": "top-right",
-      "opacity": 0.6,
-      "size": 28
-    },
-    "progressBar": {
-      "enabled": false,
-      "position": "top",
-      "height": 6,
-      "showChapters": true
-    }
+    "watermark": { "enabled": false, "text": "", "image": null, "position": "top-right", "opacity": 0.6, "size": 28 },
+    "progressBar": { "enabled": false, "position": "top", "height": 6, "showChapters": true }
   },
   "fonts": [],
   "cover": { "enabled": "auto", "aspect": "16:9" },
@@ -108,20 +106,13 @@
     "outputName": "final",
     "preview": { "scale": 0.5, "maxSeconds": 30 }
   },
-  "footage": {
-    "source": null,
-    "copySource": true,
-    "asr": {
-      "model": "small",
-      "language": "zh",
-      "initialPrompt": "以下是普通话的句子，使用简体中文和标点。",
-      "boostBelowMeanDb": -40,
-      "boostDb": 20
-    }
+  "footage": { "source": null, "copySource": true },
+  "qa": {
+    "blackMinSec": 0.5,
+    "blackPixelThreshold": 0.05,
+    "freezeWarnSec": 8,
+    "loudnessToleranceLu": 1.5,
+    "stills": true
   },
-  "cleanup": {
-    "removeNodeModules": true,
-    "removeWorkDir": true,
-    "removePreview": false
-  }
+  "cleanup": { "removeNodeModules": true, "removeWorkDir": true, "removePreview": false }
 }

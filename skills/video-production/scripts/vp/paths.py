@@ -55,8 +55,32 @@ class Project:
         return self.root / "transcript.md"
 
     @property
+    def transcript_txt(self) -> Path:
+        return self.root / "transcript.txt"
+
+    @property
+    def timeline_path(self) -> Path:
+        return self.root / "timeline.json"
+
+    @property
     def captions_dir(self) -> Path:
         return self.root / "captions"
+
+    @property
+    def captions_json(self) -> Path:
+        return self.captions_dir / "captions.json"
+
+    def srt_path(self, name: str) -> Path:
+        return self.captions_dir / f"{name}.srt"
+
+    @property
+    def proof_path(self) -> Path:
+        """footage 模式：可校对的转写稿（只改错字，时间来自识别结果）。"""
+        return self.captions_dir / "transcript.proof.json"
+
+    @property
+    def state_path(self) -> Path:
+        return self.vp_dir / "state.json"
 
     # 音频
     @property
@@ -95,7 +119,12 @@ class Project:
 
     @property
     def work_dir(self) -> Path:
-        return self.renders_dir / ".work"
+        # 不用点开头的目录名：Remotion 渲染图片序列时路径里不能有点
+        return self.renders_dir / "_work"
+
+    @property
+    def seq_dir(self) -> Path:
+        return self.renders_dir / "_seq"
 
     @property
     def qa_dir(self) -> Path:

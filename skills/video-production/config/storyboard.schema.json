@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "video-production/storyboard.schema.json",
+  "title": "分镜与声画字关联表（storyboard.json）",
+  "description": "镜头按顺序排列；每个镜头说明要表达的关系（intent）、画面形式（visual）和画面来源（source），并挂上本镜头要念的句子。句子的时长来自配音，镜头的时长来自句子，不手填、不平均分配。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["shots"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "intent", "visual", "source", "sentences"],
+        "properties": {
+          "id": { "description": "镜头编号，全片唯一", "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "maxLength": 64 },
+          "chapter": { "description": "章节名；相邻且同名的镜头属于同一章，用于进度条分段", "type": ["string", "null"], "minLength": 1 },
+          "intent": { "description": "这个镜头要让观众看懂的关系（先定关系，再选画面形式）", "type": "string", "minLength": 2 },
+          "visual": { "description": "画面形式的描述：用什么画、怎么动", "type": "string", "minLength": 2 },
+          "source": {
+            "description": "画面来源：scene（React 场景，默认）/ clip（视频片段，如视频生成模型的产出）/ image（图片）",
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": { "enum": ["scene", "clip", "image"] }
+            }
+          },
+          "transition": {
+            "description": "进入本镜头的转场，缺省用 video.config.json 的 transition",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": { "enum": ["cut", "fade", "slide", "wipe"] },
+              "durationSec": { "type": "number", "minimum": 0, "maximum": 3 }
+            }
+          },
+          "holdSec": { "description": "最后一句念完后画面多停留的时间", "type": "number", "minimum": 0, "maximum": 30 },
+          "minDurationSec": { "description": "镜头最短时长（动画需要时间展开时用），不够就延长停留", "type": "number", "minimum": 0, "maximum": 600 },
+          "durationSec": { "description": "只用于没有句子的镜头（纯画面）", "type": "number", "exclusiveMinimum": 0, "maximum": 600 },
+          "sentences": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["text"],
+              "properties": {
+                "id": { "description": "句子编号，全片唯一；缺省自动生成为 <镜头id>-<序号>", "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "maxLength": 64 },
+                "text": { "description": "显示文本：字幕照此显示", "type": "string", "minLength": 1 },
+                "say": { "description": "朗读文本：TTS 按此朗读；缺省为 text 套用 voice.pronunciations 后的结果", "type": "string", "minLength": 1 },
+                "rate": { "description": "本句语速，覆盖 voice.rate", "type": "string", "pattern": "^[+-][0-9]+%$" },
+                "pauseAfterSec": { "description": "本句之后的停顿，覆盖 pacing 的句间/镜头间停顿", "type": "number", "minimum": 0, "maximum": 10 },
+                "steps": {
+                  "description": "算法类：本句覆盖的 trace 步骤区间 [起, 止]（含两端）。需要镜头 source.props.trace",
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": { "type": "integer", "minimum": 0 }
+                },
+                "cues": {
+                  "description": "画面提示点：念到 at 这几个字时触发，场景里用 useCue(id) 取到帧号",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["id", "at"],
+                    "properties": {
+                      "id": { "description": "镜头内唯一", "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+                      "at": { "description": "本句显示文本中的一段原文", "type": "string", "minLength": 1 },
+                      "occurrence": { "description": "at 在本句中第几次出现（从 1 开始）", "type": "integer", "minimum": 1 },
+                      "edge": { "description": "取这段文字开始念的时刻还是念完的时刻", "enum": ["start", "end"] },
+                      "offsetSec": { "type": "number", "minimum": -5, "maximum": 5 },
+                      "step": { "description": "算法类：到这个时刻切到第几步", "type": "integer", "minimum": 0 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "source_scene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "component"],
+      "properties": {
+        "type": { "enum": ["scene"] },
+        "component": { "description": "src/scenes/index.ts 中注册的组件名", "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
+        "props": { "description": "传给组件的参数", "type": "object" }
+      }
+    },
+    "source_clip": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "file"],
+      "properties": {
+        "type": { "enum": ["clip"] },
+        "file": { "description": "相对 public/ 的视频路径", "type": "string", "minLength": 1 },
+        "trimStartSec": { "type": "number", "minimum": 0 },
+        "fit": { "enum": ["cover", "contain"] },
+        "volume": { "description": "片段原声音量，0 为静音（默认）", "type": "number", "minimum": 0, "maximum": 2 },
+        "loop": { "description": "片段比镜头短时循环播放；否则停在最后一帧", "type": "boolean" },
+        "playbackRate": { "type": "number", "minimum": 0.25, "maximum": 4 },
+        "background": { "description": "fit=contain 时的底色", "type": "string", "minLength": 1 }
+      }
+    },
+    "source_image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "file"],
+      "properties": {
+        "type": { "enum": ["image"] },
+        "file": { "description": "相对 public/ 的图片路径", "type": "string", "minLength": 1 },
+        "fit": { "enum": ["cover", "contain"] },
+        "kenBurns": { "description": "镜头内缓慢推近", "type": "boolean" },
+        "background": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

@@ -111,6 +111,13 @@ def semantic_errors(cfg: dict) -> list[str]:
 
     if cfg["mode"] == "footage" and codec not in ("h264", "h265"):
         errs.append("footage 模式由 ffmpeg 直接编码，video.codec 只支持 h264 / h265")
+    if cfg["mode"] == "footage" and c["style"]["highlightWords"]:
+        errs.append("footage 模式每块字幕只渲染一张图，不支持 captions.style.highlightWords")
+
+    scale = cfg["render"]["preview"]["scale"]
+    pw, ph = v["width"] * scale, v["height"] * scale
+    if cfg["mode"] == "produce" and (abs(pw - round(pw)) > 1e-6 or abs(ph - round(ph)) > 1e-6 or round(pw) % 2 or round(ph) % 2):
+        errs.append(f"render.preview.scale={scale:g} 让预览尺寸变成 {pw:g}x{ph:g}，H.264 需要偶数整数宽高，换一个缩放比例")
 
     fonts = cfg["fonts"]
     seen = set()

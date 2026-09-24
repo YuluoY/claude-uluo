@@ -1,0 +1,108 @@
+{
+  "shots": [
+    {
+      "id": "title",
+      "chapter": "引子",
+      "intent": "点题：今天讲插入排序，和理扑克牌是一回事",
+      "visual": "标题卡，副标题点出类比",
+      "source": { "type": "scene", "component": "TitleCard", "props": { "kicker": "算法图解", "title": "插入排序", "subtitle": "像理扑克牌一样排序" } },
+      "sentences": [
+        { "text": "你打牌的时候，是怎么理手里的牌的？" }
+      ]
+    },
+    {
+      "id": "idea",
+      "chapter": "引子",
+      "intent": "先给现象：摸一张、插到已排好的牌里；再说这就是插入排序",
+      "visual": "一句话大字，“插到”“排好”两个词随口播变色",
+      "source": { "type": "scene", "component": "Statement", "props": { "text": "每摸一张新牌，就插进左手已经排好的牌里", "emphasis": ["插进", "排好"], "at": "insert" } },
+      "transition": { "type": "fade" },
+      "sentences": [
+        { "text": "每摸到一张新牌，我们会把它插到左手已经排好的那些牌中间。", "cues": [{ "id": "insert", "at": "插到" }] },
+        { "text": "插入排序做的，就是这件事。" }
+      ]
+    },
+    {
+      "id": "walk-1",
+      "chapter": "逐行走一遍",
+      "intent": "代码每一行在数据上做了什么：拿出 key、往左比较、比它大的右移、放进空位",
+      "visual": "左边 Python 代码逐行高亮，右边柱状数组；绿色是已排好的前缀，key 所在位置随指针移动",
+      "source": { "type": "scene", "component": "AlgoScene", "props": { "trace": "insertion-sort", "viz": ["a"], "codeTitle": "insertion_sort.py", "annotate": { "key": 3, "j": 4 } } },
+      "transition": { "type": "fade" },
+      "sentences": [
+        { "text": "看代码：外层循环从第二个数开始，把它们一个一个往左边插。", "steps": [0, 1] },
+        { "text": "先拿出 a[1]，也就是 2，记作 key。", "say": "先拿出 a 1，也就是 2，记作 key。", "steps": [2, 2] },
+        {
+          "text": "往左比：5 比 2 大，5 就往右挪一格。",
+          "steps": [3, 6],
+          "cues": [
+            { "id": "cmp-5-2", "at": "5 比 2 大", "step": 4 },
+            { "id": "shift-5", "at": "往右挪", "step": 5 }
+          ]
+        },
+        { "text": "左边没有数了，2 就放进最前面。", "steps": [7, 8], "cues": [{ "id": "put-2", "at": "放进", "step": 8 }] },
+        {
+          "text": "下一个是 4。5 比 4 大，挪一格；2 比 4 小，停下，4 放在 2 后面。",
+          "steps": [9, 16],
+          "cues": [
+            { "id": "cmp-5-4", "at": "5 比 4 大", "step": 12 },
+            { "id": "stop-2", "at": "2 比 4 小", "step": 15 },
+            { "id": "put-4", "at": "4 放在", "step": 16 }
+          ]
+        },
+        { "text": "6 比左边的 5 大，一次都不用挪。", "steps": [17, 21] }
+      ]
+    },
+    {
+      "id": "walk-2",
+      "chapter": "逐行走一遍",
+      "intent": "最坏情况的样子：1 要一路挪到最前面；最后一个数收尾",
+      "visual": "同一画面继续推进（硬切，不做转场），挪动的数标红",
+      "source": { "type": "scene", "component": "AlgoScene", "props": { "trace": "insertion-sort", "viz": ["a"], "codeTitle": "insertion_sort.py", "annotate": { "key": 3, "j": 4 } } },
+      "transition": { "type": "cut" },
+      "sentences": [
+        { "text": "1 是最小的，它得一路挪到最前面，比了四次。", "steps": [22, 38] },
+        { "text": "最后是 3，挪过 6、5、4，停在 2 的后面。", "steps": [39, 52] },
+        { "text": "全部排好了。", "steps": [53, 53] }
+      ]
+    },
+    {
+      "id": "cost",
+      "chapter": "要花多少时间",
+      "intent": "比较次数取决于数据：有序时每个数比一次，逆序时第 i 个数比 i 次",
+      "visual": "三条要点随口播逐条出现",
+      "source": {
+        "type": "scene",
+        "component": "BulletList",
+        "props": {
+          "title": "要比较多少次？",
+          "items": ["已经有序：每个数只比一次，约 n 次", "完全逆序：第 i 个数比 i 次，约 n²/2 次", "最坏 O(n²)，但几乎有序的数据很快"],
+          "at": ["sorted", "reversed", "bigo"]
+        }
+      },
+      "transition": { "type": "fade" },
+      "sentences": [
+        { "text": "比较的次数，取决于数据本身。" },
+        { "text": "如果数据已经有序，每个数只要比一次。", "cues": [{ "id": "sorted", "at": "已经有序" }] },
+        { "text": "如果完全逆序，第 i 个数要比 i 次，加起来大约是 n 平方的一半。", "cues": [{ "id": "reversed", "at": "完全逆序" }] },
+        {
+          "text": "所以插入排序最坏是 O(n²)，但对几乎有序的数据非常快。",
+          "say": "所以插入排序最坏是 O n 平方，但对几乎有序的数据非常快。",
+          "cues": [{ "id": "bigo", "at": "最坏" }]
+        }
+      ]
+    },
+    {
+      "id": "recap",
+      "chapter": "小结",
+      "intent": "把整个算法压成三个动作，方便记忆",
+      "visual": "一句话大字，三个动作变色",
+      "source": { "type": "scene", "component": "Statement", "props": { "text": "拿一张，往左比，插进去", "emphasis": ["拿一张", "往左比", "插进去"], "at": "three" } },
+      "transition": { "type": "fade" },
+      "holdSec": 0.8,
+      "sentences": [
+        { "text": "记住三个动作：拿一张，往左比，插进去。", "cues": [{ "id": "three", "at": "拿一张" }] }
+      ]
+    }
+  ]
+}
