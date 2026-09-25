@@ -107,6 +107,17 @@ def cmd_enforce(args):
 
     fixed, changes = mod.enforce(diagram)
 
+    theme_name = getattr(args, "theme", None)
+    if theme_name:
+        from _shared.core import enforce_default_style, load_diagram_theme
+        theme = load_diagram_theme(theme_name)
+        if not theme:
+            print(f"❌ 未知主题: {theme_name}")
+            return 1
+        overrides = {k: v for k, v in theme.items() if k != "backgroundColor"}
+        fixed, style_changes = enforce_default_style(fixed, theme_overrides=overrides)
+        changes = list(changes) + style_changes
+
     if changes and not args.json:
         for c in changes:
             print(f"📝 {c.get('message', c)}")
@@ -179,6 +190,17 @@ def cmd_export(args):
 
     background = getattr(args, "background", None)
     transparent = getattr(args, "transparent", False)
+    theme_name = getattr(args, "theme", None)
+    if theme_name:
+        from _shared.core import enforce_default_style, load_diagram_theme
+        theme = load_diagram_theme(theme_name)
+        if not theme:
+            print(f"❌ 未知主题: {theme_name}")
+            return 1
+        overrides = {k: v for k, v in theme.items() if k != "backgroundColor"}
+        diagram, _ = enforce_default_style(diagram, theme_overrides=overrides)
+        if background is None and not transparent:
+            background = theme.get("backgroundColor")
     result = export_image(diagram, args.output, args.scale, args.width, args.height,
                           background=background, transparent=transparent)
     if args.json:
@@ -431,6 +453,7 @@ def main():
     p_enf = sub.add_parser("enforce", help="强制图表规范（校验 + 自动修正），输出修正后代码")
     p_enf.add_argument("input", help="输入文件（- 表示 stdin）")
     p_enf.add_argument("--type", "-t", required=True, help="图表类型")
+    p_enf.add_argument("--theme", help="diagram-themes.yaml 里的主题名，如 default、dark、midnight")
     p_enf.add_argument("--json", action="store_true")
 
     # --> style
@@ -451,6 +474,7 @@ def main():
                        help="导出透明背景（默认跟随主题背景色）")
     p_exp.add_argument("--background", "-b", default=None,
                        help="指定背景色（CSS 颜色值），覆盖主题默认值")
+    p_exp.add_argument("--theme", help="diagram-themes.yaml 里的主题名；决定配色和默认背景")
 
     # --> schema
     p_schema = sub.add_parser("schema", help="查看图表类型的数据格式说明（DATA_SCHEMA）")

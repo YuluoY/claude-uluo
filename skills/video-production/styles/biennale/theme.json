@@ -1,0 +1,174 @@
+{
+  "$schema": "../style.schema.json",
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.12,
+    "headingTracking": -0.02
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "space": 28,
+  "name": "biennale",
+  "description": "双年展黄：羊皮纸底、日光黄晕、靛蓝墨水，适合展览、人文、安静的长讲解",
+  "credit": "改编自 frontend-slides（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）「Biennale Yellow」",
+  "dark": false,
+  "colors": {
+    "bg": "#E9E5DB",
+    "surface": "#F4F1E8",
+    "surfaceAlt": "#DCD6C4",
+    "border": "#C9C2B0",
+    "text": "#1B2566",
+    "textMuted": "#3E4678",
+    "accent": "#F1EE2E",
+    "accent2": "#E26B4A",
+    "onAccent": "#1B2566",
+    "success": "#2F6B4F",
+    "warning": "#C47A1A",
+    "danger": "#B42318"
+  },
+  "background": {
+    "type": "radial",
+    "colors": [
+      "#E9E5DB",
+      "#F1EE2E"
+    ],
+    "opacity": 0.55
+  },
+  "decor": {
+    "motif": "circles",
+    "grain": 0.05,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "fonts": {
+    "heading": [
+      "Instrument Serif",
+      "Noto Serif SC Variable",
+      "Songti SC",
+      "SimSun",
+      "serif"
+    ],
+    "body": [
+      "Archivo",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 400,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource/instrument-serif": "5.2.6",
+      "@fontsource/archivo": "5.2.6",
+      "@fontsource-variable/noto-serif-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0"
+    },
+    "imports": [
+      "@fontsource/instrument-serif/400.css",
+      "@fontsource/archivo/400.css",
+      "@fontsource-variable/noto-serif-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Instrument Serif",
+        "weights": [
+          400
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Archivo",
+        "weights": [
+          400,
+          600
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Serif SC Variable",
+        "weights": [
+          400,
+          600,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500
+        ],
+        "style": "normal"
+      }
+    ]
+  },
+  "radius": 0,
+  "card": {
+    "style": "flat",
+    "shadow": "none"
+  },
+  "title": {
+    "style": "underline",
+    "case": "none"
+  },
+  "code": {
+    "theme": "min-light",
+    "background": "#F4F1E8",
+    "lineHighlight": "rgba(27,37,102,0.08)",
+    "lineNumber": "#8A846F"
+  },
+  "viz": {
+    "node": "#F4F1E8",
+    "nodeText": "#1B2566",
+    "edge": "#8A846F",
+    "marks": {
+      "active": "#1B2566",
+      "compare": "#E26B4A",
+      "done": "#2F6B4F",
+      "visited": "#C9C2B0",
+      "path": "#F1EE2E",
+      "swap": "#B42318",
+      "found": "#E26B4A",
+      "muted": "#DCD6C4"
+    }
+  }
+}

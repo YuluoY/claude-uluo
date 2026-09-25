@@ -34,7 +34,7 @@
     }
   },
   "overlays": {
-    "pageNumber": true,
+    "pageNumber": false,
     "header": true,
     "sectionNumber": true,
     "watermark": {
@@ -55,7 +55,7 @@
       "enabled": false,
       "position": "top",
       "style": "ruler",
-      "widths": "equal",
+      "widths": "duration",
       "showProgress": true,
       "height": 64,
       "tickPosition": "top",
@@ -77,7 +77,7 @@
     }
   },
   "fonts": [],
-  "styleName": "midnight",
+  "styleName": "paper",
   "themes": {
     "bold-signal": {
       "name": "bold-signal",

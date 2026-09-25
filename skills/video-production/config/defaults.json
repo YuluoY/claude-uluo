@@ -5,7 +5,7 @@
   "sceneText": "auto",
   "language": "zh-CN",
   "genre": "concept-explainer",
-  "style": "midnight",
+  "style": "paper",
   "video": {
     "width": 1920,
     "height": 1080,
@@ -39,7 +39,7 @@
   },
   "voice": {
     "engine": "edge-tts",
-    "voice": "zh-CN-YunxiNeural",
+    "voice": "zh-CN-XiaoxiaoNeural",
     "rate": "+0%",
     "volume": "+0%",
     "pitch": "+0Hz",
@@ -97,12 +97,12 @@
   },
   "transition": { "type": "cut", "durationSec": 0.35 },
   "overlays": {
-    "pageNumber": true,
+    "pageNumber": false,
     "header": true,
     "sectionNumber": true,
     "watermark": { "enabled": false, "text": "", "image": null, "position": "top-right", "opacity": 0.6, "size": 28 },
     "progressBar": { "enabled": false, "position": "top", "height": 6, "showChapters": true },
-    "chapterBar": { "enabled": false, "position": "top", "style": "ruler", "widths": "equal", "showProgress": true, "height": 64, "tickPosition": "top", "tickLength": 22, "tickWidth": 2, "tickColor": "auto", "tickColorIdle": "auto", "tickEvery": 0, "rail": true, "railThickness": 2, "railColor": "auto", "progressThickness": 8, "progressColor": "auto", "trackColor": "auto", "labelGap": 10, "labelAlign": "center", "labelSize": 0, "showLabels": true }
+    "chapterBar": { "enabled": true, "position": "top", "style": "ruler", "widths": "duration", "showProgress": true, "height": 64, "tickPosition": "top", "tickLength": 22, "tickWidth": 2, "tickColor": "auto", "tickColorIdle": "auto", "tickEvery": 0, "rail": true, "railThickness": 2, "railColor": "auto", "progressThickness": 8, "progressColor": "auto", "trackColor": "auto", "labelGap": 10, "labelAlign": "center", "labelSize": 0, "showLabels": true }
   },
   "fonts": [],
   "cover": { "enabled": "auto", "aspect": "16:9" },

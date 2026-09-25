@@ -1,0 +1,174 @@
+{
+  "$schema": "../style.schema.json",
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.12,
+    "headingTracking": -0.02
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "space": 28,
+  "name": "notebook",
+  "description": "笔记本页：奶油纸、右侧色签、古典标题，适合课程、清单、分章讲解",
+  "credit": "改编自 frontend-slides（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）「Notebook Tabs」",
+  "dark": false,
+  "colors": {
+    "bg": "#F8F6F1",
+    "surface": "#FFFFFF",
+    "surfaceAlt": "#EFEBE3",
+    "border": "#DDD6C8",
+    "text": "#1A1A1A",
+    "textMuted": "#5C574E",
+    "accent": "#7C6AAD",
+    "accent2": "#98D4BB",
+    "onAccent": "#FFFFFF",
+    "success": "#3E8F6A",
+    "warning": "#C4922A",
+    "danger": "#C45C6A"
+  },
+  "background": {
+    "type": "solid",
+    "colors": [
+      "#F8F6F1"
+    ]
+  },
+  "decor": {
+    "motif": "tabs",
+    "grain": 0.04,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": true
+  },
+  "fonts": {
+    "heading": [
+      "Bodoni Moda",
+      "Noto Serif SC Variable",
+      "Songti SC",
+      "SimSun",
+      "serif"
+    ],
+    "body": [
+      "DM Sans Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 700,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource/bodoni-moda": "5.2.6",
+      "@fontsource-variable/dm-sans": "5.2.6",
+      "@fontsource-variable/noto-serif-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0"
+    },
+    "imports": [
+      "@fontsource/bodoni-moda/700.css",
+      "@fontsource-variable/dm-sans/index.css",
+      "@fontsource-variable/noto-serif-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Bodoni Moda",
+        "weights": [
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "DM Sans Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Serif SC Variable",
+        "weights": [
+          400,
+          600,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ],
+        "style": "normal"
+      }
+    ]
+  },
+  "radius": 6,
+  "card": {
+    "style": "elevated",
+    "shadow": "0 10px 28px rgba(26,26,26,0.08)"
+  },
+  "title": {
+    "style": "plain",
+    "case": "none"
+  },
+  "code": {
+    "theme": "github-light",
+    "background": "#FFFFFF",
+    "lineHighlight": "rgba(124,106,173,0.14)",
+    "lineNumber": "#A39E93"
+  },
+  "viz": {
+    "node": "#FFFFFF",
+    "nodeText": "#1A1A1A",
+    "edge": "#C4BBA8",
+    "marks": {
+      "active": "#7C6AAD",
+      "compare": "#C4922A",
+      "done": "#3E8F6A",
+      "visited": "#C4BBA8",
+      "path": "#5BA8C4",
+      "swap": "#C45C6A",
+      "found": "#98D4BB",
+      "muted": "#EFEBE3"
+    }
+  }
+}

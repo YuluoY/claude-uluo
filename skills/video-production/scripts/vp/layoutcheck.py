@@ -49,7 +49,9 @@ def frame_layout(cfg: dict, theme: dict, width: Optional[int] = None, height: Op
             lift = ch + gap
     gutter = round(theme["space"] * unit)
     top = inner_top
-    if theme["chrome"]["header"] and cfg["overlays"].get("header", True) is not False:
+    page_on = cfg["overlays"].get("pageNumber", True) is not False
+    header_empty = (not page_on) and chapter_bar
+    if theme["chrome"]["header"] and cfg["overlays"].get("header", True) is not False and not header_empty:
         top = inner_top + theme["type"]["small"] * unit * 1.5 + gutter
     captions = None
     c = cfg["captions"]

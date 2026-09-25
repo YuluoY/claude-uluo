@@ -52,6 +52,23 @@ const ellipsize = (text: string, maxW: number, fs: number, family: string, weigh
 
 const clamp01 = (v: number): number => Math.min(1, Math.max(0, v));
 
+/** 色块右沿落在当前章节格子里，和这一章的播放进度一致（不按整条尺匀速铺）。 */
+const playedWidth = (cells: Array<Rect & Segment>, frame: number, barW: number): number => {
+  let w = 0;
+  for (const c of cells) {
+    const span = Math.max(1, c.end - c.start);
+    if (frame >= c.end) {
+      w += c.w;
+    } else if (frame >= c.start) {
+      w += c.w * clamp01((frame - c.start) / Math.max(1, span - 1));
+      break;
+    } else {
+      break;
+    }
+  }
+  return Math.max(0, Math.min(w, barW));
+};
+
 /** 刻度尺：贴边线 + 长方形进度色块 + 大刻度 + 距线 labelGap 的居中章节名 */
 const RulerBar: React.FC<{ bar: Rect; cells: Array<Rect & Segment>; u: number; theme: Theme; frame: number; cfg: Cfg }> = ({ bar, cells, u, theme, frame, cfg }) => {
   const h = bar.h;
@@ -68,8 +85,7 @@ const RulerBar: React.FC<{ bar: Rect; cells: Array<Rect & Segment>; u: number; t
   const progColor = cfg.progressColor === 'auto' ? theme.colors.accent : cfg.progressColor;
   const tickPlayed = cfg.tickColor === 'auto' ? theme.colors.accent : cfg.tickColor;
   const tickIdle = cfg.tickColorIdle === 'auto' ? withAlpha(theme.colors.textMuted, 0.55) : cfg.tickColorIdle;
-  const p = cfg.showProgress ? clamp01(frame / Math.max(1, timeline.durationInFrames - 1)) : 0;
-  const playedW = Math.max(0, Math.min(bar.w * p, bar.w));
+  const playedW = cfg.showProgress ? playedWidth(cells, frame, bar.w) : 0;
   const lo = tickW / 2;
   const hi = bar.w - tickW / 2;
   const xs: number[] = [lo, hi];

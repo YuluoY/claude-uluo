@@ -17,10 +17,12 @@
 
 ## 能力盘点（第 0 步）
 
-- 视频生成工具：TODO（有 / 无；有的话用于哪些镜头）
-- 图片生成工具：TODO（有 / 无；无则跳过封面）
-- 更好的 TTS：TODO（有 / 无；无则 edge-tts）
-- 本机依赖：TODO（vp.py 检查结果：ffmpeg / node / edge-tts / whisper）
+写分镜前先问一次当前环境，三行都要填掉 TODO：
+
+- 生图：TODO（工具名，或「无」；用在哪些镜头）
+- 生视频：TODO（工具名，或「无」；用在哪些镜头）
+- 生语音：TODO（工具名，或「无」；无则 edge-tts 默认女声）
+- 本机依赖：TODO（ffmpeg / node / edge-tts / whisper）
 
 ## 类型与风格
 

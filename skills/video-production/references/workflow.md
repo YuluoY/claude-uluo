@@ -2,18 +2,28 @@
 
 `VP` 指 `python3 <本技能目录>/scripts/vp.py`。所有命令在项目目录里运行，或加 `--project <目录>`；加 `--json` 得到机器可读结果。
 
-## 第 0 步：能力盘点
+## 第 0 步：先问一次当前环境
 
-技能判断不了自己跑在哪个模型上，只能看**当前能调用的工具**。开工前先盘点，结论写进 `brief.md` 的“能力盘点”：
+不猜模型名字。写分镜之前，列出当前会话实际能调用的工具，只回答三件事，写进 `brief.md`：
 
-| 能力 | 怎么判断 | 有的话 | 没有的话 |
-|---|---|---|---|
-| 视频生成（Veo、Sora、可灵等工具 / MCP / API key） | 工具列表、MCP、环境变量 | 只用于氛围、实拍感的镜头：生成片段放 `public/clips/`，镜头 `source` 用 `clip` | 全部用 HTML/React 场景 |
-| 图片生成 | 同上 | 生成无字背景图做封面 `cover/background.png`；也可生成配图给 `image` 镜头 | 跳过封面（`cover.enabled: "auto"` 时自动跳过） |
-| 更好的 TTS | 同上 | 逐句生成音频放 `audio/external/<句子id>.wav`，`voice.engine: "external"`，词级时间用 whisper 对齐 | 用 edge-tts（默认） |
-| 本机依赖 | `VP presets` 能跑；`ffmpeg -version`、`node -v`、`python3 -c "import edge_tts"` | — | 按 troubleshooting.md 安装 |
+- 生图：工具名，或「无」
+- 生视频：工具名，或「无」
+- 生语音：工具名，或「无」
 
-**视频生成模型不擅长信息类画面。** 它们每段只有几秒到十几秒，适合氛围、实拍感的镜头，但中文文字、代码、图表、与口播精确对齐都做不好。讲解、演示、数据类内容即使有视频生成能力，信息镜头也用场景。时间轴 + 合成是固定主干，只有每个镜头的画面来源可选。
+三行里的 `TODO` 还在时，`vp.py status` 不算简报完成，不要往下选画面。
+
+询问结果再决定每个镜头的 `source`。先写 `intent`（这一镜要看懂的关系），然后：
+
+1. 关系是代码、数据、数字、图解，或必须卡在某个词上：用 React 场景。生视频能力也不改这条。
+2. 否则，关系是一张不需要排字的静图（封面、物体、气氛），且生图那行有工具名：生成无字图，`source` 用 `image`。封面仍按 `cover.enabled: auto`。
+3. 否则，关系是实拍或气氛运动，且生视频那行有工具名：片段放 `public/clips/`，`source` 用 `clip`。
+4. 其余用场景。
+
+配音全片一次决定，用生语音那一行：有工具名，就逐句放到 `audio/external/<句子id>.wav`，`voice.engine` 设为 `external`，用 whisper 对齐；是「无」才用 edge-tts 默认女声。
+
+本机依赖仍要查：`VP presets` 能跑；`ffmpeg -version`、`node -v`、`python3 -c "import edge_tts"`。缺了按 troubleshooting.md 安装。
+
+**视频生成不擅长信息类画面。** 中文文字、代码、图表、与口播精确对齐都留给场景。时间轴和合成是固定主干，变的只是每个镜头的画面来源。
 
 ## 三种入口
 
@@ -28,18 +38,18 @@
 ### 1. 建项目
 
 ```bash
-VP init videos/20260924-dijkstra --title "Dijkstra 最短路径" --genre algorithm --style midnight --preset landscape-1080p
+VP init videos/20260924-dijkstra --title "Dijkstra 最短路径" --genre algorithm --preset landscape-1080p
 ```
 
 一个视频就是一个项目目录，放在用户当前工作目录的 `videos/<日期>-<英文短名>/` 下（用户另有要求时从其要求）。`init` 会复制 Remotion 模板、安装基础类型包 concept-explainer 与主类型包，并按配置生成 `src/generated/*`。
 
 ### 2. 简报 → 检查点 1
 
-填 `brief.md`：入口、选题、受众（他们已经知道什么）、看完能做到什么、平台与画幅、能力盘点。和用户确认后记在“检查点记录”里，删掉对应的 TODO。
+填 `brief.md`：入口、选题、受众（他们已经知道什么）、看完能做到什么、平台与画幅、第 0 步的三行能力。和用户确认后记在“检查点记录”里，删掉对应的 TODO。
 
 ### 3. 口播稿与分镜 → 检查点 2
 
-写 `storyboard.json`（格式见 storyboard.md），讲解结构按类型包 `genres/<类型>/GENRE.md`，画面选择按 explaining.md。算法类先写 `src/algo/<id>/code.*` 与 `trace.ts`，`VP trace` 跑出步骤后再绑定 `steps`。
+写 `storyboard.json`（格式见 storyboard.md），讲解结构按类型包 `genres/<类型>/GENRE.md`，画面选择按 explaining.md。正片第一镜用 `TitleCard` 写出主题，再进入例子。算法或逻辑关系用 diagram-compiler 导出 flowchart：视频风格 `dark` 为真时 `--theme midnight`，否则 `--theme default`，背景用该主题的 `backgroundColor`。导出的图用 `ImageText` 和判断句放在一起。算法类先写 `src/algo/<id>/code.*` 与 `trace.ts`，`VP trace` 跑出步骤后再绑定 `steps`。
 
 ```bash
 VP check        # 校验配置、分镜、素材、场景注册；生成 script.md（带粗估时长）
@@ -66,7 +76,7 @@ VP layout                                   # 版面检测：每个镜头的中�
 
 **出片前先定风格**：按内容挑 3 个风格（`VP styles` 列出全部，各自适合什么见 design.md），给用户看三套静帧（`renders/stills/styles/<风格>/`）。需要别的样子就在项目 `styles/<名字>/theme.json` 里派生（复制一个再改，要求见 design.md），`VP build` 后即可用。用户选定后写进 `video.config.json` 的 `style` 与 brief。
 
-**版面检测必须通过**：`VP stills` 输出里列出的压盖、越界、溢出、放不下，按报告里的镜头和槽位名去改——删减文字、减少项数、拆成两个镜头，或换更合适的场景；不要靠调小最小字号硬塞。需要章节条就开 `overlays.chapterBar`（默认刻度尺 `ruler`，也可换成一排分段格子），内容区和字幕会自动让开。
+**版面检测必须通过**：`VP stills` 输出里列出的压盖、越界、溢出、放不下，按报告里的镜头和槽位名去改——删减文字、减少项数、拆成两个镜头，或换更合适的场景；不要靠调小最小字号硬塞。章节条默认开着（刻度尺 `ruler`，也可换成一排分段格子），内容区和字幕会自动让开。不要刻度就写 `overlays.chapterBar.enabled: false`。
 
 拖动预览：`VP studio`（Remotion Studio，可以逐帧看每个镜头）。
 

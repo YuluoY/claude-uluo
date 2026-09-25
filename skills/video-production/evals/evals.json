@@ -8,7 +8,7 @@
       "expected_output": "按 produce 流程建项目（genre=algorithm，preset=landscape-1080p），写 brief、trace、分镜，经过检查点后 build/render，成片通过验收",
       "files": [],
       "assertions": [
-        "先做能力盘点，并把结论写进 brief.md",
+        "先问一次当前环境能不能生图、生视频、生语音，并把工具名或「无」写进 brief.md",
         "运行 vp.py init，genre 为 algorithm，preset 为 landscape-1080p",
         "在 src/algo/<id>/ 写了展示代码 code.* 和 trace.ts，trace.ts 的 t.step 行号与展示代码对应",
         "运行 vp.py trace 后再写 storyboard 的 steps，steps 首尾相接且不超出步数",

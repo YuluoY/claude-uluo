@@ -5,7 +5,7 @@ description: >-
   让没有视频生成能力的模型也能做出完整的讲解视频：前端（React/Remotion）写画面、逐帧渲染，edge-tts 免费配音并拿到词级时间，
   ffmpeg 混音、响度标准化与验收；声音、画面、字幕共用一条时间轴。一个视频就是一个项目目录，全部素材留存、可重新渲染。
   画面像精排的 PPT：10 套风格（深色科技、瑞士、杂志、终端……），位置和字号按画幅计算，渲染前自动做版面检测，不压盖、不越界；
-  可开章节条（默认「紧贴的刻度尺」，也可选 B 站 / 抖音那样的分段格子，都带播放进度）。一份 video.config.json 配置画幅、编码、音色、语速、字幕样式、BGM、水印等全部参数，
+  默认有章节刻度尺（也可换成 B 站 / 抖音那样的分段格子，都带播放进度）。一份 video.config.json 配置画幅、编码、音色、语速、字幕样式、BGM、水印等全部参数，
   内置 B 站横屏、抖音竖屏、小红书 3:4 等预设；讲解类型（算法逐行讲解 + 数据结构可视化、概念讲解……）与视觉风格可无限扩展。也能给已有视频转写、校对并加字幕。
   Use when the user wants to 做视频、出片、做讲解视频、算法讲解视频、科普短视频、口播视频、把文章/口播稿做成视频、
   给录屏或视频加字幕/烧字幕、生成字幕文件或口播文稿、make an explainer video, turn a script into a video,
@@ -42,9 +42,10 @@ license: MIT
 
 完整说明见 references/workflow.md。四个检查点都要等用户确认，结论记进 `brief.md`。
 
-0. **能力盘点**：看当前能调用哪些工具——视频生成、图片生成、更好的 TTS。有视频生成也只用于氛围、实拍感的镜头；文字、代码、图表、需要和口播精确对齐的镜头仍用场景。没有生图能力就跳过封面。
+0. **能力询问**：写分镜前先看当前会话能调用的工具，只记三行到 `brief.md`——生图、生视频、生语音，每行是工具名或「无」。然后按 references/workflow.md 给每个镜头选 `source`。没有生图能力就跳过封面。
+正片第一镜必须是标题页（`TitleCard`），画面和口播都先说出这支片子的主题，然后再进入例子或论证。不要用“今天只做一件事”这类预告句代替标题。章节名可以用概述、小结，不要用引子、收束、导言。结尾写出结论，不要把开场的路线图卡片再亮一遍。算法或逻辑关系用 diagram-compiler 导出 flowchart，深色风格用主题 midnight，浅色用 default，再放进画面。
 1. **建项目**：`VP init videos/<日期>-<英文短名> --title "…" --genre <类型> [--style <风格>] [--preset <预设>]`。类型：`VP genre list`；风格：`VP styles`；预设：`VP presets`。
-2. **简报 → 检查点 1**：填 `brief.md`（选题、受众、看完能做到什么、平台、能力盘点）。
+2. **简报 → 检查点 1**：填 `brief.md`（选题、受众、看完能做到什么、平台、第 0 步三行能力）。
 3. **口播稿与分镜 → 检查点 2**：读 `genres/<类型>/GENRE.md` 与 references/explaining.md，写 `storyboard.json`（references/storyboard.md）；算法类先写 `src/algo/<id>/` 并 `VP trace`。`VP check` 生成 `script.md` 给用户确认。
 4. **配音与时间轴**：`VP build`。
 5. **画面 → 检查点 3**：优先用类型包场景，缺的在 `src/scenes/` 写（references/scenes.md）。按内容挑 3 个风格，`VP stills --styles a,b,c` 给用户看静帧，定下风格；输出里的版面问题必须改到零（references/design.md）。
@@ -88,21 +89,21 @@ footage 模式：`VP init <目录> --mode footage --source <视频>` → `VP asr
 | 软字幕 / 只要 SRT | `captions.render: "soft"` 或 `"both"` |
 | BGM | `audio.bgm.file`、`audio.bgm.volumeDb` |
 | 编码 | `video.codec`、`video.crf` 或 `video.videoBitrate`、`video.fps` |
-| 章节条（上方或下方的刻度尺 / 分段格子 + 播放进度） | `overlays.chapterBar.enabled: true`，`position`：top / bottom，`style`：ruler（默认）/ filled / outline / underline（references/design.md） |
+| 章节条（默认开：上方刻度尺 + 播放进度） | `overlays.chapterBar.enabled` 默认 `true`。关掉写 `false`。`position`：top / bottom，`style`：ruler（默认）/ filled / outline / underline（references/design.md） |
 | 水印、细进度条 | `overlays.watermark`、`overlays.progressBar` |
 | 字幕颜色 | `captions.style.color` / `strokeColor`：缺省 `auto` 按风格（深色白字黑描边，浅色深字浅描边） |
 
 ## 类型与风格可扩展
 
-- **类型包**（讲什么、怎么讲）：`genres/<名字>/`，含 `GENRE.md`（讲解结构、分镜套路、场景参数）、`genre.json`、`components/`。新增类型：复制 `genres/_template` 填写即可，本文件不用改。当前：`algorithm`（算法逐行讲解 + 可视化，trace 驱动）、`concept-explainer`（通用讲解，所有项目都装）。
-- **风格**（长什么样）：`styles/<名字>/theme.json`，格式见 `styles/style.schema.json`；项目内 `styles/<名字>/` 可覆盖或新增。当前 10 套：`midnight`（默认，深色科技）、`paper`、`swiss`、`bold-signal`、`electric`、`botanical`、`editorial`、`pastel`、`terminal`、`neon`，各自适合什么见 references/design.md。
+- **类型包**（讲什么、怎么讲）：`genres/<名字>/`，含 `GENRE.md`（讲解结构、分镜套路、场景参数）、`genre.json`、`components/`。新增类型：复制 `genres/_template` 填写即可，本文件不用改。当前：`algorithm`（算法逐行讲解 + 可视化，trace 驱动）、`concept-explainer`（通用讲解，所有项目都装）。开场由这一镜要讲的关系决定，不要把上一支片子的开场照抄成固定范式。
+- **风格**（长什么样）：`styles/<名字>/theme.json`，格式见 `styles/style.schema.json`；项目内 `styles/<名字>/` 可覆盖或新增。当前 10 套：`paper`（默认，暖纸编辑）、`midnight`（深色科技）、`swiss`、`bold-signal`、`electric`、`botanical`、`editorial`、`pastel`、`terminal`、`neon`，各自适合什么见 references/design.md。不写 `style` 时用 `paper`。
 - 做完一个新领域的视频，把能复用的场景提炼进类型包，类型库会越用越全。
 
 ## references
 
 | 文件 | 内容 |
 |---|---|
-| workflow.md | 能力盘点、三种入口、每一步命令与检查点、footage 流程、改动连带表 |
+| workflow.md | 开工先问当前环境能力、三种入口、每一步命令与检查点、footage 流程、改动连带表 |
 | storyboard.md | storyboard.json 字段、提示点、算法步骤绑定、校验与排布规则 |
 | explaining.md | 讲解方法：现象→原理→术语→反例、先关系后画面、不编数字、节奏 |
 | design.md | 版面几何、排版规则、版面检测、10 套风格与派生规则、章节条 |

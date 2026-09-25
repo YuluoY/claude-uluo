@@ -1,0 +1,161 @@
+{
+  "$schema": "../style.schema.json",
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.12,
+    "headingTracking": -0.02
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "space": 28,
+  "name": "forest",
+  "description": "森林编辑：燕麦纸、森绿与灰粉，适合书评、自然、安静的概念片",
+  "credit": "改编自 frontend-slides（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）「Editorial Forest」",
+  "dark": false,
+  "colors": {
+    "bg": "#EFE7D4",
+    "surface": "#F7F2E6",
+    "surfaceAlt": "#E6DCC4",
+    "border": "#D4C8AE",
+    "text": "#1A1A17",
+    "textMuted": "#5A564C",
+    "accent": "#2E4A2A",
+    "accent2": "#E89CB1",
+    "onAccent": "#F7F2E6",
+    "success": "#3A5A36",
+    "warning": "#A67C2D",
+    "danger": "#A33B3B"
+  },
+  "background": {
+    "type": "solid",
+    "colors": [
+      "#EFE7D4"
+    ]
+  },
+  "decor": {
+    "motif": "lines",
+    "grain": 0.05,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "fonts": {
+    "heading": [
+      "Source Serif 4 Variable",
+      "Noto Serif SC Variable",
+      "Songti SC",
+      "SimSun",
+      "serif"
+    ],
+    "body": [
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 500,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource-variable/source-serif-4": "5.2.6",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0",
+      "@fontsource-variable/noto-serif-sc": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/source-serif-4/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css",
+      "@fontsource-variable/noto-serif-sc/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Source Serif 4 Variable",
+        "weights": [
+          500,
+          600
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Serif SC Variable",
+        "weights": [
+          500
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ],
+        "style": "normal"
+      }
+    ]
+  },
+  "radius": 2,
+  "card": {
+    "style": "flat",
+    "shadow": "none"
+  },
+  "title": {
+    "style": "underline",
+    "case": "none"
+  },
+  "code": {
+    "theme": "vitesse-light",
+    "background": "#F7F2E6",
+    "lineHighlight": "rgba(46,74,42,0.12)",
+    "lineNumber": "#A39880"
+  },
+  "viz": {
+    "node": "#F7F2E6",
+    "nodeText": "#1A1A17",
+    "edge": "#A39880",
+    "marks": {
+      "active": "#2E4A2A",
+      "compare": "#A67C2D",
+      "done": "#3A5A36",
+      "visited": "#C9BDA6",
+      "path": "#E89CB1",
+      "swap": "#A33B3B",
+      "found": "#2E4A2A",
+      "muted": "#E6DCC4"
+    }
+  }
+}

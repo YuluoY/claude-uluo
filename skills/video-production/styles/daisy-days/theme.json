@@ -1,0 +1,164 @@
+{
+  "$schema": "../style.schema.json",
+  "name": "daisy-days",
+  "description": "雏菊日：奶油底、园色色块、圆头标题，适合轻松科普、儿童向、贴纸感内容",
+  "credit": "改编自 frontend-slides（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）「Daisy Days」",
+  "dark": false,
+  "colors": {
+    "bg": "#F5F0E6",
+    "surface": "#FFFFFF",
+    "surfaceAlt": "#FFF8EE",
+    "border": "#2D2D2D",
+    "text": "#2D2D2D",
+    "textMuted": "#5C5C5C",
+    "accent": "#F8635F",
+    "accent2": "#7ECDC0",
+    "onAccent": "#FFFFFF",
+    "success": "#3E9A78",
+    "warning": "#C4922A",
+    "danger": "#D64545"
+  },
+  "background": {
+    "type": "solid",
+    "colors": [
+      "#F5F0E6"
+    ]
+  },
+  "decor": {
+    "motif": "tabs",
+    "grain": 0,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "Fredoka Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "body": [
+      "Quicksand Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 600,
+    "bodyWeight": 500,
+    "packages": {
+      "@fontsource-variable/fredoka": "5.2.6",
+      "@fontsource-variable/quicksand": "5.2.6",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/fredoka/index.css",
+      "@fontsource-variable/quicksand/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Fredoka Variable",
+        "weights": [
+          500,
+          600,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Quicksand Variable",
+        "weights": [
+          500,
+          600
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ],
+        "style": "normal"
+      }
+    ]
+  },
+  "type": {
+    "display": 112,
+    "h1": 80,
+    "h2": 56,
+    "h3": 40,
+    "body": 34,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.12,
+    "headingTracking": 0.01
+  },
+  "radius": 28,
+  "space": 28,
+  "card": {
+    "style": "elevated",
+    "shadow": "6px 6px 0 #2D2D2D"
+  },
+  "title": {
+    "style": "plain",
+    "case": "none"
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.55,
+    "staggerSec": 0.08
+  },
+  "code": {
+    "theme": "github-light",
+    "background": "#FFFFFF",
+    "lineHighlight": "rgba(248,99,95,0.16)",
+    "lineNumber": "#8A8A8A"
+  },
+  "viz": {
+    "node": "#FFFFFF",
+    "nodeText": "#2D2D2D",
+    "edge": "#2D2D2D",
+    "marks": {
+      "active": "#F8635F",
+      "compare": "#FDE68A",
+      "done": "#A8E6CF",
+      "visited": "#D9D3C7",
+      "path": "#7ECDC0",
+      "swap": "#F7C8D4",
+      "found": "#A8D8F0",
+      "muted": "#FFF8EE"
+    }
+  }
+}

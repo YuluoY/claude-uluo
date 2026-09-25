@@ -1,0 +1,172 @@
+{
+  "$schema": "../style.schema.json",
+  "name": "capsule",
+  "description": "胶囊：晒白奶油底、墨线药丸框、糖果色点缀，适合轻松编辑、清单、生活向讲解",
+  "credit": "改编自 frontend-slides（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）「Capsule」",
+  "dark": false,
+  "colors": {
+    "bg": "#F5F5F0",
+    "surface": "#FFFFFF",
+    "surfaceAlt": "#EEEEE8",
+    "border": "#1E1E1E",
+    "text": "#1A1A1A",
+    "textMuted": "#5A5A55",
+    "accent": "#E85D4E",
+    "accent2": "#C4D94E",
+    "onAccent": "#FFFFFF",
+    "success": "#3E9A6A",
+    "warning": "#C4922A",
+    "danger": "#C0392B"
+  },
+  "background": {
+    "type": "solid",
+    "colors": [
+      "#F5F5F0"
+    ]
+  },
+  "decor": {
+    "motif": "orbs",
+    "grain": 0,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "fonts": {
+    "heading": [
+      "Bodoni Moda",
+      "Noto Serif SC Variable",
+      "Songti SC",
+      "SimSun",
+      "serif"
+    ],
+    "body": [
+      "Space Grotesk Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "JetBrains Mono Variable",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "headingWeight": 800,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource/bodoni-moda": "5.2.6",
+      "@fontsource-variable/space-grotesk": "5.3.0",
+      "@fontsource-variable/noto-serif-sc": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0"
+    },
+    "imports": [
+      "@fontsource/bodoni-moda/800.css",
+      "@fontsource-variable/space-grotesk/index.css",
+      "@fontsource-variable/noto-serif-sc/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Bodoni Moda",
+        "weights": [
+          700,
+          800
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Space Grotesk Variable",
+        "weights": [
+          400,
+          500
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Serif SC Variable",
+        "weights": [
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ],
+        "style": "normal"
+      }
+    ]
+  },
+  "type": {
+    "display": 112,
+    "h1": 80,
+    "h2": 56,
+    "h3": 40,
+    "body": 34,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.02,
+    "headingTracking": -0.02
+  },
+  "radius": 200,
+  "space": 28,
+  "card": {
+    "style": "outline",
+    "shadow": "8px 8px 0 rgba(26,26,26,0.12)"
+  },
+  "title": {
+    "style": "underline",
+    "case": "none"
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.55,
+    "staggerSec": 0.08
+  },
+  "code": {
+    "theme": "github-light",
+    "background": "#FFFFFF",
+    "lineHighlight": "rgba(232,93,78,0.14)",
+    "lineNumber": "#9A9A94"
+  },
+  "viz": {
+    "node": "#FFFFFF",
+    "nodeText": "#1A1A1A",
+    "edge": "#1E1E1E",
+    "marks": {
+      "active": "#E85D4E",
+      "compare": "#F2D160",
+      "done": "#A8E6CF",
+      "visited": "#D5D5CE",
+      "path": "#8BB4F7",
+      "swap": "#A06CE8",
+      "found": "#C4D94E",
+      "muted": "#EEEEE8"
+    }
+  }
+}

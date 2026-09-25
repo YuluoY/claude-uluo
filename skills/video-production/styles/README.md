@@ -1,11 +1,11 @@
 # 风格
 
-每个子目录一套风格：`<名字>/theme.json`，格式由 `style.schema.json` 规定（颜色、背景、装饰、页眉、字体包、字号、卡片、标题样式、动效、代码与可视化配色）。怎么选、怎么派生新风格见 `../references/design.md`。
+每个子目录一套风格：`<名字>/theme.json`，格式由 `style.schema.json` 规定（颜色、背景、装饰、页眉、字体包、字号、卡片、标题样式、动效、代码与可视化配色）。怎么选、怎么派生新风格见 `../references/design.md`。新建项目不写 `style` 时用 `paper`。
 
 | 风格 | 说明 | 出处 |
 |---|---|---|
+| paper（默认） | 暖纸编辑：米白纸面、衬线标题、朱红强调 | 本技能原创 |
 | midnight | 深色科技：深靛蓝柔光背景、毛玻璃卡片、冷蓝强调 | 本技能原创 |
-| paper | 暖纸编辑：米白纸面、衬线标题、朱红强调 | 本技能原创 |
 | swiss | 瑞士国际主义：纯白底、黑色粗体、信号红、网格与几何块 | 改编自 frontend-slides「Swiss Modern」 |
 | bold-signal | 强信号：炭黑渐变、橙色色块、超粗标题与大号页码 | 改编自 frontend-slides「Bold Signal」 |
 | electric | 电光蓝：白底 + 左侧电光蓝色带、描边卡片 | 改编自 frontend-slides「Electric Studio」 |

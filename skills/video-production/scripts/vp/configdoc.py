@@ -28,8 +28,8 @@ HEADER = """# 配置参数（video.config.json）
   "title": "Dijkstra 最短路径",
   "preset": "landscape-1080p",
   "genre": "algorithm",
-  "style": "midnight",
-  "voice": { "voice": "zh-CN-YunxiNeural", "rate": "+5%" },
+  "style": "paper",
+  "voice": { "voice": "zh-CN-XiaoxiaoNeural", "rate": "+5%" },
   "audio": { "bgm": { "file": "public/audio/bgm.mp3", "volumeDb": -26 } }
 }
 ```

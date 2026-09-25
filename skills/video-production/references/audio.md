@@ -4,7 +4,7 @@
 
 | 引擎 | 什么时候 | 词级时间 |
 |---|---|---|
-| `edge-tts`（默认） | 免费，中文音色好（`zh-CN-YunxiNeural` 男声、`zh-CN-XiaoxiaoNeural` 女声等） | 有：显式请求 `WordBoundary`（7.2 起默认只给句级，脚本已处理） |
+| `edge-tts`（默认） | 免费。默认女声 `zh-CN-XiaoxiaoNeural`；男声如 `zh-CN-YunxiNeural` | 有：显式请求 `WordBoundary`（7.2 起默认只给句级，脚本已处理） |
 | `external` | 模型或用户用别的 TTS 生成好了逐句音频 | 没有：按 `voice.align` 用 whisper 对齐或按字数估算 |
 | `say` | macOS 自带，离线兜底 | 没有：同上 |
 | `none` | 不要配音，只要字幕和画面 | 句长按阅读速度 `readingCharsPerSec` |

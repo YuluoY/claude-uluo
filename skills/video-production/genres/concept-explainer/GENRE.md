@@ -4,7 +4,7 @@
 
 ## 讲解结构
 
-按“建构”的顺序：先给具体经验，再给抽象概念。
+按“建构”的顺序：先给具体经验，再给抽象概念。正片第一镜用 `TitleCard` 写出主题，口播把主题说出来，然后再进入现象。不要用“今天只做一件事”这类预告句代替标题页。
 
 1. **现象**：观众见过、能感到疑惑的具体场景（“第二次打开网页为什么快多了？”）。
 2. **原理**：用一个关系讲清机制（先后、因果、对比、组成），配最能表达这个关系的画面。
@@ -52,7 +52,8 @@
 
 | 场景 | 参数 |
 |---|---|
-| `TitleCard` | `title`（必填）、`subtitle`、`kicker`（标题上方小字）、`align`：center / left |
+| `TitleCard` | 正片第一镜。`title` 写主题名。`subtitle` 写一句具体要看什么。`kicker` 只放短词。不画页眉和页码 |
+| `ImageText` | 逻辑图用这个放 diagram-compiler 导出的 PNG。`file` 相对 public/。`title` 和 `points` 写判断句。深色视频导出用 `--theme midnight`，浅色用 `--theme default` |
 | `Agenda` | `title`（缺省“目录”）、`items`（缺省为全片章节）、`highlight`：高亮第几项（从 1 开始）、`columns`：1 / 2 |
 | `Section` | `title`（必填）、`subtitle`、`number`（缺省按章节顺序自动编号 01、02…）、`label`（缺省 CHAPTER 01） |
 | `Statement` | `text`（必填）、`emphasis`：要变色的词数组、`at`：变色的提示点、`align`、`kicker` |

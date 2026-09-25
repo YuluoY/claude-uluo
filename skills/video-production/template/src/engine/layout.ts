@@ -121,8 +121,9 @@ export const computeFrameLayout = (width: number, height: number, s: Settings, t
 
   let top = inner.y;
   let header: Rect | null = null;
-  // 页码关掉后页眉会剩一条空白带：overlays.header=false 直接不预留
-  if (theme.chrome.header && s.overlays.header !== false) {
+  // 页码关闭且章节条已经占住页眉内容时，不再留一条空白页眉
+  const headerEmpty = s.overlays.pageNumber === false && chapterBar;
+  if (theme.chrome.header && s.overlays.header !== false && !headerEmpty) {
     const hh = theme.type.small * unit * 1.5;
     header = { x: inner.x, y: inner.y, w: inner.w, h: hh };
     top = inner.y + hh + gutter;

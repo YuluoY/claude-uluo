@@ -1,0 +1,180 @@
+{
+  "$schema": "../style.schema.json",
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.12,
+    "headingTracking": -0.02
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "space": 28,
+  "name": "vellum",
+  "description": "羊皮纸墙：一整面深蓝，黄字斜体衬线，适合金句、展览说明、慢节奏",
+  "credit": "改编自 frontend-slides（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）「Vellum」",
+  "dark": true,
+  "colors": {
+    "bg": "#2A3870",
+    "surface": "#343F80",
+    "surfaceAlt": "#1F2858",
+    "border": "#4A568F",
+    "text": "#E8D85C",
+    "textMuted": "#C9BE78",
+    "accent": "#E8D85C",
+    "accent2": "#3A7878",
+    "onAccent": "#1F2858",
+    "success": "#9DDE9A",
+    "warning": "#F5E168",
+    "danger": "#F0A0A0"
+  },
+  "background": {
+    "type": "solid",
+    "colors": [
+      "#2A3870"
+    ]
+  },
+  "decor": {
+    "motif": "none",
+    "grain": 0.03,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "fonts": {
+    "heading": [
+      "Cormorant Garamond",
+      "Noto Serif SC Variable",
+      "Songti SC",
+      "SimSun",
+      "serif"
+    ],
+    "body": [
+      "DM Sans Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "Courier Prime",
+      "Menlo",
+      "monospace"
+    ],
+    "headingWeight": 500,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource/cormorant-garamond": "5.2.6",
+      "@fontsource-variable/dm-sans": "5.2.6",
+      "@fontsource/courier-prime": "5.2.6",
+      "@fontsource-variable/noto-serif-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0"
+    },
+    "imports": [
+      "@fontsource/cormorant-garamond/500-italic.css",
+      "@fontsource-variable/dm-sans/index.css",
+      "@fontsource/courier-prime/400.css",
+      "@fontsource-variable/noto-serif-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Cormorant Garamond",
+        "weights": [
+          500
+        ],
+        "style": "italic"
+      },
+      {
+        "family": "DM Sans Variable",
+        "weights": [
+          400,
+          500
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Courier Prime",
+        "weights": [
+          400
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Serif SC Variable",
+        "weights": [
+          400,
+          600,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500
+        ],
+        "style": "normal"
+      }
+    ]
+  },
+  "radius": 0,
+  "card": {
+    "style": "flat",
+    "shadow": "none"
+  },
+  "title": {
+    "style": "plain",
+    "case": "none"
+  },
+  "code": {
+    "theme": "nord",
+    "background": "#1F2858",
+    "lineHighlight": "rgba(232,216,92,0.16)",
+    "lineNumber": "#9AA3C4"
+  },
+  "viz": {
+    "node": "#1F2858",
+    "nodeText": "#E8D85C",
+    "edge": "#9AA3C4",
+    "marks": {
+      "active": "#E8D85C",
+      "compare": "#F5E168",
+      "done": "#9DDE9A",
+      "visited": "#5C6898",
+      "path": "#3A7878",
+      "swap": "#F0A0A0",
+      "found": "#E8D85C",
+      "muted": "#343F80"
+    }
+  }
+}

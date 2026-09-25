@@ -19,8 +19,8 @@
   "title": "Dijkstra 最短路径",
   "preset": "landscape-1080p",
   "genre": "algorithm",
-  "style": "midnight",
-  "voice": { "voice": "zh-CN-YunxiNeural", "rate": "+5%" },
+  "style": "paper",
+  "voice": { "voice": "zh-CN-XiaoxiaoNeural", "rate": "+5%" },
   "audio": { "bgm": { "file": "public/audio/bgm.mp3", "volumeDb": -26 } }
 }
 ```
@@ -35,7 +35,7 @@
 | `sceneText` | "auto" / "off" | "auto" | 画面文字总开关：auto = 正常；off = 隐藏所有说明性文字（标题、标签、正文、注释条），只保留代码、数值、字幕与章节条 |
 | `language` | string（格式 `^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$`） | "zh-CN" | BCP 47 语言标签，如 zh-CN、en-US |
 | `genre` | string（格式 `^[a-z0-9][a-z0-9-]*$`） | "concept-explainer" | 主类型包名（genres/<name>），决定讲解结构与可用组件 |
-| `style` | string（格式 `^[a-z0-9][a-z0-9-]*$`） | "midnight" | 视觉风格包名（styles/<name> 或项目内 styles/<name>） |
+| `style` | string（格式 `^[a-z0-9][a-z0-9-]*$`） | "paper" | 视觉风格包名（styles/<name> 或项目内 styles/<name>） |
 | `video.width` | integer（≥16，≤7680） | 1920 | 成片宽度（像素），通常由 preset 决定 |
 | `video.height` | integer（≥16，≤7680） | 1080 | 成片高度（像素），通常由 preset 决定 |
 | `video.fps` | integer（≥1，≤120） | 30 | 帧率。讲解类 30 足够，动画多可用 60 |
@@ -69,7 +69,7 @@
 | `audio.bgm.fadeOutSec` | number（≥0，≤30） | 2.5 | BGM 结尾淡出时长 |
 | `audio.bgm.loop` | boolean | true | BGM 比成片短时循环播放 |
 | `voice.engine` | "edge-tts" / "external" / "say" / "none" | "edge-tts" | edge-tts：默认免费；external：模型/用户已生成的逐句音频；say：macOS 系统语音；none：不配音，字幕按阅读速度计时 |
-| `voice.voice` | string | "zh-CN-YunxiNeural" | edge-tts 音色，如 zh-CN-YunxiNeural、zh-CN-XiaoxiaoNeural |
+| `voice.voice` | string | "zh-CN-XiaoxiaoNeural" | edge-tts 音色。默认 zh-CN-XiaoxiaoNeural（女声）；男声如 zh-CN-YunxiNeural |
 | `voice.rate` | string（格式 `^[+-][0-9]+%$`） | "+0%" | 语速，edge-tts 格式 +10% / -5% |
 | `voice.volume` | string（格式 `^[+-][0-9]+%$`） | "+0%" | 音量调整，edge-tts 格式 +0% / -10% |
 | `voice.pitch` | string（格式 `^[+-][0-9]+Hz$`） | "+0Hz" | 音高调整，edge-tts 格式 +0Hz / -5Hz |
@@ -121,6 +121,9 @@
 | `transition` | 对象 |  | 镜头切换：新镜头盖在旧镜头上进入，旧镜头在转场结束前一直保留（防闪） |
 | `transition.type` | "cut" / "fade" / "slide" / "wipe" | "cut" | 默认转场：cut 硬切 / fade 淡入 / slide 滑入 / wipe 擦除（都是新镜头盖在旧镜头上进入） |
 | `transition.durationSec` | number（≥0，≤3） | 0.35 | 转场时长 |
+| `overlays.pageNumber` | boolean | false | 右上角页码，默认关闭；true 才画（还要主题 chrome.pageNumber 允许）。开了章节条且页码关闭时，不再预留空白页眉 |
+| `overlays.header` | boolean | true | 页眉带：页码关掉后页眉是空白带，false 就不预留这块高度，内容整体上移 |
+| `overlays.sectionNumber` | boolean | true | 背景大号镜头序号（主题 decor.sectionNumber 开启时）；false 连它一起不画，画面只有章节刻度尺 |
 | `overlays.watermark.enabled` | boolean | false | 是否显示水印 |
 | `overlays.watermark.text` | string | "" | 水印文字（image 为空时使用） |
 | `overlays.watermark.image` | string 或 null | null | 相对 public/ 的图片路径 |
@@ -133,10 +136,10 @@
 | `overlays.progressBar.height` | number（≥1，≤60） | 6 | 进度条粗细（像素，短边 1080 基准） |
 | `overlays.progressBar.showChapters` | boolean | true | 按 storyboard 的 chapter 分段并显示当前章节名 |
 | `overlays.chapterBar` | 对象 |  | 章节条：默认刻度尺（ruler，贴视频边）；也可换成画面上方或下方的一排格子。每格一个章节（storyboard 镜头的 chapter），当前章节高亮并显示播放进度。开启后内容区与字幕带自动让开。footage 模式忽略 |
-| `overlays.chapterBar.enabled` | boolean | false | 是否显示章节条 |
+| `overlays.chapterBar.enabled` | boolean | true | 是否显示章节条 |
 | `overlays.chapterBar.position` | "top" / "bottom" | "top" | 贴着安全区上沿还是下沿（下沿时字幕整体上移） |
 | `overlays.chapterBar.style` | "ruler" / "filled" / "outline" / "underline" | "ruler" | ruler 紧贴的刻度尺（连续轨尺 + 密排刻度 + 章节边界 + 游标，推荐）/ filled 实色格（当前章节强调色）/ outline 描边格 / underline 文字 + 下划进度线 |
-| `overlays.chapterBar.widths` | "equal" / "duration" | "equal" | equal 等宽 / duration 按章节时长分宽（每格至少为平均宽度的 45%） |
+| `overlays.chapterBar.widths` | "equal" / "duration" | "duration" | equal 等宽 / duration 按章节时长分宽（每格至少为平均宽度的 45%） |
 | `overlays.chapterBar.showProgress` | boolean | true | 在当前章节格子里显示本章播放进度 |
 | `overlays.chapterBar.height` | number（≥24，≤160） | 64 | 高度（像素，短边 1080 基准）；刻度尺建议 60–80 |
 | `overlays.chapterBar.tickPosition` | "top" / "bottom" | "top" | ruler：轨尺贴哪边——top 轨尺在上、刻度朝下；bottom 轨尺在下、刻度朝上（刻度永远朝开口方向） |

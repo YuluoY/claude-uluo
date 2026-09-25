@@ -73,8 +73,8 @@
 
 | 风格 | 适合 | 标题 / 正文字体 |
 |---|---|---|
-| `midnight`（默认） | 深靛蓝柔光、毛玻璃卡片：技术讲解、产品介绍 | Inter / Inter + 思源黑体 |
-| `paper` | 米白纸面、衬线标题、朱红强调：科普、人文、概念讲解 | Fraunces + 思源宋体 / 思源黑体 |
+| `paper`（默认） | 米白纸面、衬线标题、朱红强调：科普、人文、概念讲解 | Fraunces + 思源宋体 / 思源黑体 |
+| `midnight` | 深靛蓝柔光、毛玻璃卡片：技术讲解、产品介绍 | Inter / Inter + 思源黑体 |
 | `swiss` | 白底黑字、信号红、网格与几何块：观点、数据、结构化讲解 | Archivo Black / Inter |
 | `bold-signal` | 炭黑渐变、橙色色块、大号页码：观点输出、强节奏内容 | Archivo Black / Space Grotesk |
 | `electric` | 白底 + 电光蓝色带、描边卡片：产品、教程、干货清单 | Manrope / Manrope |
@@ -103,7 +103,7 @@
 ```json
 "overlays": {
   "chapterBar": {
-    "enabled": true, "position": "top", "style": "ruler", "widths": "equal", "showProgress": true, "height": 64,
+    "enabled": true, "position": "top", "style": "ruler", "widths": "duration", "showProgress": true, "height": 64,
     "tickPosition": "top", "tickLength": 22, "tickWidth": 2,
     "tickColor": "auto", "tickColorIdle": "auto", "tickEvery": 0,
     "rail": true, "railThickness": 2, "railColor": "auto",
@@ -115,10 +115,10 @@
 
 | 参数 | 说明 |
 |---|---|
-| `enabled` | 开关（默认关；只用于 produce 模式） |
+| `enabled` | 开关（默认开；只用于 produce 模式。footage 忽略） |
 | `position` | `top` 贴安全区上沿；`bottom` 贴下沿，字幕整体上移让开 |
 | `style` | `ruler` 刻度尺 / `filled` 色块 / `outline` 描边 / `underline` 只有下划线 |
-| `widths` | `equal` 等宽；`duration` 按章节时长（每章至少平均宽度的 45%，短章节名也放得下） |
+| `widths` | `duration`（默认）按章节时长，进度色块和正在播的章节对齐；`equal` 等宽。每章至少平均宽度的 45%，短章节名也放得下 |
 | `showProgress` | `ruler`：已播刻度 / 轨道填色 + 游标；格子：当前格显示本章进度 |
 | `height` | 高度（像素，短边 1080 基准）；刻度尺建议 60–80 |
 | `tickPosition`（ruler） | 轨尺贴哪边：`top` 刻度朝下 / `bottom` 刻度朝上（刻度永远朝开口方向） |
@@ -150,7 +150,7 @@
 | 参数 | 默认 | 设为 `false` 之后 |
 |---|---|---|
 | `overlays.chapterBar.showLabels` | `true` | 刻度尺上的章节名不画（进度色块与刻度保留） |
-| `overlays.pageNumber` | `true` | 右上角页码不画（还要主题 `chrome.pageNumber` 允许） |
+| `overlays.pageNumber` | `false` | 右上角页码不画（默认就是关的；要画还得主题 `chrome.pageNumber` 允许） |
 | `overlays.header` | `true` | 页眉带整条不预留，内容区上边界跟着上移（页码关掉后就不会剩一条空带） |
 | `overlays.sectionNumber` | `true` | 背景里那个淡淡的大号镜头序号（主题 `decor.sectionNumber`）不画 |
 

@@ -1,0 +1,183 @@
+{
+  "$schema": "../style.schema.json",
+  "chrome": {
+    "header": true,
+    "chapter": true,
+    "pageNumber": true
+  },
+  "type": {
+    "display": 124,
+    "h1": 86,
+    "h2": 62,
+    "h3": 44,
+    "body": 36,
+    "small": 26,
+    "code": 28,
+    "lineHeight": 1.45,
+    "headingLineHeight": 1.12,
+    "headingTracking": -0.02
+  },
+  "motion": {
+    "easing": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "durationSec": 0.6,
+    "staggerSec": 0.08
+  },
+  "space": 28,
+  "name": "cobalt",
+  "description": "钴蓝网格：暖纸底、一根钴蓝、全程方格，适合趋势、数据、杂志式讲解",
+  "credit": "改编自 frontend-slides（MIT，© zarazhangrui，https://github.com/zarazhangrui/frontend-slides）「Cobalt Grid」",
+  "dark": false,
+  "colors": {
+    "bg": "#F0EBDE",
+    "surface": "#F7F4EC",
+    "surfaceAlt": "#E6E0CE",
+    "border": "#D5CDB8",
+    "text": "#1A1A1A",
+    "textMuted": "#5C584C",
+    "accent": "#1F2BE0",
+    "accent2": "#5560E5",
+    "onAccent": "#FFFFFF",
+    "success": "#1F7A4D",
+    "warning": "#B8860B",
+    "danger": "#C0392B"
+  },
+  "background": {
+    "type": "grid",
+    "colors": [
+      "#F0EBDE",
+      "#1F2BE0"
+    ],
+    "opacity": 0.14
+  },
+  "decor": {
+    "motif": "none",
+    "grain": 0.03,
+    "accentBar": "none",
+    "sectionNumber": false,
+    "frame": false
+  },
+  "fonts": {
+    "heading": [
+      "Newsreader Variable",
+      "Noto Serif SC Variable",
+      "Songti SC",
+      "SimSun",
+      "serif"
+    ],
+    "body": [
+      "DM Sans Variable",
+      "Noto Sans SC Variable",
+      "PingFang SC",
+      "Microsoft YaHei",
+      "sans-serif"
+    ],
+    "mono": [
+      "DM Mono",
+      "Menlo",
+      "monospace"
+    ],
+    "headingWeight": 500,
+    "bodyWeight": 400,
+    "packages": {
+      "@fontsource-variable/newsreader": "5.2.6",
+      "@fontsource-variable/dm-sans": "5.2.6",
+      "@fontsource/dm-mono": "5.2.6",
+      "@fontsource-variable/noto-serif-sc": "5.3.0",
+      "@fontsource-variable/jetbrains-mono": "5.3.0",
+      "@fontsource-variable/noto-sans-sc": "5.3.0"
+    },
+    "imports": [
+      "@fontsource-variable/newsreader/index.css",
+      "@fontsource-variable/dm-sans/index.css",
+      "@fontsource/dm-mono/400.css",
+      "@fontsource-variable/noto-serif-sc/index.css",
+      "@fontsource-variable/jetbrains-mono/index.css",
+      "@fontsource-variable/noto-sans-sc/index.css"
+    ],
+    "faces": [
+      {
+        "family": "Newsreader Variable",
+        "weights": [
+          400,
+          500
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "DM Sans Variable",
+        "weights": [
+          400,
+          500
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "DM Mono",
+        "weights": [
+          400
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Serif SC Variable",
+        "weights": [
+          400,
+          600,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "JetBrains Mono Variable",
+        "weights": [
+          400,
+          700
+        ],
+        "style": "normal"
+      },
+      {
+        "family": "Noto Sans SC Variable",
+        "weights": [
+          400,
+          500
+        ],
+        "style": "normal"
+      }
+    ]
+  },
+  "radius": 0,
+  "card": {
+    "style": "outline",
+    "shadow": "none"
+  },
+  "title": {
+    "style": "plain",
+    "case": "none"
+  },
+  "code": {
+    "theme": "github-light",
+    "background": "#F7F4EC",
+    "lineHighlight": "rgba(31,43,224,0.1)",
+    "lineNumber": "#9A9484"
+  },
+  "viz": {
+    "node": "#F7F4EC",
+    "nodeText": "#1A1A1A",
+    "edge": "#9A9484",
+    "marks": {
+      "active": "#1F2BE0",
+      "compare": "#B8860B",
+      "done": "#1F7A4D",
+      "visited": "#C8C0AA",
+      "path": "#5560E5",
+      "swap": "#C0392B",
+      "found": "#1F2BE0",
+      "muted": "#E6E0CE"
+    }
+  }
+}

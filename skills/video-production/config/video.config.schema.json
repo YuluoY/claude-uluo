@@ -88,7 +88,7 @@
       "required": ["engine", "voice", "rate", "volume", "pitch", "fallbackEngine", "sayVoice", "retries", "timeoutSec", "pronunciations", "externalDir", "align", "readingCharsPerSec"],
       "properties": {
         "engine": { "description": "edge-tts：默认免费；external：模型/用户已生成的逐句音频；say：macOS 系统语音；none：不配音，字幕按阅读速度计时", "enum": ["edge-tts", "external", "say", "none"] },
-        "voice": { "description": "edge-tts 音色，如 zh-CN-YunxiNeural、zh-CN-XiaoxiaoNeural", "type": "string", "minLength": 1 },
+        "voice": { "description": "edge-tts 音色。默认 zh-CN-XiaoxiaoNeural（女声）；男声如 zh-CN-YunxiNeural", "type": "string", "minLength": 1 },
         "rate": { "description": "语速，edge-tts 格式 +10% / -5%", "type": "string", "pattern": "^[+-][0-9]+%$" },
         "volume": { "description": "音量调整，edge-tts 格式 +0% / -10%", "type": "string", "pattern": "^[+-][0-9]+%$" },
         "pitch": { "description": "音高调整，edge-tts 格式 +0Hz / -5Hz", "type": "string", "pattern": "^[+-][0-9]+Hz$" },
@@ -191,7 +191,7 @@
       "additionalProperties": false,
       "required": ["pageNumber", "header", "sectionNumber", "watermark", "progressBar", "chapterBar"],
       "properties": {
-        "pageNumber": { "description": "右上角页码；false 完全不画（开了顶部章节条时页眉只剩页码）", "type": "boolean" },
+        "pageNumber": { "description": "右上角页码，默认关闭；true 才画（还要主题 chrome.pageNumber 允许）。开了章节条且页码关闭时，不再预留空白页眉", "type": "boolean" },
     "header": { "description": "页眉带：页码关掉后页眉是空白带，false 就不预留这块高度，内容整体上移", "type": "boolean" },
     "sectionNumber": { "description": "背景大号镜头序号（主题 decor.sectionNumber 开启时）；false 连它一起不画，画面只有章节刻度尺", "type": "boolean" },
     "watermark": {
