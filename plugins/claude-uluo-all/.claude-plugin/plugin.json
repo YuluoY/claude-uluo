@@ -1,6 +1,6 @@
 {
   "name": "claude-uluo-all",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "一键安装 claude-uluo 全部扩展的元插件——安装此插件即自动安装所有自研 skill",
   "author": { "name": "claude-uluo" },
   "keywords": ["all", "bundle", "claude-uluo"],
@@ -8,13 +8,17 @@
   "dependencies": {
     "diagram-compiler": "0.1.0",
     "frontend-visual-qa": "0.1.0",
-    "html-blueprint": "0.1.0",
+    "html-blueprint": "0.8.0",
     "uluo-spec-driven": "0.2.0",
     "uluo-web-standards": "0.1.0",
     "impeccable": "0.1.0",
     "skill-creator": "0.1.0",
-    "memex": "0.1.0",
+    "memex": "1.0.0",
     "avoid-ai-writing": "1.1.0",
-    "video-production": "2.1.0"
+    "video-production": "2.1.0",
+    "spirit-forge": "0.1.0",
+    "ui-component-creator": "0.2.0",
+    "uluo-change-flow": "0.1.0",
+    "uluo-skill-creator": "0.1.0"
   }
 }
